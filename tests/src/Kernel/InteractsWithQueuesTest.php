@@ -86,6 +86,38 @@ class InteractsWithQueuesTest extends KernelTestBase
         $this->assertEquals('test title', $node->title->value);
     }
 
+    /** @test */
+    public function clear_queue(): void
+    {
+        $this->assertEquals(0, $this->getQueue('create_node_worker')->numberOfItems());
+
+        $this->addToQueue('create_node_worker', [
+            'title' => 'test title',
+        ]);
+
+        $this->assertEquals(1, $this->getQueue('create_node_worker')->numberOfItems());
+
+        $this->clearQueue('create_node_worker');
+
+        $this->assertEquals(0, $this->getQueue('create_node_worker')->numberOfItems());
+    }
+
+    /** @test */
+    public function queue_count(): void
+    {
+        $this->assertEquals(0, $this->getQueueCount('create_node_worker'));
+
+        $this->addToQueue('create_node_worker', [
+            'title' => 'test title',
+        ]);
+
+        $this->assertEquals(1, $this->getQueueCount('create_node_worker'));
+
+        $this->clearQueue('create_node_worker');
+
+        $this->assertEquals(0, $this->getQueueCount('create_node_worker'));
+    }
+
     /** @return mixed */
     private function customQueueFactory()
     {
