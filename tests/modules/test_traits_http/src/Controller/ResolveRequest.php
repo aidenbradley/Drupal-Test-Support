@@ -61,4 +61,15 @@ class ResolveRequest implements ContainerInjectionInterface
 
         return Response::create();
     }
+
+    public function redirectFromExample(?string $redirectRoute = null): Response
+    {
+        if ($this->request->headers->get('referer') === 'https://example.com/from') {
+            return RedirectResponse::create(
+                Url::fromRoute($redirectRoute)->toString(true)->getGeneratedUrl()
+            );
+        }
+
+        return Response::create();
+    }
 }
