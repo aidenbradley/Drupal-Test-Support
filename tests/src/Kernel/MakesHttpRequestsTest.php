@@ -127,6 +127,18 @@ class MakesHttpRequestsTest extends KernelTestBase
         ]))->assertLocation($this->route('route.redirect_to'));
     }
 
+    /** @test */
+    public function from_url(): void
+    {
+        $response = $this->from('https://example.com/from')
+            ->followingRedirects()
+            ->get($this->route('route.direct_from_example', [
+                'redirectRoute' => 'route.redirect_to',
+            ]));
+
+        $response->assertLocation($this->route('route.redirect_to'));
+    }
+
     private function route(string $routeName, array $parameters = [], array $options = []): string
     {
         return Url::fromRoute(...func_get_args())->toString(true)->getGeneratedUrl();

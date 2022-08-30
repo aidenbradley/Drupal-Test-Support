@@ -1,6 +1,15 @@
 route_callbacks:
   - '\Drupal\test_traits_http\Routing\TestRoutes::routes'
 
+route.direct_from_example:
+  path: '/redirect/example/{redirectRoute}'
+  defaults:
+    _controller: '\Drupal\test_traits_http\Controller\ResolveRequest::redirectFromExample'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'
+
 route.redirect:
   path: '/redirect/{redirectRoute}'
   defaults:
