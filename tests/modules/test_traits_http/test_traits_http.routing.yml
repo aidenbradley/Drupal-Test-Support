@@ -18,3 +18,14 @@ route.redirect_to:
     no_cache: TRUE
   requirements:
     _access: 'TRUE'
+
+route.basic_auth:
+  path: '/basic-auth'
+  defaults:
+    _controller: '\Drupal\test_traits_http\Controller\ResolveRequest::basicAuth'
+  options:
+    _auth:
+      - basic_auth
+    no_cache: TRUE
+  requirements:
+    _user_is_logged_in: 'TRUE'

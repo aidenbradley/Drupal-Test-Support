@@ -61,4 +61,9 @@ class ResolveRequest implements ContainerInjectionInterface
 
         return Response::create();
     }
+
+    public function basicAuth(): Response
+    {
+        return JsonResponse::create();
+    }
 }

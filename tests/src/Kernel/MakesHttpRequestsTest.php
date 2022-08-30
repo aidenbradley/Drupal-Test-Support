@@ -5,6 +5,7 @@ namespace Drupal\Tests\test_traits\Kernel;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_traits\Traits\MakesHttpRequests;
+use Drupal\user\Entity\User;
 
 class MakesHttpRequestsTest extends KernelTestBase
 {
@@ -125,6 +126,31 @@ class MakesHttpRequestsTest extends KernelTestBase
         $this->followingRedirects()->get($this->route('route.redirect', [
             'redirectRoute' => 'route.redirect_to',
         ]))->assertLocation($this->route('route.redirect_to'));
+    }
+
+    /** @test */
+    public function basic_auth(): void
+    {
+        $this->enableModules([
+            'system',
+            'basic_auth',
+            'user',
+        ]);
+        $this->installSchema('system', 'sequences');
+        $this->installEntitySchema('user');
+
+        $user = User::create([
+            'name' => 'basic_auth',
+            'pass' => 'example',
+        ]);
+        $user->save();
+
+        $this->get($this->route('route.basic_auth'), [
+            'HTTP_AUTHORIZATION' => [
+                'basic_auth',
+                'example',
+            ],
+        ])->assertOk();
     }
 
     private function route(string $routeName, array $parameters = [], array $options = []): string

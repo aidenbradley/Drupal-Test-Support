@@ -11,67 +11,88 @@ trait MakesHttpRequests
     /** @var bool */
     private $followRedirects = false;
 
-    /** @var null|bool */
-    private $requestIsAjax = null;
+    /** @var bool */
+    private $requestIsAjax = false;
 
-    public function get(string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
+    /** @var array */
+    private $defaultHeaders = [];
+
+    public function get(string $uri, array $headers = []): TestResponse
     {
-        return $this->call('GET', ...func_get_args());
+        $server = $this->transformHeadersToServerVars($headers);
+        $cookies = [];
+
+        return $this->call('GET', $uri, [], $cookies, [], $server);
     }
 
-    public function getJson(string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
+    public function getJson(string $uri, array $headers = []): TestResponse
     {
-        return $this->json('GET', ...func_get_args());
+        return $this->json('GET', $uri, [], $headers);
     }
 
-    public function post(string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
+    public function post($uri, array $data = [], array $headers = []): TestResponse
     {
-        return $this->call('POST', ...func_get_args());
+        $server = $this->transformHeadersToServerVars($headers);
+        $cookies = [];
+
+        return $this->call('POST', $uri, $data, $cookies, [], $server);
     }
 
-    public function postJson(string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
+    public function postJson($uri, array $data = [], array $headers = []): TestResponse
     {
-        return $this->json('POST', ...func_get_args());
+        return $this->json('POST', $uri, $data, $headers);
     }
 
-    public function put(string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
+    public function put($uri, array $data = [], array $headers = []): TestResponse
     {
-        return $this->call('PUT', ...func_get_args());
+        $server = $this->transformHeadersToServerVars($headers);
+        $cookies = [];
+
+        return $this->call('PUT', $uri, $data, $cookies, [], $server);
     }
 
-    public function putJson(string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
+    public function putJson(string $uri, array $data = [], array $headers = []): TestResponse
     {
-        return $this->json('PUT', ...func_get_args());
+        return $this->json('PUT', $uri, $data, $headers);
     }
 
-    public function patch(string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
+    public function patch(string $uri, array $data = [], array $headers = []): TestResponse
     {
-        return $this->call('PATCH', ...func_get_args());
+        $server = $this->transformHeadersToServerVars($headers);
+        $cookies = [];
+
+        return $this->call('PATCH', $uri, $data, $cookies, [], $server);
     }
 
-    public function patchJson(string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
+    public function patchJson(string $uri, array $data = [], array $headers = []): TestResponse
     {
-        return $this->json('PATCH', ...func_get_args());
+        return $this->json('PATCH', $uri, $data, $headers);
     }
 
-    public function options(string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
+    public function options(string $uri, array $data = [], array $headers = []): TestResponse
     {
-        return $this->call('OPTIONS', ...func_get_args());
+        $server = $this->transformHeadersToServerVars($headers);
+        $cookies = [];
+
+        return $this->call('OPTIONS', $uri, $data, $cookies, [], $server);
     }
 
-    public function optionsJson(string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
+    public function optionsJson(string $uri, array $data = [], array $headers = []): TestResponse
     {
-        return $this->json('OPTIONS', ...func_get_args());
+        return $this->json('OPTIONS', $uri, $data, $headers);
     }
 
-    public function delete(string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
+    public function delete($uri, array $data = [], array $headers = []): TestResponse
     {
-        return $this->call('DELETE', ...func_get_args());
+        $server = $this->transformHeadersToServerVars($headers);
+        $cookies = [];
+
+        return $this->call('DELETE', $uri, $data, $cookies, [], $server);
     }
 
-    public function deleteJson(string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
+    public function deleteJson($uri, array $data = [], array $headers = []): TestResponse
     {
-        return $this->json('DELETE', ...func_get_args());
+        return $this->json('DELETE', $uri, $data, $headers);
     }
 
     public function ajax(): self
@@ -92,7 +113,7 @@ trait MakesHttpRequests
         return $this->call(
             $method,
             $uri,
-            $parameters,
+            [],
             $cookies,
             $files,
             $headers,
@@ -121,6 +142,8 @@ trait MakesHttpRequests
 
         if ($this->followRedirects) {
             $response = $this->followRedirects($response);
+
+            $this->followRedirects = false;
         }
 
         $kernel = $this->container->get('kernel');
@@ -136,6 +159,30 @@ trait MakesHttpRequests
         $this->followRedirects = true;
 
         return $this;
+    }
+
+    /**
+     * Transform headers array to array of $_SERVER vars with HTTP_* format.
+     *
+     * @param  array  $headers
+     * @return array
+     */
+    protected function transformHeadersToServerVars(array $headers)
+    {
+        return collect(array_merge($this->defaultHeaders, $headers))->mapWithKeys(function ($value, $name) {
+            $name = strtr(strtoupper($name), '-', '_');
+
+            return [$this->formatServerHeaderKey($name) => $value];
+        })->all();
+    }
+
+    protected function formatServerHeaderKey($name)
+    {
+        if (! str_starts_with($name, 'HTTP_') && $name !== 'CONTENT_TYPE' && $name !== 'REMOTE_ADDR') {
+            return 'HTTP_'.$name;
+        }
+
+        return $name;
     }
 
     private function followRedirects(Response $response)
