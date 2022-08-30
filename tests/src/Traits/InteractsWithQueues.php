@@ -50,6 +50,21 @@ trait InteractsWithQueues
         }
     }
 
+    public function clearQueue(string $queueName): self
+    {
+        $this->container->get('database')
+            ->delete('queue')
+            ->condition('name', $queueName)
+            ->execute();
+
+        return $this;
+    }
+
+    public function getQueueCount(string $queueName): int
+    {
+        return $this->getQueue($queueName)->numberOfItems();
+    }
+
     private function getQueueByName(string $queueName, bool $useReliableQueue): QueueInterface
     {
         if (isset($this->queues[$queueName])) {
