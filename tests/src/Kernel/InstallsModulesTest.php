@@ -3,7 +3,7 @@
 namespace Drupal\Tests\test_traits\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_traits\Kernel\Testing\Concerns\InstallsModules;
+use Drupal\Tests\test_traits\Traits\InstallsModules;
 
 class InstallsModulesTest extends KernelTestBase
 {

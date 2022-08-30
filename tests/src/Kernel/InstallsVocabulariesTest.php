@@ -4,7 +4,7 @@ namespace Drupal\Tests\test_traits\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\test_traits\Kernel\Testing\Concerns\InstallsVocabularies;
+use Drupal\Tests\test_traits\Traits\InstallsVocabularies;
 
 class InstallsVocabulariesTest extends KernelTestBase
 {

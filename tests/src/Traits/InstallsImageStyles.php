@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Kernel\Testing\Concerns;
+namespace Drupal\Tests\test_traits\Traits;
 
 trait InstallsImageStyles
 {

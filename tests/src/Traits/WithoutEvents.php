@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Kernel\Testing;
+namespace Drupal\Tests\test_traits\Traits;
 
 use Illuminate\Support\Collection;
 use Prophecy\Argument;

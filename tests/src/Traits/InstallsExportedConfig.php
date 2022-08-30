@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Kernel\Testing\Concerns;
+namespace Drupal\Tests\test_traits\Traits;
 
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Site\Settings;
-use Drupal\Tests\test_traits\Kernel\Testing\Exceptions\ConfigInstallFailed;
-use Drupal\Tests\test_traits\Kernel\Testing\Utils\ConfigurationDiscovery;
+use Drupal\Tests\test_traits\Traits\Exceptions\ConfigInstallFailed;
+use Drupal\Tests\test_traits\Traits\Utils\ConfigurationDiscovery;
 
 trait InstallsExportedConfig
 {

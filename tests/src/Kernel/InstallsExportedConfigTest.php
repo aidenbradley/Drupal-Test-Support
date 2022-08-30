@@ -7,8 +7,8 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\test_traits\Kernel\Testing\Concerns\InstallsExportedConfig;
-use Drupal\Tests\test_traits\Kernel\Testing\Exceptions\ConfigInstallFailed;
+use Drupal\Tests\test_traits\Traits\InstallsExportedConfig;
+use Drupal\Tests\test_traits\Traits\Exceptions\ConfigInstallFailed;
 use Drupal\user\Entity\Role;
 
 class InstallsExportedConfigTest extends KernelTestBase
