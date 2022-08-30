@@ -156,16 +156,8 @@ trait MakesHttpRequests
 
     public function from(string $url): self
     {
-//        $this->headers = array_merge($this->headers, $this->transformHeadersToServerVars([
-//            'referer' => $url,
-//        ]));
-
         $this->headers = array_merge($this->headers, [
             'referer' => $url,
-        ]);
-
-        $this->headers = array_merge($this->headers, [
-            'expires' => 'never',
         ]);
 
         return $this;
