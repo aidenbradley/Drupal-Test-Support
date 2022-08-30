@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Kernel\Testing\Concerns;
+namespace Drupal\Tests\test_traits\Traits;
 
-use Drupal\Tests\test_traits\Kernel\Testing\Response\TestResponse;
+use Drupal\Tests\test_traits\Traits\Response\TestResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

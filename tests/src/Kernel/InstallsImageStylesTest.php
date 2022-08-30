@@ -4,7 +4,7 @@ namespace Drupal\Tests\test_traits\Kernel;
 
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_traits\Kernel\Testing\Concerns\InstallsImageStyles;
+use Drupal\Tests\test_traits\Traits\InstallsImageStyles;
 
 class InstallsImageStylesTest extends KernelTestBase
 {

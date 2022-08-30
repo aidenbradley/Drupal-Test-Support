@@ -7,7 +7,7 @@ use Drupal\Core\Config\ConfigEvents;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\EventSubscriber\ConfigSubscriber;
 use Drupal\node\Routing\RouteSubscriber;
-use Drupal\Tests\test_traits\Kernel\Testing\WithoutEventSubscribers;
+use Drupal\Tests\test_traits\Traits\WithoutEventSubscribers;
 
 class WithoutEventSubscribersTest extends KernelTestBase
 {

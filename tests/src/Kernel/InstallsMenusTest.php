@@ -4,7 +4,7 @@ namespace Drupal\Tests\test_traits\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Menu;
-use Drupal\Tests\test_traits\Kernel\Testing\Concerns\InstallsMenus;
+use Drupal\Tests\test_traits\Traits\InstallsMenus;
 
 class InstallsMenusTest extends KernelTestBase
 {
