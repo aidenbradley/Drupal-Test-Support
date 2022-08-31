@@ -5,6 +5,8 @@ namespace Drupal\Tests\drupal_test_support\Kernel\Http;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\drupal_test_support\Traits\Http\MakesHttpRequests;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class MakesHttpRequestsTest extends KernelTestBase
 {
@@ -137,6 +139,22 @@ class MakesHttpRequestsTest extends KernelTestBase
             ]));
 
         $response->assertLocation($this->route('route.redirect_to'));
+    }
+
+    /** @test */
+    public function mock_response(): void
+    {
+        $fakeResponseData = [
+            'fake' => 'data',
+        ];
+
+        $this->mockResponse('https://www.example.com/fake', JsonResponse::create($fakeResponseData));
+        $response = $this->get('https://www.example.com/fake');
+        $response->assertJsonContent($fakeResponseData);
+
+        $this->mockResponse($this->route('route.get'), JsonResponse::create($fakeResponseData));
+        $response = $this->get($this->route('route.get'));
+        $response->assertJsonContent($fakeResponseData);
     }
 
     private function route(string $routeName, array $parameters = [], array $options = []): string

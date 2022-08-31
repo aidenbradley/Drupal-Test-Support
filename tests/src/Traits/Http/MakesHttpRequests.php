@@ -14,6 +14,9 @@ trait MakesHttpRequests
     /** @var array */
     private $headers = [];
 
+    /** @var array */
+    private $fakes = [];
+
     public function get(string $uri, array $headers = []): TestResponse
     {
         return $this->call('GET', $uri, [], [], [], $headers);
@@ -114,6 +117,10 @@ trait MakesHttpRequests
     /** @return mixed */
     public function call(string $method, string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
     {
+        if (isset($this->fakes[$uri])) {
+            return TestResponse::fromBaseResponse($this->fakes[$uri]);
+        }
+
         $request = Request::create($uri, $method, $parameters, $cookies, $files, $server, $content);
 
         $request->setSession($this->container->get('session'));
@@ -154,6 +161,13 @@ trait MakesHttpRequests
     public function from(string $url): self
     {
         return $this->withHeader('referer', $url);
+    }
+
+    public function mockResponse(string $url, $response): self
+    {
+        $this->fakes[$url] = $response;
+
+        return $this;
     }
 
     protected function withHeaders(array $headers)
