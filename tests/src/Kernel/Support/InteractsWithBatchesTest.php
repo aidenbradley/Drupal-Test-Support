@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Kernel\Support;
+namespace Drupal\Tests\drupal_test_support\Kernel\Support;
 
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_traits\Traits\Support\InteractsWithBatches;
-use Drupal\Tests\test_traits\Traits\Http\MakesHttpRequests;
+use Drupal\Tests\drupal_test_support\Traits\Support\InteractsWithBatches;
+use Drupal\Tests\drupal_test_support\Traits\Http\MakesHttpRequests;
 
 class InteractsWithBatchesTest extends KernelTestBase
 {
@@ -15,7 +15,7 @@ class InteractsWithBatchesTest extends KernelTestBase
     protected static $modules = [
         'system',
         'user',
-        'test_traits_batch',
+        'drupal_test_support_batch',
     ];
 
     protected function setUp(): void

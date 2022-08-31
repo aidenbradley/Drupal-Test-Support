@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\test_traits_entity_install\Entity;
+namespace Drupal\drupal_test_support_entity_install\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;

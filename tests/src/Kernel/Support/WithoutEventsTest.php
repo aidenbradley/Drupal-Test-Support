@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Kernel\Support;
+namespace Drupal\Tests\drupal_test_support\Kernel\Support;
 
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\locale\LocaleEvent;
-use Drupal\Tests\test_traits\Traits\Support\WithoutEvents;
+use Drupal\Tests\drupal_test_support\Traits\Support\WithoutEvents;
 use Drupal\Tests\token\Kernel\KernelTestBase;
 
 class WithoutEventsTest extends KernelTestBase

@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Traits\Support;
+namespace Drupal\Tests\drupal_test_support\Traits\Support;
 
-use Drupal\Tests\test_traits\Traits\Support\Mail\TestMail;
+use Drupal\Tests\drupal_test_support\Traits\Support\Mail\TestMail;
 use Illuminate\Support\Collection;
 
 trait InteractsWithMail

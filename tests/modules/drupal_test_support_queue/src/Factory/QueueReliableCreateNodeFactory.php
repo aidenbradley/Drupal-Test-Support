@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\test_traits_queue\Factory;
+namespace Drupal\drupal_test_support_queue\Factory;
 
-use Drupal\test_traits_queue\Queue\ReliableCreateNodeQueue;
+use Drupal\drupal_test_support_queue\Queue\ReliableCreateNodeQueue;
 
 class QueueReliableCreateNodeFactory
 {

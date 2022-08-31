@@ -1,10 +1,10 @@
 route_callbacks:
-  - '\Drupal\test_traits_http\Routing\TestRoutes::routes'
+  - '\Drupal\drupal_test_support_http\Routing\TestRoutes::routes'
 
 route.direct_from_example:
   path: '/redirect/example/{redirectRoute}'
   defaults:
-    _controller: '\Drupal\test_traits_http\Controller\ResolveRequest::redirectFromExample'
+    _controller: '\Drupal\drupal_test_support_http\Controller\ResolveRequest::redirectFromExample'
   options:
     no_cache: TRUE
   requirements:
@@ -13,7 +13,7 @@ route.direct_from_example:
 route.redirect:
   path: '/redirect/{redirectRoute}'
   defaults:
-    _controller: '\Drupal\test_traits_http\Controller\ResolveRequest::redirect'
+    _controller: '\Drupal\drupal_test_support_http\Controller\ResolveRequest::redirect'
   options:
     no_cache: TRUE
   requirements:
@@ -22,7 +22,7 @@ route.redirect:
 route.redirect_to:
   path: '/redirect-to'
   defaults:
-    _controller: '\Drupal\test_traits_http\Controller\ResolveRequest::redirect'
+    _controller: '\Drupal\drupal_test_support_http\Controller\ResolveRequest::redirect'
   options:
     no_cache: TRUE
   requirements:

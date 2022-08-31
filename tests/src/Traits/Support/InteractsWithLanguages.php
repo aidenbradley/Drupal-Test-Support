@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Traits\Support;
+namespace Drupal\Tests\drupal_test_support\Traits\Support;
 
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Tests\test_traits\Traits\Installs\InstallsExportedConfig;
+use Drupal\Tests\drupal_test_support\Traits\Installs\InstallsExportedConfig;
 
 trait InteractsWithLanguages
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Kernel\Support;
+namespace Drupal\Tests\drupal_test_support\Kernel\Support;
 
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_traits\Traits\Support\InteractsWithAuthentication;
-use Drupal\Tests\test_traits\Traits\Http\MakesHttpRequests;
+use Drupal\Tests\drupal_test_support\Traits\Support\InteractsWithAuthentication;
+use Drupal\Tests\drupal_test_support\Traits\Http\MakesHttpRequests;
 
 class InteractsWithAuthenticationTest extends KernelTestBase
 {

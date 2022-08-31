@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\test_traits_batch\Controller;
+namespace Drupal\drupal_test_support_batch\Controller;
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Traits\Support;
+namespace Drupal\Tests\drupal_test_support\Traits\Support;
 
 use Drupal\Core\Site\Settings;
 use Symfony\Component\Finder\Finder;

@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Kernel\Installs;
+namespace Drupal\Tests\drupal_test_support\Kernel\Installs;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Menu;
-use Drupal\Tests\test_traits\Traits\Installs\InstallsMenus;
+use Drupal\Tests\drupal_test_support\Traits\Installs\InstallsMenus;
 
 class InstallsMenusTest extends KernelTestBase
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Kernel\Installs;
+namespace Drupal\Tests\drupal_test_support\Kernel\Installs;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_traits\Traits\Support\Exceptions\ConfigInstallFailed;
-use Drupal\Tests\test_traits\Traits\Installs\InstallsExportedConfig;
+use Drupal\Tests\drupal_test_support\Traits\Support\Exceptions\ConfigInstallFailed;
+use Drupal\Tests\drupal_test_support\Traits\Installs\InstallsExportedConfig;
 
 class InstallsExportedConfigTest extends KernelTestBase
 {

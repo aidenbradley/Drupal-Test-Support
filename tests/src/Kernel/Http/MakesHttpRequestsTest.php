@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Kernel\Http;
+namespace Drupal\Tests\drupal_test_support\Kernel\Http;
 
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_traits\Traits\Http\MakesHttpRequests;
+use Drupal\Tests\drupal_test_support\Traits\Http\MakesHttpRequests;
 
 class MakesHttpRequestsTest extends KernelTestBase
 {
     use MakesHttpRequests;
 
     protected static $modules = [
-        'test_traits_http',
+        'drupal_test_support_http',
     ];
 
     /** @test */

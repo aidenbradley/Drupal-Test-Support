@@ -1,7 +1,7 @@
-name: Test Traits
+name: Drupal Test Support
 type: module
 description: 'Provides concerns that help with testing'
 package: Custom
-version: VERSION
+version: 0.0.1
 hidden: true
 core_version_requirement: ^8 || ^9

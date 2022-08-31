@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Kernel\Support;
+namespace Drupal\Tests\drupal_test_support\Kernel\Support;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_traits\Traits\Support\InteractsWithSettings;
+use Drupal\Tests\drupal_test_support\Traits\Support\InteractsWithSettings;
 
 class InteractsWithSettingsTest extends KernelTestBase
 {

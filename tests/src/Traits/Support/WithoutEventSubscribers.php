@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Traits\Support;
+namespace Drupal\Tests\drupal_test_support\Traits\Support;
 
-use Drupal\Tests\test_traits\Traits\Support\Decorators\DecoratedListener as Listener;
+use Drupal\Tests\drupal_test_support\Traits\Support\Decorators\DecoratedListener as Listener;
 use Illuminate\Support\Collection;
 
 trait WithoutEventSubscribers
