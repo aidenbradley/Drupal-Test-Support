@@ -163,7 +163,7 @@ trait MakesHttpRequests
         return $this->withHeader('referer', $url);
     }
 
-    public function mockResponse(string $url, $response): self
+    public function fakeResponse(string $url, $response): self
     {
         $this->fakes[$url] = $response;
 

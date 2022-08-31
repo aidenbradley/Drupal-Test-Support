@@ -148,11 +148,11 @@ class MakesHttpRequestsTest extends KernelTestBase
             'fake' => 'data',
         ];
 
-        $this->mockResponse('https://www.example.com/fake', JsonResponse::create($fakeResponseData));
+        $this->fakeResponse('https://www.example.com/fake', JsonResponse::create($fakeResponseData));
         $response = $this->get('https://www.example.com/fake');
         $response->assertJsonContent($fakeResponseData);
 
-        $this->mockResponse($this->route('route.get'), JsonResponse::create($fakeResponseData));
+        $this->fakeResponse($this->route('route.get'), JsonResponse::create($fakeResponseData));
         $response = $this->get($this->route('route.get'));
         $response->assertJsonContent($fakeResponseData);
     }
