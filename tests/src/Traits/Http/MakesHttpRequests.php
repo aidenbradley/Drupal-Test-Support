@@ -11,9 +11,6 @@ trait MakesHttpRequests
     /** @var bool */
     private $followRedirects = false;
 
-    /** @var bool */
-    private $requestIsAjax = false;
-
     /** @var array */
     private $headers = [];
 
@@ -156,8 +153,21 @@ trait MakesHttpRequests
 
     public function from(string $url): self
     {
+        return $this->withHeader('referer', $url);
+    }
+
+    protected function withHeaders(array $headers)
+    {
+        $this->headers = array_merge($this->headers, $headers);
+
+        return $this;
+    }
+
+    /** @param mixed $value */
+    protected function withHeader(string $header, $value): self
+    {
         $this->headers = array_merge($this->headers, [
-            'referer' => $url,
+            $header => $value,
         ]);
 
         return $this;
