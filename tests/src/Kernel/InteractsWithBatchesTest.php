@@ -4,8 +4,8 @@ namespace Drupal\Tests\test_traits\Kernel;
 
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_traits\Traits\InteractsWithBatches;
-use Drupal\Tests\test_traits\Traits\MakesHttpRequests;
+use Drupal\Tests\test_traits\Traits\Support\InteractsWithBatches;
+use Drupal\Tests\test_traits\Traits\Http\MakesHttpRequests;
 
 class InteractsWithBatchesTest extends KernelTestBase
 {

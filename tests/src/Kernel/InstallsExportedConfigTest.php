@@ -2,14 +2,9 @@
 
 namespace Drupal\Tests\test_traits\Kernel;
 
-use Drupal\Core\Site\Settings;
-use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\node\Entity\NodeType;
-use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\test_traits\Traits\InstallsExportedConfig;
-use Drupal\Tests\test_traits\Traits\Exceptions\ConfigInstallFailed;
-use Drupal\user\Entity\Role;
+use Drupal\Tests\test_traits\Traits\Support\Exceptions\ConfigInstallFailed;
+use Drupal\Tests\test_traits\Traits\Installs\InstallsExportedConfig;
 
 class InstallsExportedConfigTest extends KernelTestBase
 {

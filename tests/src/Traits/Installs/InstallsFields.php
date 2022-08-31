@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Traits;
+namespace Drupal\Tests\test_traits\Traits\Installs;
 
 use Drupal\Core\Config\FileStorage;
 

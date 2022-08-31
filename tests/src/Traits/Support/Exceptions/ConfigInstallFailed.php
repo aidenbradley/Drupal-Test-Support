@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Traits\Exceptions;
+namespace Drupal\Tests\test_traits\Traits\Support\Exceptions;
 
 class ConfigInstallFailed extends \Exception
 {

@@ -4,8 +4,8 @@ namespace Drupal\Tests\test_traits\Kernel;
 
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_traits\Traits\InteractsWithAuthentication;
-use Drupal\Tests\test_traits\Traits\MakesHttpRequests;
+use Drupal\Tests\test_traits\Traits\Support\InteractsWithAuthentication;
+use Drupal\Tests\test_traits\Traits\Http\MakesHttpRequests;
 
 class InteractsWithAuthenticationTest extends KernelTestBase
 {

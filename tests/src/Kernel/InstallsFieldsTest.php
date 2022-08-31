@@ -3,7 +3,7 @@
 namespace Drupal\Tests\test_traits\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_traits\Traits\InstallsFields;
+use Drupal\Tests\test_traits\Traits\Installs\InstallsFields;
 
 class InstallsFieldsTest extends KernelTestBase
 {
