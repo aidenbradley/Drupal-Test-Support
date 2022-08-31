@@ -4,7 +4,7 @@ namespace Drupal\Tests\test_traits\Kernel;
 
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\locale\LocaleEvent;
-use Drupal\Tests\test_traits\Traits\WithoutEvents;
+use Drupal\Tests\test_traits\Traits\Support\WithoutEvents;
 use Drupal\Tests\token\Kernel\KernelTestBase;
 
 class WithoutEventsTest extends KernelTestBase

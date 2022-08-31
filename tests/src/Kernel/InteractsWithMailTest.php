@@ -3,9 +3,8 @@
 namespace Drupal\Tests\test_traits\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_traits\Traits\InteractsWithMail;
-use Drupal\Tests\test_traits\Traits\Mail\TestMail;
-use PHPUnit\Framework\Assert;
+use Drupal\Tests\test_traits\Traits\Support\InteractsWithMail;
+use Drupal\Tests\test_traits\Traits\Support\Mail\TestMail;
 
 class InteractsWithMailTest extends KernelTestBase
 {

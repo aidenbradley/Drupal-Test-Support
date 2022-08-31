@@ -4,7 +4,7 @@ namespace Drupal\Tests\test_traits\Kernel;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_traits\Traits\InteractsWithLanguages;
+use Drupal\Tests\test_traits\Traits\Support\InteractsWithLanguages;
 
 class InteractsWithLanguagesTest extends KernelTestBase
 {

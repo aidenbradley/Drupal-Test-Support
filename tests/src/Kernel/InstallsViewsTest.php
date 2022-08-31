@@ -3,7 +3,7 @@
 namespace Drupal\Tests\test_traits\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_traits\Traits\InstallsViews;
+use Drupal\Tests\test_traits\Traits\Installs\InstallsViews;
 use Drupal\views\Entity\View;
 
 class InstallsViewsTest extends KernelTestBase

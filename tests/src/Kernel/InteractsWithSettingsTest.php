@@ -3,7 +3,7 @@
 namespace Drupal\Tests\test_traits\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_traits\Traits\InteractsWithSettings;
+use Drupal\Tests\test_traits\Traits\Support\InteractsWithSettings;
 
 class InteractsWithSettingsTest extends KernelTestBase
 {

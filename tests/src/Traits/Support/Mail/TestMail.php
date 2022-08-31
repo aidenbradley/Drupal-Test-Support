@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Traits\Mail;
+namespace Drupal\Tests\test_traits\Traits\Support\Mail;
 
 use PHPUnit\Framework\Assert;
 
