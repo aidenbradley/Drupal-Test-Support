@@ -27,10 +27,11 @@ trait InstallsViews
                 'user',
                 'views',
             ]);
-            $this->installEntitySchema('view');
-        }
 
-        $this->setupViewsDependencies = true;
+            $this->installEntitySchema('view');
+
+            $this->setupViewsDependencies = true;
+        }
 
         return $this;
     }

@@ -30,9 +30,9 @@ trait InstallsRoles
             ]);
 
             $this->installEntitySchema('user_role');
-        }
 
-        $this->setupRoleDependencies = true;
+            $this->setupRoleDependencies = true;
+        }
 
         return $this;
     }

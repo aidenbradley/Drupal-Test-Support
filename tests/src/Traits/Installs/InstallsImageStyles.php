@@ -31,9 +31,10 @@ trait InstallsImageStyles
             ]);
 
             $this->installEntitySchema('image_style');
+
+            $this->setupImageStyleDependencies = true;
         }
 
-        $this->setupImageStyleDependencies = true;
 
         return $this;
     }

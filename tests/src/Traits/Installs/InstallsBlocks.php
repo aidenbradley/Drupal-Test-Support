@@ -28,9 +28,9 @@ trait InstallsBlocks
             ]);
 
             $this->installEntitySchema('block');
-        }
 
-        $this->setupBlockDependencies = true;
+            $this->setupBlockDependencies = true;
+        }
 
         return $this;
     }

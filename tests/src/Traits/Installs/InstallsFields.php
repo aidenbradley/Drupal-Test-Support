@@ -47,9 +47,10 @@ trait InstallsFields
     {
         if ($this->setupDependencies === false) {
             $this->enableModules(['field']);
+            
+            $this->setupDependencies = true;
         }
 
-        $this->setupDependencies = true;
 
         return $this;
     }

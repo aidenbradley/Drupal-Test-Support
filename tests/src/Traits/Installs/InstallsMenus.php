@@ -29,9 +29,10 @@ trait InstallsMenus
             ]);
 
             $this->installEntitySchema('menu');
+
+            $this->setupMenuDependencies = true;
         }
 
-        $this->setupMenuDependencies = true;
 
         return $this;
     }

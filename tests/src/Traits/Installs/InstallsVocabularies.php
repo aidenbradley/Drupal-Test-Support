@@ -31,9 +31,9 @@ trait InstallsVocabularies
             ]);
 
             $this->installEntitySchema('taxonomy_vocabulary');
-        }
 
-        $this->setupVocabularyDependencies = true;
+            $this->setupVocabularyDependencies = true;
+        }
 
         return $this;
     }
