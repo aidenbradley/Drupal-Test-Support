@@ -46,5 +46,7 @@ trait InteractsWithCron
         $this->enableModules([
             'system',
         ]);
+
+        $this->setupCronDependencies = true;
     }
 }
