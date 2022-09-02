@@ -9,6 +9,10 @@ class InteractsWithCronTest extends KernelTestBase
 {
     use InteractsWithCron;
 
+    protected static $modules = [
+        'test_support_cron',
+    ];
+
     /** @test */
     public function set_cron_key(): void
     {
@@ -22,9 +26,6 @@ class InteractsWithCronTest extends KernelTestBase
     /** @test */
     public function run_cron(): void
     {
-        $this->enableModules([
-            'test_support_cron',
-        ]);
         $this->setCronKey('EXAMPLE_CRON_KEY');
 
         $this->assertNull(
@@ -41,9 +42,6 @@ class InteractsWithCronTest extends KernelTestBase
     /** @test */
     public function run_cron_multiple(): void
     {
-        $this->enableModules([
-            'test_support_cron',
-        ]);
         $this->setCronKey('EXAMPLE_CRON_KEY');
 
         $this->assertNull(
