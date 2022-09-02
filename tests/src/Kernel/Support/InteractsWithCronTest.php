@@ -25,9 +25,38 @@ class InteractsWithCronTest extends KernelTestBase
         $this->enableModules([
             'test_support_cron',
         ]);
-
         $this->setCronKey('EXAMPLE_CRON_KEY');
 
+        $this->assertNull(
+            $this->container->get('state')->get('CRON_TRIGGERED')
+        );
+
+        $this->runSystemCron();
+
+        $this->assertTrue(
+            $this->container->get('state')->get('CRON_TRIGGERED')
+        );
+    }
+
+    /** @test */
+    public function run_cron_multiple(): void
+    {
+        $this->enableModules([
+            'test_support_cron',
+        ]);
+        $this->setCronKey('EXAMPLE_CRON_KEY');
+
+        $this->assertNull(
+            $this->container->get('state')->get('CRON_TRIGGERED')
+        );
+
+        $this->runSystemCron();
+
+        $this->assertTrue(
+            $this->container->get('state')->get('CRON_TRIGGERED')
+        );
+
+        $this->container->get('state')->set('CRON_TRIGGERED', null);
         $this->assertNull(
             $this->container->get('state')->get('CRON_TRIGGERED')
         );
