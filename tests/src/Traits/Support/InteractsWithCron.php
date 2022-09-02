@@ -4,6 +4,7 @@ namespace Drupal\Tests\test_support\Traits\Support;
 
 use Drupal\Core\Url;
 use Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+use Drupal\Tests\test_support\Traits\Support\Exceptions\CronFailed;
 
 trait InteractsWithCron
 {
@@ -26,6 +27,10 @@ trait InteractsWithCron
 
     public function runSystemCron(): self
     {
+        if ($this->getCronKey() === null) {
+            throw CronFailed::noCronKey();
+        }
+
         $this->setupCronDependencies();
 
         $cronUrl = Url::fromRoute('system.cron', [
