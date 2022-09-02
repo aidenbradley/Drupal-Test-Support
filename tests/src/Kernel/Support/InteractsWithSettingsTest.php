@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Kernel\Support;
+namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\drupal_test_support\Traits\Support\InteractsWithSettings;
+use Drupal\Tests\test_support\Traits\Support\InteractsWithSettings;
 
 class InteractsWithSettingsTest extends KernelTestBase
 {
@@ -32,6 +32,8 @@ class InteractsWithSettingsTest extends KernelTestBase
      */
     public function auto_discovers_settings(): void
     {
+        $this->markTestSkipped('To be ran locally against a drupal installation that has a valid settings.php');
+
         $this->assertNull($this->getSettings()->get('auto_discovered'));
 
         // force InteractsWithSettings to find settings.php again

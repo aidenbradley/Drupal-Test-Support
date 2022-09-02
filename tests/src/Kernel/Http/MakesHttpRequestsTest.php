@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Kernel\Http;
+namespace Drupal\Tests\test_support\Kernel\Http;
 
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\drupal_test_support\Traits\Http\MakesHttpRequests;
+use Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,7 +13,7 @@ class MakesHttpRequestsTest extends KernelTestBase
     use MakesHttpRequests;
 
     protected static $modules = [
-        'drupal_test_support_http',
+        'test_support_http',
     ];
 
     /** @test */

@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Kernel\Support;
+namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\drupal_test_support\Traits\Support\InteractsWithMail;
-use Drupal\Tests\drupal_test_support\Traits\Support\Mail\TestMail;
+use Drupal\Tests\test_support\Traits\Support\InteractsWithMail;
+use Drupal\Tests\test_support\Traits\Support\Mail\TestMail;
 
 class InteractsWithMailTest extends KernelTestBase
 {
@@ -18,7 +18,7 @@ class InteractsWithMailTest extends KernelTestBase
     private const NO_REPLY = null;
 
     protected static $modules = [
-        'drupal_test_support_mail',
+        'test_support_mail',
     ];
 
     protected function setUp()
@@ -45,10 +45,10 @@ class InteractsWithMailTest extends KernelTestBase
     /** @test */
     public function get_sent_mail_from_module(): void
     {
-        // this will send from the drupal_test_support_mail module
+        // this will send from the test_support_mail module
         $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
 
-        $this->assertNotEmpty($this->getSentMail('drupal_test_support_mail'));
+        $this->assertNotEmpty($this->getSentMail('test_support_mail'));
         $this->assertEmpty($this->getSentMail('node'));
     }
 
@@ -130,12 +130,12 @@ class InteractsWithMailTest extends KernelTestBase
     {
         $state = $this->container->get('state');
 
-        $state->set('drupal_test_support.mail_subject', $subject);
-        $state->set('drupal_test_support.mail_body', $body);
+        $state->set('test_support.mail_subject', $subject);
+        $state->set('test_support.mail_body', $body);
 
         $this->mailManager->mail(
-            'drupal_test_support_mail',
-            'drupal_test_support_mail',
+            'test_support_mail',
+            'test_support_mail',
             $to,
             'en',
             $params,

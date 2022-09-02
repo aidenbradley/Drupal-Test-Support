@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Kernel\Installs;
+namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
-use Drupal\Tests\drupal_test_support\Traits\Installs\InstallsEntityTypes;
+use Drupal\Tests\test_support\Traits\Installs\InstallsEntityTypes;
 
 class InstallsEntityTypesTest extends KernelTestBase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Kernel\Support;
+namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\Core\Queue\DatabaseQueue;
 use Drupal\Core\Queue\QueueFactory;
@@ -8,8 +8,8 @@ use Drupal\Core\Queue\QueueInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
-use Drupal\drupal_test_support_queue\Queue\ReliableCreateNodeQueue;
-use Drupal\Tests\drupal_test_support\Traits\Support\InteractsWithQueues;
+use Drupal\test_support_queue\Queue\ReliableCreateNodeQueue;
+use Drupal\Tests\test_support\Traits\Support\InteractsWithQueues;
 
 class InteractsWithQueuesTest extends KernelTestBase
 {
@@ -19,7 +19,7 @@ class InteractsWithQueuesTest extends KernelTestBase
     public function get_queue(): void
     {
         $this->enableModules([
-            'drupal_test_support_queue',
+            'test_support_queue',
         ]);
 
         $this->assertInstanceOf(
@@ -32,7 +32,7 @@ class InteractsWithQueuesTest extends KernelTestBase
     public function get_reliable_queue(): void
     {
         $this->enableModules([
-            'drupal_test_support_queue',
+            'test_support_queue',
         ]);
 
         $this->container->set('queue', $this->customQueueFactory());
@@ -59,7 +59,7 @@ class InteractsWithQueuesTest extends KernelTestBase
         $this->enableModules([
             'node',
             'user',
-            'drupal_test_support_queue',
+            'test_support_queue',
         ]);
         $this->installEntitySchema('node');
         $this->installEntitySchema('user');

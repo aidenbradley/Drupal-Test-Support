@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Kernel\Installs;
+namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\drupal_test_support\Traits\Installs\InstallsImageStyles;
+use Drupal\Tests\test_support\Traits\Installs\InstallsImageStyles;
 
 class InstallsImageStylesTest extends KernelTestBase
 {

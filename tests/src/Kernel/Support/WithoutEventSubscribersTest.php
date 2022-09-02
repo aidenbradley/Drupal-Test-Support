@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Kernel\Support;
+namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\EventSubscriber\ConfigSubscriber;
 use Drupal\node\Routing\RouteSubscriber;
-use Drupal\Tests\drupal_test_support\Traits\Support\WithoutEventSubscribers;
+use Drupal\Tests\test_support\Traits\Support\WithoutEventSubscribers;
 
 class WithoutEventSubscribersTest extends KernelTestBase
 {

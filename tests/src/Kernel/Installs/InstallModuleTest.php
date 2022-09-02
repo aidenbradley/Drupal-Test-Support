@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Kernel\Installs;
+namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Tests\drupal_test_support\Kernel\Base\EnableModuleKernelTest;
+use Drupal\Tests\test_support\Kernel\Base\EnableModuleKernelTest;
 
 class InstallModuleTest extends EnableModuleKernelTest
 {
     public function module(): string
     {
-        return 'drupal_test_support_entity_install';
+        return 'test_support_entity_install';
     }
 
     /**

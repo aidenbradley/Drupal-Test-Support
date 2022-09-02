@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Traits\Installs;
+namespace Drupal\Tests\test_support\Traits\Installs;
 
 trait InstallsEntityTypes
 {

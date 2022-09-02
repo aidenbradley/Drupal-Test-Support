@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\drupal_test_support_queue\Queue;
+namespace Drupal\test_support_queue\Queue;
 
 use Drupal\Core\Queue\QueueInterface;
 

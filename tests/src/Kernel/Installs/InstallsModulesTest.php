@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Kernel\Installs;
+namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\drupal_test_support\Traits\Installs\InstallsModules;
+use Drupal\Tests\test_support\Traits\Installs\InstallsModules;
 
 class InstallsModulesTest extends KernelTestBase
 {
@@ -26,7 +26,7 @@ class InstallsModulesTest extends KernelTestBase
             $this->assertFalse($moduleHandler->moduleExists($dependency));
         }
 
-        $this->installModuleWithDependencies('drupal_test_support_dependencies');
+        $this->installModuleWithDependencies('test_support_dependencies');
 
         foreach ($expectedDependencies as $dependency) {
             $this->assertTrue($moduleHandler->moduleExists($dependency));

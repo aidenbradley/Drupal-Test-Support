@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\drupal_test_support_http\Controller;
+namespace Drupal\test_support_http\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Url;

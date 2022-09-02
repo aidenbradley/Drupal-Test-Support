@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Kernel\Installs;
+namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\drupal_test_support\Traits\Installs\InstallsTheme;
+use Drupal\Tests\test_support\Traits\Installs\InstallsTheme;
 
 class InstallsThemeTest extends KernelTestBase
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Kernel\Support;
+namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\drupal_test_support\Traits\Support\InteractsWithLanguages;
+use Drupal\Tests\test_support\Traits\Support\InteractsWithLanguages;
 
 class InteractsWithLanguagesTest extends KernelTestBase
 {

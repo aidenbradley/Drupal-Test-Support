@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Unit\Support;
+namespace Drupal\Tests\test_support\Unit\Support;
 
-use Drupal\Tests\drupal_test_support\Traits\Support\Mail\TestMail;
+use Drupal\Tests\test_support\Traits\Support\Mail\TestMail;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\User;
 

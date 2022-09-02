@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Kernel\Installs;
+namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\block\Entity\Block;
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\drupal_test_support\Traits\Installs\InstallsBlocks;
+use Drupal\Tests\test_support\Traits\Installs\InstallsBlocks;
 
 class InstallsBlocksTest extends KernelTestBase
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Kernel\Installs;
+namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\drupal_test_support\Traits\Installs\InstallsViews;
+use Drupal\Tests\test_support\Traits\Installs\InstallsViews;
 use Drupal\views\Entity\View;
 
 class InstallsViewsTest extends KernelTestBase

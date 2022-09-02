@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Traits\Support;
+namespace Drupal\Tests\test_support\Traits\Support;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\UserInterface;

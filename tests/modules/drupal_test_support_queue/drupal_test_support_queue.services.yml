@@ -1,3 +1,0 @@
-services:
-  queue_reliable_service_create_node_worker:
-    class: Drupal\drupal_test_support_queue\Factory\QueueReliableCreateNodeFactory

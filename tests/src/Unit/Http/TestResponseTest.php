@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Unit\Http;
+namespace Drupal\Tests\test_support\Unit\Http;
 
-use Drupal\Tests\drupal_test_support\Traits\Http\Response\TestResponse;
+use Drupal\Tests\test_support\Traits\Http\Response\TestResponse;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

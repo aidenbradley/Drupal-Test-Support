@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\Tests\drupal_test_support\Kernel\Installs;
+namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\drupal_test_support\Traits\Installs\InstallsVocabularies;
+use Drupal\Tests\test_support\Traits\Installs\InstallsVocabularies;
 
 class InstallsVocabulariesTest extends KernelTestBase
 {

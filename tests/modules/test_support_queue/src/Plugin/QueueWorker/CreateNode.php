@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\drupal_test_support_queue\Plugin\QueueWorker;
+namespace Drupal\test_support_queue\Plugin\QueueWorker;
 
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
