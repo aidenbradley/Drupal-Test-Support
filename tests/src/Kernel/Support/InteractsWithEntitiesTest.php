@@ -63,4 +63,30 @@ class InteractsWithEntitiesTest extends KernelTestBase
         $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertEquals('Updated Example Title', $node->title->value);
     }
+
+    /** @test */
+    public function refresh_entity(): void
+    {
+        $node = $this->createEntity('node', [
+            'nid' => 1000,
+            'title' => 'Example Title',
+            'type' => 'page',
+        ]);
+
+        $this->assertEquals('Example Title', $node->title->value);
+
+        $this->updateNodeTitle();
+
+        $this->refreshEntity($node);
+
+        $this->assertEquals('Example Title Updated', $node->title->value);
+    }
+
+    private function updateNodeTitle(): void
+    {
+        $this->storage('node')
+            ->load(1000)
+            ->set('title', 'Example Title Updated')
+            ->save();
+    }
 }
