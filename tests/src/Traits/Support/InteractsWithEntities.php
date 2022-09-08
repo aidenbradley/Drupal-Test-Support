@@ -29,9 +29,11 @@ trait InteractsWithEntities
         return $entity;
     }
 
-    protected function refreshEntity(EntityInterface &$entity)
+    protected function refreshEntity(EntityInterface &$entity): self
     {
         $entity = $this->storage($entity->getEntityTypeId())->load($entity->id());
+
+        return $this;
     }
 
     protected function storage(string $entityTypeId): EntityStorageInterface
