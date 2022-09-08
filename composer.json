@@ -18,6 +18,7 @@
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.5",
         "illuminate/collections": "^8.77",
-        "opis/closure": "^3.6"
+        "opis/closure": "^3.6",
+        "nesbot/carbon": "2.x-dev"
     }
 }
