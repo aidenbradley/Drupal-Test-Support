@@ -1,10 +1,11 @@
 <?php
 
 namespace Drupal\Tests\test_support\Traits\Installs;
+use Drupal\Tests\test_support\Traits\Installs\Configuration\InstallConfiguration;
 
 trait InstallsEntityTypes
 {
-    use InstallsExportedConfig;
+    use InstallConfiguration;
 
     /** @param string|array $bundles */
     public function installBundles(string $module, $bundles): self
