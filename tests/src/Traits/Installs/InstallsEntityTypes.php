@@ -7,13 +7,20 @@ trait InstallsEntityTypes
 {
     use InstallConfiguration;
 
+    public function installBundle(string $module, string $bundle): self
+    {
+        $this->installExportedConfig([
+            $module . '.type.' . $bundle,
+        ]);
+
+        return $this;
+    }
+
     /** @param string|array $bundles */
     public function installBundles(string $module, $bundles): self
     {
         foreach ((array) $bundles as $bundle) {
-            $this->installExportedConfig([
-                $module . '.type.' . $bundle,
-            ]);
+            $this->installBundle($module, $bundle);
         }
 
         return $this;
