@@ -80,7 +80,7 @@ trait InteractsWithSettings
     {
         $currentErrorReportingLevel = error_reporting();
 
-        error_reporting(E_ALL & ~E_NOTICE);
+        error_reporting(E_ALL ^ E_NOTICE);
 
         $result = $callback();
 
