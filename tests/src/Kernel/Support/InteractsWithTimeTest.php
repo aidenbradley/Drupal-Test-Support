@@ -5,6 +5,7 @@ namespace Drupal\Tests\test_support\Kernel\Support;
 use Carbon\Carbon;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithTime;
+use Drupal\user\Entity\User;
 
 class InteractsWithTimeTest extends KernelTestBase
 {
@@ -98,6 +99,34 @@ class InteractsWithTimeTest extends KernelTestBase
         $this->travel(2)->years();
 
         $this->assertTimeIs('10th March 2002 20:00:00');
+    }
+
+    /** @test */
+    public function closure_time_travel(): void
+    {
+        $this->enableModules([
+            'user',
+        ]);
+        $this->installEntitySchema('user');
+
+        $this->travelTo('3rd January 2000 15:00:00');
+
+        $this->travel(5)->years(function() {
+            User::create([
+                'uid' => 10,
+                'name' => 'time.traveler',
+                'created' => Carbon::now()->timestamp,
+            ])->save();
+        });
+
+        $this->assertEquals(Carbon::now()->timestamp, time());
+
+        $timeTraveller = User::load(10);
+
+        $this->assertEquals(
+            Carbon::createFromTimeString('3rd January 2005 15:00:00')->timestamp,
+            Carbon::createFromTimestamp($timeTraveller->created->value)->timestamp
+        );
     }
 
     private function assertTimeIs(string $time)

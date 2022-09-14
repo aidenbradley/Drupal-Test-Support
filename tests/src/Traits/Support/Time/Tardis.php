@@ -5,12 +5,12 @@ namespace Drupal\Tests\test_support\Traits\Support\Time;
 use Carbon\Carbon;
 
 /**
- * @method void seconds
- * @method void minutes
- * @method void hours
- * @method void days
- * @method void months
- * @method void years
+ * @method void seconds(?\Closure $callback = null)
+ * @method void minutes(?\Closure $callback = null)
+ * @method void hours(?\Closure $callback = null)
+ * @method void days(?\Closure $callback = null)
+ * @method void months(?\Closure $callback = null)
+ * @method void years(?\Closure $callback = null)
  */
 class Tardis
 {
@@ -46,5 +46,13 @@ class Tardis
             Carbon::now()->$method($this->travel),
             Carbon::now()->getTimezone()
         );
+
+        if (isset($args[0]) === false || is_callable($args[0]) === false) {
+            return;
+        }
+
+        $args[0]();
+
+        $this->back();
     }
 }
