@@ -34,7 +34,7 @@ class InstallsEntityTypesTest extends KernelTestBase
 
         $this->assertEmpty($nodeTypeStorage->loadMultiple());
 
-        $this->installBundles('node', 'page');
+        $this->installBundle('node', 'page');
 
         $nodeTypes = $nodeTypeStorage->loadMultiple();
 

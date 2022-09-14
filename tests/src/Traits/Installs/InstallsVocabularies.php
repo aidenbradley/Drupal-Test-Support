@@ -2,9 +2,11 @@
 
 namespace Drupal\Tests\test_support\Traits\Installs;
 
+use Drupal\Tests\test_support\Traits\Installs\Configuration\InstallConfiguration;
+
 trait InstallsVocabularies
 {
-    use InstallsExportedConfig;
+    use InstallConfiguration;
 
     /** @var bool */
     private $setupVocabularyDependencies = false;

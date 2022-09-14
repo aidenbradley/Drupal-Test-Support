@@ -3,10 +3,11 @@
 namespace Drupal\Tests\test_support\Traits\Installs;
 
 use Drupal\Core\Config\FileStorage;
+use Drupal\Tests\test_support\Traits\Installs\Configuration\InstallConfiguration;
 
 trait InstallsFields
 {
-    use InstallsExportedConfig;
+    use InstallConfiguration;
 
     /** @var bool */
     private $setupDependencies = false;

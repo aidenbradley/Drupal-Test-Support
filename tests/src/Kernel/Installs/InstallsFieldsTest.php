@@ -3,11 +3,13 @@
 namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\test_support\Traits\Installs\InstallsEntityTypes;
 use Drupal\Tests\test_support\Traits\Installs\InstallsFields;
 
 class InstallsFieldsTest extends KernelTestBase
 {
-    use InstallsFields;
+    use InstallsFields,
+        InstallsEntityTypes;
 
     protected static $modules = [
         'system',
