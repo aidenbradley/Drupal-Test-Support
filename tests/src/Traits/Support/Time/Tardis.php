@@ -17,22 +17,34 @@ class Tardis
     /** @var int */
     private $travel;
 
-    public static function createFromTravel(int $travel): self
+    public static function createFromTravel(?int $travel = null): self
     {
         return new self($travel);
     }
 
-    public function __construct(int $travel)
+    public function back(): Carbon
+    {
+        Carbon::setTestNow();
+
+        return Carbon::now();
+    }
+
+    public function __construct(?int $travel = null)
     {
         $this->travel = $travel;
     }
 
     public function __call(string $method, array $args): void
     {
+        if ($this->travel === null) {
+            return;
+        }
+
         $method = 'add' . ucfirst($method);
 
-        Carbon::setTestNow(
-            Carbon::now()->$method($this->travel)
+        Carbon::setTestNowAndTimezone(
+            Carbon::now()->$method($this->travel),
+            Carbon::now()->getTimezone()
         );
     }
 }
