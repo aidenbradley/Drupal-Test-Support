@@ -14,7 +14,7 @@ trait InteractsWithTime
         return $this;
     }
 
-    protected function timeTravel(?int $travel = null): Tardis
+    protected function travel(?int $travel = null): Tardis
     {
         return Tardis::createFromTravel($travel);
     }

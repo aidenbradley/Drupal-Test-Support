@@ -25,7 +25,7 @@ class InteractsWithTimeTest extends KernelTestBase
 
         $this->assertTimeIs('3rd January 2000 15:00:00');
 
-        $this->timeTravel()->back();
+        $this->travel()->back();
 
         $this->assertEquals(time(), Carbon::now()->timestamp);
     }
@@ -35,7 +35,7 @@ class InteractsWithTimeTest extends KernelTestBase
     {
         Carbon::setTestNow('3rd January 2000 15:00:00');
 
-        $this->timeTravel(5)->seconds();
+        $this->travel(5)->seconds();
 
         $this->assertTimeIs('3rd January 2000 15:00:05');
     }
@@ -45,7 +45,7 @@ class InteractsWithTimeTest extends KernelTestBase
     {
         Carbon::setTestNow('3rd January 2000 15:05:00');
 
-        $this->timeTravel(5)->minutes();
+        $this->travel(5)->minutes();
 
         $this->assertTimeIs('3rd January 2000 15:10:00');
     }
@@ -55,7 +55,7 @@ class InteractsWithTimeTest extends KernelTestBase
     {
         Carbon::setTestNow('3rd January 2000 15:00:00');
 
-        $this->timeTravel(5)->hours();
+        $this->travel(5)->hours();
 
         $this->assertTimeIs('3rd January 2000 20:00:00');
     }
@@ -65,7 +65,7 @@ class InteractsWithTimeTest extends KernelTestBase
     {
         Carbon::setTestNow('3rd January 2000 20:00:00');
 
-        $this->timeTravel(5)->days();
+        $this->travel(5)->days();
 
         $this->assertTimeIs('8th January 2000 20:00:00');
     }
@@ -75,7 +75,7 @@ class InteractsWithTimeTest extends KernelTestBase
     {
         Carbon::setTestNow('10th January 2000 20:00:00');
 
-        $this->timeTravel(2)->weeks();
+        $this->travel(2)->weeks();
 
         $this->assertTimeIs('24th January 2000 20:00:00');
     }
@@ -85,7 +85,7 @@ class InteractsWithTimeTest extends KernelTestBase
     {
         Carbon::setTestNow('10th January 2000 20:00:00');
 
-        $this->timeTravel(2)->months();
+        $this->travel(2)->months();
 
         $this->assertTimeIs('10th March 2000 20:00:00');
     }
@@ -95,7 +95,7 @@ class InteractsWithTimeTest extends KernelTestBase
     {
         Carbon::setTestNow('10th March 2000 20:00:00');
 
-        $this->timeTravel(2)->years();
+        $this->travel(2)->years();
 
         $this->assertTimeIs('10th March 2002 20:00:00');
     }
