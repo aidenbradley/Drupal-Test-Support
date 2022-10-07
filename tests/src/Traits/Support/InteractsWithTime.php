@@ -5,6 +5,7 @@ namespace Drupal\Tests\test_support\Traits\Support;
 use Carbon\Carbon;
 use Drupal\Tests\test_support\Traits\Support\Time\Tardis;
 
+/** Useful test trait if you are using nesbot/caron to handle datetime */
 trait InteractsWithTime
 {
     protected function travelTo(string $date, ?string $timezone = null): self
