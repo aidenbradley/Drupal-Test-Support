@@ -20,38 +20,6 @@ class InteractsWithTimeTest extends KernelTestBase
     }
 
     /** @test */
-    public function travel_to_with_timezone(): void
-    {
-        $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
-
-        $this->assertEquals('Europe/London', Carbon::now()->getTimezone());
-
-        $this->travelTo('3rd January 2000 15:00:00', 'Europe/Rome');
-
-        $this->assertEquals('Europe/Rome', Carbon::now()->getTimezone());
-    }
-
-    /** @test */
-    public function travel_to_timezone(): void
-    {
-        $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
-
-        $this->assertTimeIs('3rd January 2000 15:00:00');
-
-        $this->travel()->toTimezone('Europe/Rome');
-        $this->assertTimeIs('3rd January 2000 16:00:00');
-
-        $this->travel()->toTimezone('Europe/Athens');
-        $this->assertTimeIs('3rd January 2000 17:00:00');
-
-        $this->travel()->toTimezone('America/Los_Angeles');
-        $this->assertTimeIs('3rd January 2000 07:00:00');
-
-        $this->travel()->toTimezone('Europe/London');
-        $this->assertTimeIs('3rd January 2000 15:00:00');
-    }
-
-    /** @test */
     public function back(): void
     {
         $this->travelTo('3rd January 2000 15:00:00');
@@ -134,7 +102,7 @@ class InteractsWithTimeTest extends KernelTestBase
     }
 
     /** @test */
-    public function closure_time_travel(): void
+    public function freeze_time_travel(): void
     {
         $this->enableModules([
             'user',
@@ -157,6 +125,65 @@ class InteractsWithTimeTest extends KernelTestBase
 
         $this->assertEquals(
             Carbon::createFromTimeString('3rd January 2005 15:00:00')->timestamp,
+            Carbon::createFromTimestamp($timeTraveller->created->value)->timestamp
+        );
+    }
+
+    /** @test */
+    public function travel_to_with_timezone(): void
+    {
+        $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
+
+        $this->assertEquals('Europe/London', Carbon::now()->getTimezone());
+
+        $this->travelTo('3rd January 2000 15:00:00', 'Europe/Rome');
+
+        $this->assertEquals('Europe/Rome', Carbon::now()->getTimezone());
+    }
+
+    /** @test */
+    public function travel_to_timezone(): void
+    {
+        $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
+        $this->assertTimeIs('3rd January 2000 15:00:00');
+
+        $this->travel()->toTimezone('Europe/Rome');
+        $this->assertTimeIs('3rd January 2000 16:00:00');
+
+        $this->travel()->toTimezone('Europe/Athens');
+        $this->assertTimeIs('3rd January 2000 17:00:00');
+
+        $this->travel()->toTimezone('America/Los_Angeles');
+        $this->assertTimeIs('3rd January 2000 07:00:00');
+
+        $this->travel()->toTimezone('Europe/London');
+        $this->assertTimeIs('3rd January 2000 15:00:00');
+    }
+
+    /** @test */
+    public function freeze_timezone_travel(): void
+    {
+        $this->enableModules([
+            'user',
+        ]);
+        $this->installEntitySchema('user');
+
+        $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
+
+        $this->travel()->toTimezone('Europe/Rome', function() {
+            User::create([
+                'uid' => 10,
+                'name' => 'time.traveler',
+                'created' => Carbon::now()->timestamp,
+            ])->save();
+        });
+
+        $this->assertEquals(Carbon::now()->timestamp, time());
+
+        $timeTraveller = User::load(10);
+
+        $this->assertEquals(
+            Carbon::createFromTimeString('3rd January 2000 16:00:00')->timestamp,
             Carbon::createFromTimestamp($timeTraveller->created->value)->timestamp
         );
     }
