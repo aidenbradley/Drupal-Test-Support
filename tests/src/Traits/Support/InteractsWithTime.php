@@ -7,9 +7,15 @@ use Drupal\Tests\test_support\Traits\Support\Time\Tardis;
 
 trait InteractsWithTime
 {
-    protected function travelTo(string $date): self
+    protected function travelTo(string $date, ?string $timezone = null): self
     {
-        Carbon::setTestNow($date);
+        if ($timezone === null) {
+            $timezone = Carbon::now()->getTimezone();
+        }
+
+        Carbon::setTestNowAndTimezone(
+            Carbon::createFromTimeString($date)->shiftTimezone($timezone)
+        );
 
         return $this;
     }

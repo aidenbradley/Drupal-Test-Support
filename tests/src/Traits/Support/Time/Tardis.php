@@ -22,6 +22,11 @@ class Tardis
         return new self($travel);
     }
 
+    public function __construct(?int $travel = null)
+    {
+        $this->travel = $travel;
+    }
+
     public function back(): Carbon
     {
         Carbon::setTestNow();
@@ -29,9 +34,11 @@ class Tardis
         return Carbon::now();
     }
 
-    public function __construct(?int $travel = null)
+    public function toTimezone(string $timezone): void
     {
-        $this->travel = $travel;
+        Carbon::setTestNowAndTimezone(
+            Carbon::now()->setTimezone($timezone)
+        );
     }
 
     public function __call(string $method, array $args): void
