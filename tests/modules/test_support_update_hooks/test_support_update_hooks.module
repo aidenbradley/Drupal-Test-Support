@@ -46,5 +46,5 @@ function test_support_update_hooks_update_9001(array &$sandbox): void
         return;
     }
 
-//    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
+    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
 }

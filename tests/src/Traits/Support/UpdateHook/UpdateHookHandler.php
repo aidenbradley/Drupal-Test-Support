@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\test_support\Traits\Support\UpdateHook;
 
+use Drupal\Tests\test_support\Traits\Support\Exceptions\UpdateHookFailed;
 use ReflectionFunction;
 
 class UpdateHookHandler
@@ -53,8 +54,7 @@ class UpdateHookHandler
                 continue;
             }
 
-            dump('crash here please');
-            // throw exception here since the #finished key didn't progress
+            throw UpdateHookFailed::noBatchProgression();
         }
     }
 
