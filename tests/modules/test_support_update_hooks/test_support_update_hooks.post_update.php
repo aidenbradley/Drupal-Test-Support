@@ -4,7 +4,7 @@
  * Sets the status of all users to 0, effectively blocked
  * Uses a batch to process the users
  */
-function test_support_update_hooks_update_9001(array &$sandbox): void
+function test_support_update_hooks_post_update_batch_block_users(array &$sandbox): void
 {
     $userEntityQuery = \Drupal::entityQuery('user');
 
@@ -56,7 +56,7 @@ function test_support_update_hooks_update_9001(array &$sandbox): void
  * Sets the status of all users to 0, effectively blocked
  * Processes the users without batching
  */
-function test_support_update_hooks_update_9002(): void
+function test_support_update_hooks_post_update_no_batch_block_users(): void
 {
     $userEntityQuery = \Drupal::entityQuery('user');
 
