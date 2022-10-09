@@ -1,10 +1,18 @@
 <?php
 
-/**
- * Sets the status of all users to 0, effectively blocked
- * Uses a batch to process the users
+/*
+ * sets a state value by the function name for assertions in tests
  */
-function test_support_update_hooks_update_9001(array &$sandbox): void
+function no_batch_update_hook(): void
+{
+    \Drupal::state()->set(__FUNCTION__, true);
+}
+
+/*
+ * Sets a state value by the function name and increments its value by 1
+ * for each user we're processing in the batch test
+ */
+function batch_update_hook(array &$sandbox): void
 {
     $userEntityQuery = \Drupal::entityQuery('user');
 
@@ -21,7 +29,7 @@ function test_support_update_hooks_update_9001(array &$sandbox): void
         }
     }
 
-    $usersPerBatch = 25;
+    $usersPerBatch = 5;
 
     $uids = $userEntityQuery
         ->range($sandbox['current'], $usersPerBatch)
@@ -34,11 +42,7 @@ function test_support_update_hooks_update_9001(array &$sandbox): void
     }
 
     foreach ($uids as $uid) {
-        $user = \Drupal\user\Entity\User::load($uid);
-
-        $user->set('status', 0);
-
-        $user->save();
+        incrementUserCount(__FUNCTION__);
 
         $sandbox['current']++;
     }
@@ -50,4 +54,17 @@ function test_support_update_hooks_update_9001(array &$sandbox): void
     }
 
     $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
+}
+
+function incrementUserCount(string $key): void
+{
+    $state = \Drupal::state();
+
+    if ($state->get($key) === null) {
+        $state->set($key, 0);
+
+        return;
+    }
+
+    $state->set($key, $state->get($key) + 1);
 }
