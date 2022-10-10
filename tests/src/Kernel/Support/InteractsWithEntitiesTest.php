@@ -3,7 +3,6 @@
 namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithEntities;
