@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\test_support\Kernel\Support;
+namespace Drupal\Tests\test_support\Kernel\Support\UpdateHook;
 
 use Drupal\Component\Utility\Random;
 use Drupal\KernelTests\KernelTestBase;
