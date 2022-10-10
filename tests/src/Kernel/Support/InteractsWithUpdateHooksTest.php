@@ -27,12 +27,7 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
     /** @test */
     public function run_update_hook_with_batch(): void
     {
-        for ($x = 0; $x <= 50; $x++) {
-            $this->container->get('entity_type.manager')->getStorage('user')->create([
-                'name' => (new Random())->string(),
-                'status' => 1,
-            ])->save();
-        }
+        $this->createNumberOfActiveUsers(50);
 
         $users = $this->container->get('entity_type.manager')->getStorage('user')->loadMultiple();
 
@@ -50,12 +45,7 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
     /** @test */
     public function run_update_hook_with_no_batch(): void
     {
-        for ($x = 0; $x <= 50; $x++) {
-            $this->container->get('entity_type.manager')->getStorage('user')->create([
-                'name' => (new Random())->string(),
-                'status' => 1,
-            ])->save();
-        }
+        $this->createNumberOfActiveUsers(50);
 
         $users = $this->container->get('entity_type.manager')->getStorage('user')->loadMultiple();
 
@@ -73,12 +63,7 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
     /** @test */
     public function run_post_update_hook_with_batch(): void
     {
-        for ($x = 0; $x <= 50; $x++) {
-            $this->container->get('entity_type.manager')->getStorage('user')->create([
-                'name' => (new Random())->string(),
-                'status' => 1,
-            ])->save();
-        }
+        $this->createNumberOfActiveUsers(50);
 
         $users = $this->container->get('entity_type.manager')->getStorage('user')->loadMultiple();
 
@@ -99,12 +84,7 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
     /** @test */
     public function run_post_update_hook_with_no_batch(): void
     {
-        for ($x = 0; $x <= 50; $x++) {
-            $this->container->get('entity_type.manager')->getStorage('user')->create([
-                'name' => (new Random())->string(),
-                'status' => 1,
-            ])->save();
-        }
+        $this->createNumberOfActiveUsers(50);
 
         $users = $this->container->get('entity_type.manager')->getStorage('user')->loadMultiple();
 
@@ -130,5 +110,15 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
     private function assertUserNotBlocked(User $user): void
     {
         $this->assertEquals(1, $user->get('status')->value);
+    }
+
+    private function createNumberOfActiveUsers(int $numberToCreate): void
+    {
+        for ($x = 0; $x <= $numberToCreate; $x++) {
+            $this->container->get('entity_type.manager')->getStorage('user')->create([
+                'name' => (new Random())->string(),
+                'status' => 1,
+            ])->save();
+        }
     }
 }
