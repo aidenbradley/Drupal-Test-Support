@@ -6,7 +6,6 @@ use Drupal\Component\Utility\Random;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithUpdateHooks;
 use Drupal\user\Entity\User;
-use ReflectionFunction;
 
 class InteractsWithUpdateHooksTest extends KernelTestBase
 {
@@ -61,6 +60,37 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
     }
 
     /** @test */
+    public function running_update_hook_enables_module_that_defines_function(): void
+    {
+        $this->disableModules([
+            'test_support_update_hooks',
+        ]);
+        $this->assertFalse(
+            $this->container->get('module_handler')->moduleExists('test_support_update_hooks')
+        );
+
+        $this->createNumberOfActiveUsers(50);
+
+        $users = $this->container->get('entity_type.manager')->getStorage('user')->loadMultiple();
+
+        foreach ($users as $user) {
+            $this->assertUserNotBlocked($user);
+        }
+
+        $this->runUpdateHook('test_support_update_hooks', 'test_support_update_hooks_update_9002');
+
+        $this->assertTrue(
+            $this->container->get('module_handler')->moduleExists('test_support_update_hooks')
+        );
+
+        foreach ($users as $user) {
+            $this->assertUserBlocked(
+                User::load($user->id())
+            );
+        }
+    }
+
+    /** @test */
     public function run_post_update_hook_with_batch(): void
     {
         $this->createNumberOfActiveUsers(50);
@@ -99,6 +129,40 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
 
         foreach ($users as $user) {
             $this->assertUserBlocked($user);
+        }
+    }
+
+    /** @test */
+    public function running_post_update_enables_module_that_defines_function(): void
+    {
+        $this->disableModules([
+            'test_support_update_hooks',
+        ]);
+        $this->assertFalse(
+            $this->container->get('module_handler')->moduleExists('test_support_update_hooks')
+        );
+
+        $this->createNumberOfActiveUsers(50);
+
+        $users = $this->container->get('entity_type.manager')->getStorage('user')->loadMultiple();
+
+        foreach ($users as $user) {
+            $this->assertUserNotBlocked($user);
+        }
+
+        $this->runPostUpdateHook(
+            'test_support_update_hooks',
+            'test_support_update_hooks_post_update_no_batch_block_users'
+        );
+
+        $this->assertTrue(
+            $this->container->get('module_handler')->moduleExists('test_support_update_hooks')
+        );
+
+        foreach ($users as $user) {
+            $this->assertUserBlocked(
+                User::load($user->id())
+            );
         }
     }
 

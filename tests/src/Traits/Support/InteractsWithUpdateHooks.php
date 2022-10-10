@@ -3,7 +3,6 @@
 namespace Drupal\Tests\test_support\Traits\Support;
 
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\UpdateHookHandler;
-use ReflectionFunction;
 use Symfony\Component\Finder\Finder;
 
 trait InteractsWithUpdateHooks
@@ -13,7 +12,11 @@ trait InteractsWithUpdateHooks
 
     public function runUpdateHook(string $module, string $function): self
     {
-        $this->loadModuleFile($module . '.module');
+        if ($this->container->get('module_handler')->moduleExists($module) === false) {
+            $this->enableModules([
+                $module
+            ]);
+        }
 
         UpdateHookHandler::handle($function);
 
@@ -22,6 +25,12 @@ trait InteractsWithUpdateHooks
 
     public function runPostUpdateHook(string $module, string $function)
     {
+        if ($this->container->get('module_handler')->moduleExists($module) === false) {
+            $this->enableModules([
+                $module
+            ]);
+        }
+
         $this->loadModuleFile($module . '.post_update.php');
 
         UpdateHookHandler::handle($function);
