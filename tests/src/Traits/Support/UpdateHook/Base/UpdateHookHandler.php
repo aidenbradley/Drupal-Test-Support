@@ -8,10 +8,10 @@ use ReflectionFunction;
 abstract class UpdateHookHandler
 {
     /** @var string */
-    private $function;
+    protected $function;
 
     /** returns the module name based on the given function string */
-    abstract protected function getModuleName(): string;
+    abstract public function getModuleName(): string;
 
     /** @return static */
     public static function handle(string $function)

@@ -12,6 +12,12 @@ trait InteractsWithUpdateHooks
 
     public function runUpdateHook(string $module, string $function): self
     {
+        $matches = [];
+
+        preg_match_all('(_update_\d{4})', $function, $matches);
+
+        dump($function, $matches[0][0], explode($matches[0][0], $function)[0]);
+
         if ($this->container->get('module_handler')->moduleExists($module) === false) {
             $this->enableModules([
                 $module

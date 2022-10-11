@@ -6,8 +6,12 @@ use Drupal\Tests\test_support\Traits\Support\UpdateHook\Base\UpdateHookHandler;
 
 class PostUpdateHandler extends UpdateHookHandler
 {
-    protected function getModuleName(): string
+    public function getModuleName(): string
     {
-        return '';
+        $matches = [];
+
+        preg_match_all('(_post_update_)', $this->function, $matches);
+
+        return explode($matches[0][0], $this->function)[0];
     }
 }
