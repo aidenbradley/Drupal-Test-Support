@@ -8,9 +8,6 @@ use Symfony\Component\Finder\Finder;
 
 trait InteractsWithUpdateHooks
 {
-    /** @var array */
-    private $moduleLocations = [];
-
     public function runUpdateHook(string $function): self
     {
         $handler = UpdateHandler::create($function);
@@ -37,10 +34,6 @@ trait InteractsWithUpdateHooks
 
     private function requireFile(string $moduleFile): void
     {
-        if (isset($this->moduleLocations[$moduleFile])) {
-            return;
-        }
-
         $finder = Finder::create()
             ->ignoreUnreadableDirs()
             ->ignoreDotFiles(true)
@@ -49,8 +42,6 @@ trait InteractsWithUpdateHooks
 
         foreach ($finder as $directory) {
             require $directory->getPathname();
-
-            $this->moduleLocations[$moduleFile] = $directory->getPathname();
         }
     }
 
