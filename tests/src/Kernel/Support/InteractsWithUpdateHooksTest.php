@@ -34,7 +34,7 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
             $this->assertUserNotBlocked($user);
         }
 
-        $this->runUpdateHook('test_support_update_hooks', 'test_support_update_hooks_update_9001');
+        $this->runUpdateHook('test_support_update_hooks_update_9001');
 
         foreach ($users as $user) {
             $this->assertUserBlocked($user);
@@ -52,7 +52,7 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
             $this->assertUserNotBlocked($user);
         }
 
-        $this->runUpdateHook('test_support_update_hooks', 'test_support_update_hooks_update_9002');
+        $this->runUpdateHook('test_support_update_hooks_update_9002');
 
         foreach ($users as $user) {
             $this->assertUserBlocked($user);
@@ -77,7 +77,7 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
             $this->assertUserNotBlocked($user);
         }
 
-        $this->runUpdateHook('test_support_update_hooks', 'test_support_update_hooks_update_9002');
+        $this->runUpdateHook('test_support_update_hooks_update_9002');
 
         $this->assertTrue(
             $this->container->get('module_handler')->moduleExists('test_support_update_hooks')
@@ -101,10 +101,7 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
             $this->assertUserNotBlocked($user);
         }
 
-        $this->runPostUpdateHook(
-            'test_support_update_hooks',
-            'test_support_update_hooks_post_update_batch_block_users'
-        );
+        $this->runPostUpdateHook('test_support_update_hooks_post_update_batch_block_users');
 
         foreach ($users as $user) {
             $this->assertUserBlocked($user);
@@ -122,10 +119,7 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
             $this->assertUserNotBlocked($user);
         }
 
-        $this->runPostUpdateHook(
-            'test_support_update_hooks',
-            'test_support_update_hooks_post_update_no_batch_block_users'
-        );
+        $this->runPostUpdateHook('test_support_update_hooks_post_update_no_batch_block_users');
 
         foreach ($users as $user) {
             $this->assertUserBlocked($user);
@@ -150,10 +144,7 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
             $this->assertUserNotBlocked($user);
         }
 
-        $this->runPostUpdateHook(
-            'test_support_update_hooks',
-            'test_support_update_hooks_post_update_no_batch_block_users'
-        );
+        $this->runPostUpdateHook('test_support_update_hooks_post_update_no_batch_block_users');
 
         $this->assertTrue(
             $this->container->get('module_handler')->moduleExists('test_support_update_hooks')

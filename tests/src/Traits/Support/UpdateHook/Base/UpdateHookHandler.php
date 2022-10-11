@@ -14,12 +14,6 @@ abstract class UpdateHookHandler
     abstract public function getModuleName(): string;
 
     /** @return static */
-    public static function handle(string $function)
-    {
-        return static::create($function)->run();
-    }
-
-    /** @return static */
     public static function create(string $function)
     {
         return new static($function);
@@ -31,7 +25,7 @@ abstract class UpdateHookHandler
     }
 
     /** @return static */
-    private function run()
+    public function run()
     {
         $this->wantsBatch() ? $this->runAsBatch() : $this->runWithoutBatch();
 

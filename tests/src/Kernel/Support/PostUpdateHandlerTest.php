@@ -4,7 +4,6 @@ namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\Component\Utility\Random;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_support\Kernel\Support\Concerns\UpdateHookTests;
 use Drupal\Tests\test_support\Traits\Support\Exceptions\UpdateHookFailed;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\PostUpdateHandler;
 
@@ -28,7 +27,7 @@ class PostUpdateHandlerTest extends KernelTestBase
     {
         $this->assertNull($this->container->get('state')->get('no_batch_update_hook'));
 
-        PostUpdateHandler::handle('no_batch_update_hook');
+        PostUpdateHandler::create('no_batch_update_hook')->run();
 
         $this->assertNotNull($this->container->get('state')->get('no_batch_update_hook'));
     }
@@ -40,7 +39,7 @@ class PostUpdateHandlerTest extends KernelTestBase
 
         $this->assertNull($this->container->get('state')->get('batch_update_hook'));
 
-        PostUpdateHandler::handle('batch_update_hook');
+        PostUpdateHandler::create('batch_update_hook')->run();
 
         $this->assertEquals(50, $this->container->get('state')->get('batch_update_hook'));
     }
@@ -53,7 +52,7 @@ class PostUpdateHandlerTest extends KernelTestBase
         $this->expectException(UpdateHookFailed::class);
         $this->expectExceptionCode(UpdateHookFailed::NO_BATCH_PROGRESSION);
 
-        PostUpdateHandler::handle('batch_update_hook_with_no_finished_progression');
+        PostUpdateHandler::create('batch_update_hook_with_no_finished_progression')->run();
     }
 
     private function createNumberOfUsers(int $numberToCreate): void

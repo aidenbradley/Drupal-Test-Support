@@ -2,7 +2,8 @@
 
 namespace Drupal\Tests\test_support\Traits\Support;
 
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\UpdateHookHandler;
+use Drupal\Tests\test_support\Traits\Support\UpdateHook\PostUpdateHandler;
+use Drupal\Tests\test_support\Traits\Support\UpdateHook\UpdateHandler;
 use Symfony\Component\Finder\Finder;
 
 trait InteractsWithUpdateHooks
@@ -10,59 +11,58 @@ trait InteractsWithUpdateHooks
     /** @var array */
     private $moduleLocations = [];
 
-    public function runUpdateHook(string $module, string $function): self
+    public function runUpdateHook(string $function): self
     {
-        $matches = [];
+        $handler = UpdateHandler::create($function);
 
-        preg_match_all('(_update_\d{4})', $function, $matches);
+        $this->enableModule($handler->getModuleName());
 
-        dump($function, $matches[0][0], explode($matches[0][0], $function)[0]);
+        $handler->run();
 
+        return $this;
+    }
+
+    public function runPostUpdateHook(string $function)
+    {
+        $handler = PostUpdateHandler::create($function);
+
+        $this->enableModule(
+            $handler->getModuleName()
+        )->requireFile($handler->getModuleName() . '.post_update.php');
+
+        $handler->run();
+
+        return $this;
+    }
+
+    private function requireFile(string $moduleFile): void
+    {
+        if (isset($this->moduleLocations[$moduleFile])) {
+            return;
+        }
+
+        $finder = Finder::create()
+            ->ignoreUnreadableDirs()
+            ->ignoreDotFiles(true)
+            ->name($moduleFile)
+            ->in($this->appRoot());
+
+        foreach ($finder as $directory) {
+            require $directory->getPathname();
+
+            $this->moduleLocations[$moduleFile] = $directory->getPathname();
+        }
+    }
+
+    private function enableModule(string $module): self
+    {
         if ($this->container->get('module_handler')->moduleExists($module) === false) {
             $this->enableModules([
                 $module
             ]);
         }
 
-        UpdateHookHandler::handle($function);
-
         return $this;
-    }
-
-    public function runPostUpdateHook(string $module, string $function)
-    {
-        if ($this->container->get('module_handler')->moduleExists($module) === false) {
-            $this->enableModules([
-                $module
-            ]);
-        }
-
-        $this->loadModuleFile($module . '.post_update.php');
-
-        UpdateHookHandler::handle($function);
-
-        return $this;
-    }
-
-    private function loadModuleFile(string $moduleFile): string
-    {
-        if (isset($this->moduleLocations[$moduleFile]) === false) {
-            $finder = Finder::create()
-                ->ignoreUnreadableDirs()
-                ->ignoreDotFiles(true)
-                ->name($moduleFile)
-                ->in($this->appRoot());
-
-            if ($finder->count() === 1) {
-                foreach ($finder as $directory) {
-                    require $directory->getPathname();
-
-                    $this->moduleLocations[$moduleFile] = $directory->getPathname();
-                }
-            }
-        }
-
-        return $this->moduleLocations[$moduleFile];
     }
 
     private function appRoot(): string
