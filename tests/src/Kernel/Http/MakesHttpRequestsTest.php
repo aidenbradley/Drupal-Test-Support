@@ -142,6 +142,28 @@ class MakesHttpRequestsTest extends KernelTestBase
     }
 
     /** @test */
+    public function as_form(): void
+    {
+        $route = $this->route('route.post', [], [
+            'query' => [
+                'headers' => true,
+            ],
+        ]);
+
+        $response = $this->asForm()->post($route, [
+            'body' => [
+                'first' => 'second',
+            ],
+        ]);
+
+        $response->assertJsonContentContains([
+            'content-type' => [
+                'application/x-www-form-urlencoded',
+            ],
+        ]);
+    }
+
+    /** @test */
     public function mock_response(): void
     {
         $fakeResponseData = [

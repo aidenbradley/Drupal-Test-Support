@@ -30,7 +30,13 @@ class ResolveRequest implements ContainerInjectionInterface
 
     public function __invoke(): Response
     {
-        return Response::create('content');
+        $content = '';
+
+        if ($this->request->query->get('headers')) {
+            $content = $this->request->headers->getIterator()->getArrayCopy();
+        }
+
+        return JsonResponse::create($content);
     }
 
     public function xmlHttpOnly(): Response
