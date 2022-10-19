@@ -32,7 +32,7 @@ class ResolveRequest implements ContainerInjectionInterface
     {
         $content = '';
 
-        if ($this->request->query->get('headers')) {
+        if ($this->request->query->has('headers')) {
             $content = $this->request->headers->getIterator()->getArrayCopy();
         }
 

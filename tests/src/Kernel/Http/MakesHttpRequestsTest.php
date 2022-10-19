@@ -150,13 +150,7 @@ class MakesHttpRequestsTest extends KernelTestBase
             ],
         ]);
 
-        $response = $this->asForm()->post($route, [
-            'body' => [
-                'first' => 'second',
-            ],
-        ]);
-
-        $response->assertJsonContentContains([
+        $this->asForm()->post($route)->assertJsonContentContains([
             'content-type' => [
                 'application/x-www-form-urlencoded',
             ],
