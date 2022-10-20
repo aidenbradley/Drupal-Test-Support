@@ -100,6 +100,11 @@ trait MakesHttpRequests
         return $this->withHeader('Content-Type', 'application/x-www-form-urlencoded');
     }
 
+    public function asJson(): self
+    {
+        return $this->withHeader('Content-Type', 'application/json');
+    }
+
     public function json(string $method, string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
     {
         $headers = array_merge([
