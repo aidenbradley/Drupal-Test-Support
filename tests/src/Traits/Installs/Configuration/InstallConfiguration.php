@@ -2,14 +2,17 @@
 
 namespace Drupal\Tests\test_support\Traits\Installs\Configuration;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Site\Settings;
+use Drupal\Tests\test_support\Traits\Installs\InstallsTheme;
 use Drupal\Tests\test_support\Traits\Support\Exceptions\ConfigInstallFailed;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithSettings;
 
 trait InstallConfiguration
 {
-    use InteractsWithSettings;
+    use InteractsWithSettings,
+        InstallsTheme;
 
     /** @var string */
     private $useVfsConfigDirectory = false;
@@ -36,6 +39,26 @@ trait InstallConfiguration
 
             if (is_array($configRecord) === false) {
                 throw ConfigInstallFailed::doesNotExist($configName);
+            }
+
+            if ($this->strictConfigSchema) {
+                foreach ($configRecord['dependencies'] as $dependencyType => $dependencies) {
+                    if ($dependencyType === 'module') {
+                        $this->enableModules($dependencies);
+                    }
+
+                    if ($dependencyType === 'config') {
+                        foreach ($dependencies as $dependency) {
+                            $this->installExportedConfig($dependency);
+                        }
+                    }
+
+                    if ($dependencyType === 'theme') {
+                        foreach ($dependencies as $dependency) {
+                            $this->installTheme($dependency);
+                        }
+                    }
+                }
             }
 
             /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $storage */

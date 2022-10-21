@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\test_support\Kernel\Installs;
 
+use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\Exceptions\ConfigInstallFailed;
 use Drupal\Tests\test_support\Traits\Installs\InstallsExportedConfig;
@@ -20,6 +21,97 @@ class InstallsExportedConfigTest extends KernelTestBase
 
     /** @var string */
     private $customConfigDirectory;
+
+    /** @test */
+    public function disable_strict_config_schema(): void
+    {
+        $this->disableStrictConfig();
+
+        $this->assertFalse($this->strictConfigSchema);
+    }
+
+    /** @test */
+    public function enable_strict_config_schema(): void
+    {
+        $this->strictConfigSchema = false;
+
+        $this->enableStrictConfig();
+
+        $this->assertTrue($this->strictConfigSchema);
+    }
+
+    /** @test */
+    public function installs_theme_dependency(): void
+    {
+        $this->enableModules([
+            'image',
+        ]);
+
+        $this->installEntitySchema('image_style');
+
+        $this->setConfigDirectory(__DIR__ . '/__fixtures__/config/sync/config_dependencies');
+
+        $this->assertEmpty($this->container->get('theme_handler')->listInfo());
+
+        // the "views.view.media.yml" file declares a dependency on the "seven" theme
+        $this->installViews('media');
+
+        $this->assertArrayHasKey('seven', $this->container->get('theme_handler')->listInfo());
+    }
+
+    /** @test */
+    public function installs_config_dependency(): void
+    {
+        $this->setConfigDirectory(__DIR__ . '/__fixtures__/config/sync/config_dependencies')
+            ->enableModules([
+                'image',
+            ]);
+
+        $this->installEntitySchema('image_style');
+
+        $this->assertNull(
+            $this->container->get('entity_type.manager')->getStorage('image_style')->load('large')
+        );
+
+        // the "views.view.media.yml" file declares a dependency on the "image.style.large" config item
+        $this->installViews('media');
+
+        $this->assertInstanceOf(
+            ImageStyle::class,
+            $this->container->get('entity_type.manager')->getStorage('image_style')->load('large')
+        );
+    }
+
+    /** @test */
+    public function installs_module_dependency(): void
+    {
+        $this->setConfigDirectory(__DIR__ . '/__fixtures__/config/sync/config_dependencies')
+            ->enableModules([
+                'image',
+            ]);
+
+        $this->installEntitySchema('image_style');
+
+        $expectedEnabledModules = [
+            'image',
+            'media',
+            'user',
+        ];
+
+        $this->disableModules([
+            'user',
+        ]);
+
+        $this->assertFalse($this->container->get('module_handler')->moduleExists('user'));
+        $this->assertFalse($this->container->get('module_handler')->moduleExists('media'));
+
+        // the "views.view.media.yml" file declares a dependency on the "image.style.large" config item
+        $this->installViews('media');
+
+        foreach ($expectedEnabledModules as $module) {
+            $this->assertTrue($this->container->get('module_handler')->moduleExists($module));
+        }
+    }
 
     /** @test */
     public function throws_exception_for_bad_config(): void
