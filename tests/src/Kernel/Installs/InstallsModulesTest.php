@@ -41,7 +41,7 @@ class InstallsModulesTest extends KernelTestBase
         ];
 
         $this->assertModulesDisabled($expectedDependencies)
-            ->installModuleWithDependencies('test_support_dependencies')
+            ->enableModuleWithDependencies('test_support_dependencies')
             ->assertModulesEnabled($expectedDependencies);
     }
 

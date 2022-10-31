@@ -36,7 +36,7 @@ class InstallModuleTest extends EnableModuleKernelTest
             );
         }
 
-        $this->installModuleWithDependencies($this->module());
+        $this->enableModuleWithDependencies($this->module());
 
         try {
             $this->installEntitySchema('test_install_entity');
