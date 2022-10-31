@@ -6,6 +6,13 @@ use Drupal\Core\Serialization\Yaml;
 
 trait InstallsModules
 {
+    public function enableModules($modules): self
+    {
+        parent::enableModules((array) $modules);
+
+        return $this;
+    }
+
     public function installModuleWithDependencies($modules): self
     {
         foreach ((array) $modules as $module) {

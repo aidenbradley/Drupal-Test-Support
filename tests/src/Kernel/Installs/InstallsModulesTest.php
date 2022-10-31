@@ -9,11 +9,29 @@ class InstallsModulesTest extends KernelTestBase
 {
     use InstallsModules;
 
+    /**
+     * @test
+     *
+     * Test covering DX improvement whereby the given string is casted to an array when calling $this->enableModules()
+     */
+    public function enables_modules(): void
+    {
+        $this->assertModulesDisabled('text')
+            ->enableModules('text')
+            ->assertModulesEnabled('text');
+
+        $moduleList = [
+            'node',
+            'media',
+        ];
+        $this->assertModulesDisabled($moduleList)
+            ->enableModules($moduleList)
+            ->assertModulesEnabled($moduleList);
+    }
+
     /** @test */
     public function installs_dependencies(): void
     {
-        $moduleHandler = $this->container->get('module_handler');
-
         $expectedDependencies = [
             'system',
             'link',
@@ -22,14 +40,30 @@ class InstallsModulesTest extends KernelTestBase
             'image',
         ];
 
-        foreach ($expectedDependencies as $dependency) {
-            $this->assertFalse($moduleHandler->moduleExists($dependency));
+        $this->assertModulesDisabled($expectedDependencies)
+            ->installModuleWithDependencies('test_support_dependencies')
+            ->assertModulesEnabled($expectedDependencies);
+    }
+
+    private function assertModulesEnabled($modules): self
+    {
+        foreach ((array) $modules as $module) {
+            $this->assertTrue(
+                $this->container->get('module_handler')->moduleExists($module)
+            );
         }
 
-        $this->installModuleWithDependencies('test_support_dependencies');
+        return $this;
+    }
 
-        foreach ($expectedDependencies as $dependency) {
-            $this->assertTrue($moduleHandler->moduleExists($dependency));
+    private function assertModulesDisabled($modules): self
+    {
+        foreach ((array) $modules as $module) {
+            $this->assertFalse(
+                $this->container->get('module_handler')->moduleExists($module)
+            );
         }
+
+        return $this;
     }
 }
