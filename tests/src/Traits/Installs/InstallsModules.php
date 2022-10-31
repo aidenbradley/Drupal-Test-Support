@@ -6,13 +6,6 @@ use Drupal\Core\Serialization\Yaml;
 
 trait InstallsModules
 {
-    public function enableModules($modules): self
-    {
-        parent::enableModules((array) $modules);
-
-        return $this;
-    }
-
     public function enableModuleWithDependencies($modules): self
     {
         $pathResolver = $this->container->get('extension.path.resolver');

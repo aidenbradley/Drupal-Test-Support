@@ -12,13 +12,15 @@ trait InstallsViews
     private $setupViewsDependencies = false;
 
     /** @param string|array */
-    public function installViews($views)
+    public function installViews($views): self
     {
         $this->setupViewsDependencies();
 
         foreach ((array) $views as $view) {
             $this->installExportedConfig('views.view.' . $view);
         }
+
+        return $this;
     }
 
     private function setupViewsDependencies(): self

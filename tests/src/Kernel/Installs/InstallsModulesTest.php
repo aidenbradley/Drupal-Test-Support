@@ -9,26 +9,6 @@ class InstallsModulesTest extends KernelTestBase
 {
     use InstallsModules;
 
-    /**
-     * @test
-     *
-     * Test covering DX improvement whereby the given string is casted to an array when calling $this->enableModules()
-     */
-    public function enables_modules(): void
-    {
-        $this->assertModulesDisabled('text')
-            ->enableModules('text')
-            ->assertModulesEnabled('text');
-
-        $moduleList = [
-            'node',
-            'media',
-        ];
-        $this->assertModulesDisabled($moduleList)
-            ->enableModules($moduleList)
-            ->assertModulesEnabled($moduleList);
-    }
-
     /** @test */
     public function installs_dependencies(): void
     {

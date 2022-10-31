@@ -90,25 +90,23 @@ class InstallsExportedConfigTest extends KernelTestBase
                 'image',
             ]);
 
-        $expectedEnabledModules = [
-            'image',
-            'media',
-            'user',
-        ];
-
         $this->disableModules([
             'user',
         ]);
 
-        $this->assertFalse($this->container->get('module_handler')->moduleExists('user'));
-        $this->assertFalse($this->container->get('module_handler')->moduleExists('media'));
+        $this->assertModulesDisabled([
+            'user',
+            'media',
+        ]);
 
         // the "views.view.media.yml" file declares a dependency on the "image.style.large" config item
         $this->installViews('media');
 
-        foreach ($expectedEnabledModules as $module) {
-            $this->assertTrue($this->container->get('module_handler')->moduleExists($module));
-        }
+        $this->assertModulesEnabled([
+            'image',
+            'media',
+            'user',
+        ]);
     }
 
     /** @test */
@@ -124,5 +122,29 @@ class InstallsExportedConfigTest extends KernelTestBase
             $this->assertEquals(ConfigInstallFailed::CONFIGURATION_DOES_NOT_EXIST, $exception->getCode());
             $this->assertEquals('node.type.page', $exception->getFailingConfigFile());
         }
+    }
+
+    /** @param string|array $modules */
+    private function assertModulesEnabled($modules): self
+    {
+        foreach ((array) $modules as $module) {
+            $this->assertTrue(
+                $this->container->get('module_handler')->moduleExists($module)
+            );
+        }
+
+        return $this;
+    }
+
+    /** @param string|array $modules */
+    private function assertModulesDisabled($modules): self
+    {
+        foreach ((array) $modules as $module) {
+            $this->assertFalse(
+                $this->container->get('module_handler')->moduleExists($module)
+            );
+        }
+
+        return $this;
     }
 }
