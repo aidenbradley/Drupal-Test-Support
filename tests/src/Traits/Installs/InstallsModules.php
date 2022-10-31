@@ -15,8 +15,10 @@ trait InstallsModules
 
     public function enableModuleWithDependencies($modules): self
     {
+        $pathResolver = $this->container->get('extension.path.resolver');
+
         foreach ((array) $modules as $module) {
-            $fileLocation = drupal_get_path('module', $module) . '/' . $module . '.info.yml';
+            $fileLocation = $pathResolver->getPath('module', $module) . '/' . $module . '.info.yml';
 
             $infoYaml = Yaml::decode(file_get_contents($fileLocation));
 
