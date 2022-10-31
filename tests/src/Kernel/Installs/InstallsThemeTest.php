@@ -9,8 +9,6 @@ class InstallsThemeTest extends KernelTestBase
 {
     use InstallsTheme;
 
-    protected $strictConfigSchema = false;
-
     /** @test */
     public function installs_theme(): void
     {
