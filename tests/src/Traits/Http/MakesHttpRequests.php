@@ -173,13 +173,6 @@ trait MakesHttpRequests
         return $this->withHeader('referer', $url);
     }
 
-    public function fakeResponse(string $url, $response): self
-    {
-        $this->fakes[$url] = $response;
-
-        return $this;
-    }
-
     protected function withHeaders(array $headers)
     {
         $this->headers = array_merge($this->headers, $headers);

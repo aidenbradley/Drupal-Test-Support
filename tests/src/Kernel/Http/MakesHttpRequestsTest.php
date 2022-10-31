@@ -173,22 +173,6 @@ class MakesHttpRequestsTest extends KernelTestBase
         ]);
     }
 
-    /** @test */
-    public function mock_response(): void
-    {
-        $fakeResponseData = [
-            'fake' => 'data',
-        ];
-
-        $this->fakeResponse('https://www.example.com/fake', JsonResponse::create($fakeResponseData));
-        $response = $this->get('https://www.example.com/fake');
-        $response->assertJsonContent($fakeResponseData);
-
-        $this->fakeResponse($this->route('route.get'), JsonResponse::create($fakeResponseData));
-        $response = $this->get($this->route('route.get'));
-        $response->assertJsonContent($fakeResponseData);
-    }
-
     private function route(string $routeName, array $parameters = [], array $options = []): string
     {
         return Url::fromRoute(...func_get_args())->toString(true)->getGeneratedUrl();
