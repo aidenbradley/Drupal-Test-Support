@@ -31,7 +31,7 @@ abstract class EnableModuleKernelTest extends KernelTestBase
     /** @test */
     public function install_module_entity_definitions(): void
     {
-        $this->installModuleWithDependencies($this->module());
+        $this->enableModuleWithDependencies($this->module());
 
         $moduleEntityDefinitions = array_diff(
             array_keys($this->container->get('entity_type.manager')->getDefinitions()),

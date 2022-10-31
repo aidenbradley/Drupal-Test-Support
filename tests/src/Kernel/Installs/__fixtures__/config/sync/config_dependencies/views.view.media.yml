@@ -8,6 +8,8 @@ dependencies:
     - image
     - media
     - user
+  theme:
+    - seven
 _core:
   default_config_hash: UZP23LgBdE1XbvscbLCdd9uTk5t4qqA1Z56koqbvYP0
 id: media
