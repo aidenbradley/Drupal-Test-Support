@@ -85,16 +85,14 @@ class InstallsExportedConfigTest extends KernelTestBase
     /** @test */
     public function installs_module_dependency(): void
     {
-        $this->setConfigDirectory(__DIR__ . '/__fixtures__/config/sync/config_dependencies')
-            ->enableModules([
-                'image',
-            ]);
+        $this->setConfigDirectory(__DIR__ . '/__fixtures__/config/sync/config_dependencies');
 
         $this->disableModules([
             'user',
         ]);
 
         $this->assertModulesDisabled([
+            'image',
             'user',
             'media',
         ]);

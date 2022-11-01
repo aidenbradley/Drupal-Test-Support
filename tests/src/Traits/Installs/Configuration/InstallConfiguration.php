@@ -42,22 +42,20 @@ trait InstallConfiguration
             }
 
             if ($this->strictConfigSchema) {
-                foreach ($configRecord['dependencies'] as $dependencyType => $dependencies) {
-                    if ($dependencyType === 'module') {
-                        $this->enableModules($dependencies);
-                    }
+                if (isset($configRecord['dependencies']['module'])) {
+                    $this->enableModules($configRecord['dependencies']['module']);
+                }
 
-                    if ($dependencyType === 'config') {
-                        foreach ($dependencies as $dependency) {
-                            $this->installExportedConfig($dependency);
-                        }
-                    }
+                if (isset($configRecord['dependencies']['config'])) {
+                    $this->installExportedConfig($configRecord['dependencies']['config']);
+                }
 
-                    if ($dependencyType === 'theme') {
-                        foreach ($dependencies as $dependency) {
-                            $this->installTheme($dependency);
-                        }
-                    }
+                if (isset($configRecord['dependencies']['config'])) {
+                    $this->installExportedConfig($configRecord['dependencies']['config']);
+                }
+
+                if (isset($configRecord['dependencies']['theme'])) {
+                    $this->installThemes($configRecord['dependencies']['theme']);
                 }
             }
 

@@ -14,11 +14,11 @@ class InstallsThemeTest extends KernelTestBase
     {
         $this->assertEmpty($this->container->get('theme_handler')->listInfo());
 
-        $this->installTheme('seven');
+        $this->installThemes('seven');
 
         $this->assertArrayHasKey('seven', $this->container->get('theme_handler')->listInfo());
 
-        $this->installTheme('bartik');
+        $this->installThemes('bartik');
 
         $this->assertArrayHasKey('bartik', $this->container->get('theme_handler')->listInfo());
     }

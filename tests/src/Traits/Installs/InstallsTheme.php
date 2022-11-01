@@ -6,19 +6,22 @@ trait InstallsTheme
 {
     private $setup = false;
 
-    public function installTheme(string $theme): self
+    /** @param string|array $themes */
+    public function installThemes($themes): self
     {
         $this->setupThemeDependencies();
 
-        $this->container
-            ->get('theme_installer')
-            ->install((array) $theme);
+        foreach ((array) $themes as $theme) {
+            $this->container
+                ->get('theme_installer')
+                ->install((array) $theme);
 
-        $this->container
-            ->get('config.factory')
-            ->getEditable('system.theme')
-            ->set('default', $theme)
-            ->save();
+            $this->container
+                ->get('config.factory')
+                ->getEditable('system.theme')
+                ->set('default', $theme)
+                ->save();
+        }
 
         $this->container->set('theme.registry', null);
 
