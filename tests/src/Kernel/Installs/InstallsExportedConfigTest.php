@@ -47,9 +47,7 @@ class InstallsExportedConfigTest extends KernelTestBase
             'image',
         ]);
 
-        $this->installEntitySchema('image_style');
-
-        $this->setConfigDirectory(__DIR__ . '/__fixtures__/config/sync/config_dependencies');
+        $this->setFixtureConfigDirectory('config_dependencies');
 
         $this->assertEmpty($this->container->get('theme_handler')->listInfo());
 
@@ -62,10 +60,9 @@ class InstallsExportedConfigTest extends KernelTestBase
     /** @test */
     public function installs_config_dependency(): void
     {
-        $this->setConfigDirectory(__DIR__ . '/__fixtures__/config/sync/config_dependencies')
-            ->enableModules([
-                'image',
-            ]);
+        $this->setFixtureConfigDirectory('config_dependencies')->enableModules([
+            'image',
+        ]);
 
         $this->installEntitySchema('image_style');
 
@@ -85,7 +82,7 @@ class InstallsExportedConfigTest extends KernelTestBase
     /** @test */
     public function installs_module_dependency(): void
     {
-        $this->setConfigDirectory(__DIR__ . '/__fixtures__/config/sync/config_dependencies');
+        $this->setFixtureConfigDirectory('config_dependencies');
 
         $this->disableModules([
             'user',
@@ -142,6 +139,13 @@ class InstallsExportedConfigTest extends KernelTestBase
                 $this->container->get('module_handler')->moduleExists($module)
             );
         }
+
+        return $this;
+    }
+
+    private function setFixtureConfigDirectory(string $directory): self
+    {
+        $this->setConfigDirectory(__DIR__ . '/__fixtures__/config/sync/' . $directory);
 
         return $this;
     }
