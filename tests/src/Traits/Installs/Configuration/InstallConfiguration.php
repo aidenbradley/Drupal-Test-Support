@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\test_support\Traits\Installs\Configuration;
 
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\test_support\Traits\Installs\InstallsTheme;
