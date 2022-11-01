@@ -49,10 +49,6 @@ trait InstallConfiguration
                     $this->installExportedConfig($configRecord['dependencies']['config']);
                 }
 
-                if (isset($configRecord['dependencies']['config'])) {
-                    $this->installExportedConfig($configRecord['dependencies']['config']);
-                }
-
                 if (isset($configRecord['dependencies']['theme'])) {
                     $this->installThemes($configRecord['dependencies']['theme']);
                 }
