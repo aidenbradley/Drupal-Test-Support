@@ -7,6 +7,7 @@ use Drupal\Tests\test_support\Traits\Http\Response\TestResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/** @method static $this from(string $from) */
 trait MakesHttpRequests
 {
     /** @var bool */
@@ -17,6 +18,9 @@ trait MakesHttpRequests
 
     /** @var array */
     private $fakes = [];
+
+    /** @var PendingRequest */
+    private $pendingRequest;
 
     public function get(string $uri, array $headers = []): TestResponse
     {
@@ -113,17 +117,17 @@ trait MakesHttpRequests
             return TestResponse::fromBaseResponse($this->fakes[$uri]);
         }
 
-        $symfonyRequest = Request::create($uri, $method, $parameters, $cookies, $files, $server, $content);
-
-        $request = PendingRequest::createFromSymfonyRequest($symfonyRequest);
+        $request = $this->pendingRequest()->create(
+            $uri, $method, $parameters, $cookies, $files, $server, $content
+        );
 
         $request->setSession($this->container->get('session'));
 
         $httpKernel = $this->container->get('http_kernel');
 
-        $response = $httpKernel->handle($request->getOriginal());
+        $response = $httpKernel->handle($request);
 
-        $httpKernel->terminate($request->getOriginal(), $response);
+        $httpKernel->terminate($request, $response);
 
         if ($this->followRedirects) {
             $response = $this->followRedirects($response);
@@ -181,8 +185,23 @@ trait MakesHttpRequests
         return $response;
     }
 
+    private function pendingRequest(): PendingRequest
+    {
+        if (isset($this->pendingRequest) === false) {
+            $this->pendingRequest = PendingRequest::make();
+        }
+
+        return $this->pendingRequest;
+    }
+
     public function __call($name, $arguments)
     {
-        if (method_exists())
+        $return = null;
+
+        if (method_exists($this->pendingRequest(), $name)) {
+            $return = $this->pendingRequest()->$name(...$arguments);
+        }
+
+        return $return ?? $this;
     }
 }

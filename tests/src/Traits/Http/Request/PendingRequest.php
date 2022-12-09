@@ -6,23 +6,18 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PendingRequest
 {
-    /** @var Request */
-    private $symfonyRequest;
+    /** @var array */
+    private $headers;
 
-    public static function createFromSymfonyRequest(Request $request): self
+    public static function make(): self
     {
-        return new self($request);
-    }
-
-    public function __construct(Request $request)
-    {
-        $this->symfonyRequest = $request;
+        return new self();
     }
 
     /** @param mixed $value */
     public function withHeader(string $header, $value): self
     {
-        $this->symfonyRequest->headers->set($header, $value);
+        $this->headers[$header] = $value;
 
         return $this;
     }
@@ -36,9 +31,9 @@ class PendingRequest
         return $this;
     }
 
-    public function from(string $url): self
+    public function from(string $url): void
     {
-        return $this->withHeader('referer', $url);
+        $this->withHeader('referer', $url);
     }
 
     public function ajax(): self
@@ -56,9 +51,15 @@ class PendingRequest
         return $this->withHeader('Content-Type', 'application/json');
     }
 
-    public function getOriginal(): Request
+    public function create($uri, $method = 'GET', $parameters = [], $cookies = [], $files = [], $server = [], $content = null): Request
     {
-        return $this->symfonyRequest;
+        $request = Request::create(...func_get_args());
+
+        foreach ($this->headers as $header => $value) {
+            $request->headers->set($header, $value);
+        }
+
+        return $request;
     }
 
     /** @return mixed */

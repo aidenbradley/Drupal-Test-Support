@@ -132,6 +132,7 @@ class MakesHttpRequestsTest extends KernelTestBase
     /** @test */
     public function from_url(): void
     {
+        dump($this->container->get('testing_traits:test'));
         $response = $this->from('https://example.com/from')
             ->followingRedirects()
             ->get($this->route('route.direct_from_example', [
