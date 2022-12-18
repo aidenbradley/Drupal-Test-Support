@@ -157,7 +157,6 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
         }
     }
 
-    // DEPLOY UPDATE HOOK START
     /** @test */
     public function run_deploy_hook_with_batch(): void
     {
@@ -224,7 +223,6 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
             );
         }
     }
-    // DEPLOY UPDATE HOOK END
 
     private function assertUserBlocked(User $user): void
     {
