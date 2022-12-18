@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\test_support\Traits\Support;
 
+use Drupal\Tests\test_support\Traits\Support\UpdateHook\DeployHookHandler;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\PostUpdateHandler;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\UpdateHandler;
 use Symfony\Component\Finder\Finder;
@@ -13,6 +14,7 @@ trait InteractsWithUpdateHooks
         $handler = UpdateHandler::create($function);
 
         $this->enableModule($handler->getModuleName());
+        $this->requireFIle($handler->getModuleName() . '.install');
 
         $handler->run();
 
@@ -23,9 +25,21 @@ trait InteractsWithUpdateHooks
     {
         $handler = PostUpdateHandler::create($function);
 
-        $this->enableModule(
-            $handler->getModuleName()
-        )->requireFile($handler->getModuleName() . '.post_update.php');
+        $this->enableModule($handler->getModuleName());
+        $this->requireFile($handler->getModuleName() . '.post_update.php');
+
+        $handler->run();
+
+        return $this;
+    }
+
+    public function runDeployHook(string $function)
+    {
+        $handler = DeployHookHandler::create($function);
+
+        $this->enableModule($handler->getModuleName());
+        $this->requireFile($handler->getModuleName() . '.install');
+        $this->requireFile($handler->getModuleName() . '.deploy.php');
 
         $handler->run();
 

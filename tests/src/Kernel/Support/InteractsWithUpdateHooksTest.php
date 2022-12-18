@@ -157,6 +157,75 @@ class InteractsWithUpdateHooksTest extends KernelTestBase
         }
     }
 
+    // DEPLOY UPDATE HOOK START
+    /** @test */
+    public function run_deploy_hook_with_batch(): void
+    {
+        $this->createNumberOfActiveUsers(50);
+
+        $users = $this->container->get('entity_type.manager')->getStorage('user')->loadMultiple();
+
+        foreach ($users as $user) {
+            $this->assertUserNotBlocked($user);
+        }
+
+        $this->runDeployHook('test_support_update_hooks_deploy_with_batch_disable_users');
+
+        foreach ($users as $user) {
+            $this->assertUserBlocked($user);
+        }
+    }
+
+    /** @test */
+    public function run_deploy_hook_with_no_batch(): void
+    {
+        $this->createNumberOfActiveUsers(50);
+
+        $users = $this->container->get('entity_type.manager')->getStorage('user')->loadMultiple();
+
+        foreach ($users as $user) {
+            $this->assertUserNotBlocked($user);
+        }
+
+        $this->runDeployHook('test_support_update_hooks_deploy_no_batch_disable_users');
+
+        foreach ($users as $user) {
+            $this->assertUserBlocked($user);
+        }
+    }
+
+    /** @test */
+    public function running_deploy_enables_module_that_defines_function(): void
+    {
+        $this->disableModules([
+            'test_support_update_hooks',
+        ]);
+        $this->assertFalse(
+            $this->container->get('module_handler')->moduleExists('test_support_update_hooks')
+        );
+
+        $this->createNumberOfActiveUsers(50);
+
+        $users = $this->container->get('entity_type.manager')->getStorage('user')->loadMultiple();
+
+        foreach ($users as $user) {
+            $this->assertUserNotBlocked($user);
+        }
+
+        $this->runDeployHook('test_support_update_hooks_deploy_no_batch_disable_users');
+
+        $this->assertTrue(
+            $this->container->get('module_handler')->moduleExists('test_support_update_hooks')
+        );
+
+        foreach ($users as $user) {
+            $this->assertUserBlocked(
+                User::load($user->id())
+            );
+        }
+    }
+    // DEPLOY UPDATE HOOK END
+
     private function assertUserBlocked(User $user): void
     {
         $this->assertEquals(0, $user->get('status')->value);
