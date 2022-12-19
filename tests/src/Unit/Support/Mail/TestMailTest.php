@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\test_support\Unit\Support;
+namespace Drupal\Tests\test_support\Unit\Support\Mail;
 
 use Drupal\Tests\test_support\Traits\Support\Mail\TestMail;
 use Drupal\Tests\UnitTestCase;

@@ -1,14 +1,18 @@
 <?php
 
-namespace Drupal\Tests\test_support\Kernel\Support;
+namespace Drupal\Tests\test_support\Kernel\Support\UpdateHook;
 
 use Drupal\Component\Utility\Random;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\Exceptions\UpdateHookFailed;
+use Drupal\Tests\test_support\Traits\Support\InteractsWithUpdateHooks;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\DeployHookHandler;
+use Drupal\Tests\test_support\Traits\Support\UpdateHook\Factory\HookHandlerFactory;
 
 class DeployHookHandlerTest extends KernelTestBase
 {
+    use InteractsWithUpdateHooks;
+
     protected static $modules = [
         'user',
     ];
@@ -19,7 +23,15 @@ class DeployHookHandlerTest extends KernelTestBase
 
         $this->installEntitySchema('user');
 
-        require '__fixtures__/functions/update_hook_functions.php';
+        require __DIR__ . '/../__fixtures__/functions/update_hook_functions.php';
+    }
+
+    /** @test */
+    public function creates_handler(): void
+    {
+        $handler = HookHandlerFactory::create();
+
+        $this->assertInstanceOf(DeployHookHandler::class, $handler);
     }
 
     /** @test */
