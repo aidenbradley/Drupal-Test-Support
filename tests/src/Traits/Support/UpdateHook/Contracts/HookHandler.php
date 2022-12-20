@@ -6,7 +6,7 @@ interface HookHandler
 {
     public static function canHandle(string $function): bool;
 
-    public static function create(string $function);
+    public static function create(string $function): self;
 
     public function run();
 }
