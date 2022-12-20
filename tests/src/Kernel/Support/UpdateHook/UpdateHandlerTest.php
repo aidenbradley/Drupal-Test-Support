@@ -25,8 +25,6 @@ class UpdateHandlerTest extends KernelTestBase
         parent::setUp();
 
         $this->installEntitySchema('user');
-
-        require __DIR__ . '/../__fixtures__/functions/update_hook_functions.php';
     }
 
     /** @test */
@@ -82,7 +80,7 @@ class UpdateHandlerTest extends KernelTestBase
             $this->storage('user')->loadMultiple()
         );
 
-        $this->runPostUpdateHook('test_support_updatehooks_update_9001');
+        $this->runUpdateHook('test_support_updatehooks_update_9001');
 
         $this->assertUsersBlocked(
             $this->storage('user')->loadMultiple()
