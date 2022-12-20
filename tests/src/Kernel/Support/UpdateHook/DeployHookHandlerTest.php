@@ -106,7 +106,7 @@ class DeployHookHandlerTest extends KernelTestBase
         $this->expectException(UpdateHookFailed::class);
         $this->expectExceptionCode(UpdateHookFailed::NO_BATCH_PROGRESSION);
 
-        DeployHookHandler::create('test_support_deployhooks_deploy_no_batch_disable_users')->run();
+        $this->runDeployHook('test_support_deployhooks_deploy_with_no_finished_progression');
     }
 
     private function assertModuleDisabled(string $module): void
@@ -147,7 +147,7 @@ class DeployHookHandlerTest extends KernelTestBase
     private function createNumberOfActiveUsers(int $numberToCreate): void
     {
         for ($x = 0; $x <= $numberToCreate; $x++) {
-            $this->container->get('entity_type.manager')->getStorage('user')->create([
+            $this->storage('user')->create([
                 'name' => (new Random())->string(),
                 'status' => 1,
             ])->save();
