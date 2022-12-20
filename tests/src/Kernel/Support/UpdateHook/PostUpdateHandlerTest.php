@@ -24,8 +24,6 @@ class PostUpdateHandlerTest extends KernelTestBase
         parent::setUp();
 
         $this->installEntitySchema('user');
-
-        require __DIR__ . '/../__fixtures__/functions/update_hook_functions.php';
     }
 
     /** @test */
@@ -57,7 +55,7 @@ class PostUpdateHandlerTest extends KernelTestBase
     }
 
     /** @test */
-    public function runs_deploy_hook_without_batch(): void
+    public function runs_post_update_hook_without_batch(): void
     {
         $this->createNumberOfActiveUsers(50);
 
@@ -73,7 +71,7 @@ class PostUpdateHandlerTest extends KernelTestBase
     }
 
     /** @test */
-    public function runs_deploy_hook_with_batch(): void
+    public function runs_post_update_hook_with_batch(): void
     {
         $this->createNumberOfActiveUsers(50);
 
@@ -81,7 +79,7 @@ class PostUpdateHandlerTest extends KernelTestBase
             $this->storage('user')->loadMultiple()
         );
 
-        $this->runDeployHook('test_support_postupdatehooks_post_update_with_batch_disable_users');
+        $this->runPostUpdateHook('test_support_postupdatehooks_post_update_with_batch_disable_users');
 
         $this->assertUsersBlocked(
             $this->storage('user')->loadMultiple()
