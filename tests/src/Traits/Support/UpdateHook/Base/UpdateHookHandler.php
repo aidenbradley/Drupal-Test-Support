@@ -3,15 +3,16 @@
 namespace Drupal\Tests\test_support\Traits\Support\UpdateHook\Base;
 
 use Drupal\Tests\test_support\Traits\Support\Exceptions\UpdateHookFailed;
+use Drupal\Tests\test_support\Traits\Support\UpdateHook\Contracts\HookHandler;
 use ReflectionFunction;
 
-abstract class UpdateHookHandler
+abstract class UpdateHookHandler implements HookHandler
 {
     /** @var string */
     protected $function;
 
-    /** returns the module name based on the given function string */
-    abstract public function getModuleName(): string;
+    /** Regex string to identify function name */
+    abstract public static function pattern(): string;
 
     /** @return static */
     public static function create(string $function)
@@ -24,12 +25,29 @@ abstract class UpdateHookHandler
         $this->function = $function;
     }
 
-    /** @return static */
-    public function run()
+    public function run(): self
     {
         $this->wantsBatch() ? $this->runAsBatch() : $this->runWithoutBatch();
 
         return $this;
+    }
+
+    public function getModuleName(): string
+    {
+        $matches = [];
+
+        preg_match_all(static::pattern(), $this->function, $matches);
+
+        return explode($matches[0][0], $this->function)[0];
+    }
+
+    public static function canHandle(string $function): bool
+    {
+        $matches = [];
+
+        preg_match_all(static::pattern(), $function, $matches);
+
+        return isset($matches[0]) && $matches[0] !== [];
     }
 
     private function runWithoutBatch(): void

@@ -1,18 +1,23 @@
 <?php
 
-/*
- * sets a state value by the function name for assertions in tests
+function test_support_postupdatehooks_post_update_only_in_post_update_php(): void {};
+
+/**
+ * Sets the status of all users to 0, effectively blocked
+ * Does not use a batch to process users
  */
-function no_batch_update_hook(): void
+function test_support_postupdatehooks_post_update_no_batch_disable_users(): void
 {
-    \Drupal::state()->set(__FUNCTION__, true);
+    foreach (\Drupal::entityQuery('user')->execute() as $uid) {
+        \Drupal\user\Entity\User::load($uid)->set('status', 0)->save();
+    }
 }
 
-/*
- * Sets a state value by the function name and increments its value by 1
- * for each user we're processing in the batch test
+/**
+ * Sets the status of all users to 0, effectively blocked
+ * Uses a batch to process the users
  */
-function batch_update_hook(array &$sandbox): void
+function test_support_postupdatehooks_post_update_with_batch_disable_users(array &$sandbox): void
 {
     $userEntityQuery = \Drupal::entityQuery('user');
 
@@ -29,7 +34,7 @@ function batch_update_hook(array &$sandbox): void
         }
     }
 
-    $usersPerBatch = 5;
+    $usersPerBatch = 25;
 
     $uids = $userEntityQuery
         ->range($sandbox['current'], $usersPerBatch)
@@ -42,7 +47,7 @@ function batch_update_hook(array &$sandbox): void
     }
 
     foreach ($uids as $uid) {
-        incrementUserCount(__FUNCTION__);
+        \Drupal\user\Entity\User::load($uid)->set('status', 0)->save();
 
         $sandbox['current']++;
     }
@@ -56,23 +61,10 @@ function batch_update_hook(array &$sandbox): void
     $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
 }
 
-function incrementUserCount(string $key): void
-{
-    $state = \Drupal::state();
-
-    if ($state->get($key) === null) {
-        $state->set($key, 0);
-
-        return;
-    }
-
-    $state->set($key, $state->get($key) + 1);
-}
-
 /*
  * Sets a batch in the update hook but doesn't progress the value of the #finished key. e.g. 0.1 -> 0.15 -> 0.2 ---> 1
  */
-function batch_update_hook_with_no_finished_progression(array &$sandbox): void
+function test_support_postupdatehooks_post_update_with_no_finished_progression(array &$sandbox): void
 {
     $userEntityQuery = \Drupal::entityQuery('user');
 
@@ -102,8 +94,6 @@ function batch_update_hook_with_no_finished_progression(array &$sandbox): void
     }
 
     foreach ($uids as $uid) {
-        incrementUserCount(__FUNCTION__);
-
         $sandbox['current']++;
     }
 
