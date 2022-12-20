@@ -14,8 +14,7 @@ abstract class UpdateHookHandler implements HookHandler
     /** Regex string to identify function name */
     abstract public static function pattern(): string;
 
-    /** @return static */
-    public static function create(string $function)
+    public static function create(string $function): HookHandler
     {
         return new static($function);
     }
