@@ -3,12 +3,18 @@
 namespace Drupal\Tests\test_support\Kernel\Support\UpdateHook;
 
 use Drupal\Component\Utility\Random;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\Exceptions\UpdateHookFailed;
+use Drupal\Tests\test_support\Traits\Support\InteractsWithUpdateHooks;
+use Drupal\Tests\test_support\Traits\Support\UpdateHook\Factory\HookHandlerFactory;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\PostUpdateHandler;
+use Drupal\user\Entity\User;
 
 class PostUpdateHandlerTest extends KernelTestBase
 {
+    use InteractsWithUpdateHooks;
+
     protected static $modules = [
         'user',
     ];
@@ -19,47 +25,121 @@ class PostUpdateHandlerTest extends KernelTestBase
 
         $this->installEntitySchema('user');
 
-        require '__fixtures__/functions/update_hook_functions.php';
+        require __DIR__ . '/../__fixtures__/functions/update_hook_functions.php';
     }
 
     /** @test */
-    public function runs_update_hook_without_batch(): void
+    public function create_handler(): void
     {
-        $this->assertNull($this->container->get('state')->get('no_batch_update_hook'));
+        $handler = HookHandlerFactory::create('test_support_postupdatehooks_post_update_no_batch_disable_users');
 
-        PostUpdateHandler::create('no_batch_update_hook')->run();
-
-        $this->assertNotNull($this->container->get('state')->get('no_batch_update_hook'));
+        $this->assertInstanceOf(PostUpdateHandler::class, $handler);
     }
 
     /** @test */
-    public function runs_update_hook_with_batch(): void
+    public function enables_module_that_defines_function(): void
     {
-        $this->createNumberOfUsers(50);
+        $this->assertModuleDisabled('test_support_postupdatehooks');
 
-        $this->assertNull($this->container->get('state')->get('batch_update_hook'));
+        $this->runPostUpdateHook('test_support_postupdatehooks_post_update_no_batch_disable_users');
 
-        PostUpdateHandler::create('batch_update_hook')->run();
+        $this->assertModuleEnabled('test_support_postupdatehooks');
+    }
 
-        $this->assertEquals(50, $this->container->get('state')->get('batch_update_hook'));
+    /** @test */
+    public function includes_post_update_file_when_post_update_hook_defined_in_post_update_file(): void
+    {
+        $this->assertFalse(function_exists('test_support_postupdatehooks_post_update_no_batch_disable_users'));
+
+        $this->runPostUpdateHook('test_support_postupdatehooks_post_update_no_batch_disable_users');
+
+        $this->assertTrue(function_exists('test_support_postupdatehooks_post_update_no_batch_disable_users'));
+    }
+
+    /** @test */
+    public function runs_deploy_hook_without_batch(): void
+    {
+        $this->createNumberOfActiveUsers(50);
+
+        $this->assertUsersNotBlocked(
+            $this->storage('user')->loadMultiple()
+        );
+
+        $this->runPostUpdateHook('test_support_postupdatehooks_post_update_no_batch_disable_users');
+
+        $this->assertUsersBlocked(
+            $this->storage('user')->loadMultiple()
+        );
+    }
+
+    /** @test */
+    public function runs_deploy_hook_with_batch(): void
+    {
+        $this->createNumberOfActiveUsers(50);
+
+        $this->assertUsersNotBlocked(
+            $this->storage('user')->loadMultiple()
+        );
+
+        $this->runDeployHook('test_support_postupdatehooks_post_update_with_batch_disable_users');
+
+        $this->assertUsersBlocked(
+            $this->storage('user')->loadMultiple()
+        );
     }
 
     /** @test */
     public function update_hook_with_batch_that_doesnt_increment_finished_key_triggers_exception(): void
     {
-        $this->createNumberOfUsers(50);
+        $this->createNumberOfActiveUsers(50);
 
         $this->expectException(UpdateHookFailed::class);
         $this->expectExceptionCode(UpdateHookFailed::NO_BATCH_PROGRESSION);
 
-        PostUpdateHandler::create('batch_update_hook_with_no_finished_progression')->run();
+        $this->runPostUpdateHook('test_support_postupdatehooks_post_update_with_no_finished_progression');
     }
 
-    private function createNumberOfUsers(int $numberToCreate): void
+    private function assertModuleDisabled(string $module): void
+    {
+        $this->assertFalse($this->container->get('module_handler')->moduleExists($module));
+    }
+
+    private function assertModuleEnabled(string $module): void
+    {
+        $this->assertTrue($this->container->get('module_handler')->moduleExists($module));
+    }
+
+    /** @param array|User $users */
+    private function assertUsersBlocked($users): self
+    {
+        foreach((array) $users as $user) {
+            $this->assertEquals(0, $user->get('status')->value);
+        }
+
+        return $this;
+    }
+
+    /** @param array|User $users */
+    private function assertUsersNotBlocked($users): self
+    {
+        foreach((array) $users as $user) {
+            $this->assertEquals(1, $user->get('status')->value);
+        }
+
+        return $this;
+    }
+
+    private function storage(string $entityTypeId): EntityStorageInterface
+    {
+        return $this->container->get('entity_type.manager')->getStorage($entityTypeId);
+    }
+
+    private function createNumberOfActiveUsers(int $numberToCreate): void
     {
         for ($x = 0; $x <= $numberToCreate; $x++) {
-            $this->container->get('entity_type.manager')->getStorage('user')->create([
+            $this->storage('user')->create([
                 'name' => (new Random())->string(),
+                'status' => 1,
             ])->save();
         }
     }

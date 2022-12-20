@@ -24,8 +24,6 @@ class DeployHookHandlerTest extends KernelTestBase
         parent::setUp();
 
         $this->installEntitySchema('user');
-
-        require __DIR__ . '/../__fixtures__/functions/update_hook_functions.php';
     }
 
     /** @test */
