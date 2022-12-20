@@ -3,11 +3,13 @@
 namespace Drupal\Tests\test_support\Kernel\Support\UpdateHook;
 
 use Drupal\Component\Utility\Random;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\Exceptions\UpdateHookFailed;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithUpdateHooks;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\DeployHookHandler;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\Factory\HookHandlerFactory;
+use Drupal\user\Entity\User;
 
 class DeployHookHandlerTest extends KernelTestBase
 {
@@ -29,49 +31,125 @@ class DeployHookHandlerTest extends KernelTestBase
     /** @test */
     public function creates_handler(): void
     {
-        $handler = HookHandlerFactory::create();
+        $handler = HookHandlerFactory::create('test_support_deployhooks_deploy_no_batch_disable_users');
 
         $this->assertInstanceOf(DeployHookHandler::class, $handler);
     }
 
     /** @test */
-    public function runs_update_hook_without_batch(): void
+    public function enables_module_that_defines_function(): void
     {
-        $this->assertNull($this->container->get('state')->get('no_batch_update_hook'));
+        $this->assertModuleDisabled('test_support_deployhooks');
 
-        DeployHookHandler::create('no_batch_update_hook')->run();
+        $this->runDeployHook('test_support_deployhooks_deploy_no_batch_disable_users');
 
-        $this->assertNotNull($this->container->get('state')->get('no_batch_update_hook'));
+        $this->assertModuleEnabled('test_support_deployhooks');
     }
 
     /** @test */
-    public function runs_update_hook_with_batch(): void
+    public function includes_deploy_file_when_deploy_hook_defined_in_deploy_file(): void
     {
-        $this->createNumberOfUsers(50);
+        $this->assertFalse(function_exists('test_support_deployhooks_deploy_only_in_deploy_php'));
 
-        $this->assertNull($this->container->get('state')->get('batch_update_hook'));
+        $this->runDeployHook('test_support_deployhooks_deploy_only_in_deploy_php');
 
-        DeployHookHandler::create('batch_update_hook')->run();
-
-        $this->assertEquals(50, $this->container->get('state')->get('batch_update_hook'));
+        $this->assertTrue(function_exists('test_support_deployhooks_deploy_only_in_deploy_php'));
     }
 
     /** @test */
-    public function update_hook_with_batch_that_doesnt_increment_finished_key_triggers_exception(): void
+    public function includes_install_file_when_deploy_hook_defined_in_install_file(): void
     {
-        $this->createNumberOfUsers(50);
+        $this->assertFalse(function_exists('test_support_deployhooks_deploy_only_in_install_php'));
+
+        $this->runDeployHook('test_support_deployhooks_deploy_only_in_install_php');
+
+        $this->assertTrue(function_exists('test_support_deployhooks_deploy_only_in_install_php'));
+    }
+
+    /** @test */
+    public function runs_deploy_hook_without_batch(): void
+    {
+        $this->createNumberOfActiveUsers(50);
+
+        $this->assertUsersNotBlocked(
+            $this->storage('user')->loadMultiple()
+        );
+
+        $this->runDeployHook('test_support_deployhooks_deploy_no_batch_disable_users');
+
+        $this->assertUsersBlocked(
+            $this->storage('user')->loadMultiple()
+        );
+    }
+
+    /** @test */
+    public function runs_deploy_hook_with_batch(): void
+    {
+        $this->createNumberOfActiveUsers(50);
+
+        $this->assertUsersNotBlocked(
+            $this->storage('user')->loadMultiple()
+        );
+
+        $this->runDeployHook('test_support_deployhooks_deploy_with_batch_disable_users');
+
+        $this->assertUsersBlocked(
+            $this->storage('user')->loadMultiple()
+        );
+    }
+
+    /** @test */
+    public function deploy_hook_with_batch_that_doesnt_increment_finished_key_triggers_exception(): void
+    {
+        $this->createNumberOfActiveUsers(50);
 
         $this->expectException(UpdateHookFailed::class);
         $this->expectExceptionCode(UpdateHookFailed::NO_BATCH_PROGRESSION);
 
-        DeployHookHandler::create('batch_update_hook_with_no_finished_progression')->run();
+        DeployHookHandler::create('test_support_deployhooks_deploy_no_batch_disable_users')->run();
     }
 
-    private function createNumberOfUsers(int $numberToCreate): void
+    private function assertModuleDisabled(string $module): void
+    {
+        $this->assertFalse($this->container->get('module_handler')->moduleExists($module));
+    }
+
+    private function assertModuleEnabled(string $module): void
+    {
+        $this->assertTrue($this->container->get('module_handler')->moduleExists($module));
+    }
+
+    /** @param array|User $users */
+    private function assertUsersBlocked($users): self
+    {
+        foreach((array) $users as $user) {
+            $this->assertEquals(0, $user->get('status')->value);
+        }
+
+        return $this;
+    }
+
+    /** @param array|User $users */
+    private function assertUsersNotBlocked($users): self
+    {
+        foreach((array) $users as $user) {
+            $this->assertEquals(1, $user->get('status')->value);
+        }
+
+        return $this;
+    }
+
+    private function storage(string $entityTypeId): EntityStorageInterface
+    {
+        return $this->container->get('entity_type.manager')->getStorage($entityTypeId);
+    }
+
+    private function createNumberOfActiveUsers(int $numberToCreate): void
     {
         for ($x = 0; $x <= $numberToCreate; $x++) {
             $this->container->get('entity_type.manager')->getStorage('user')->create([
                 'name' => (new Random())->string(),
+                'status' => 1,
             ])->save();
         }
     }

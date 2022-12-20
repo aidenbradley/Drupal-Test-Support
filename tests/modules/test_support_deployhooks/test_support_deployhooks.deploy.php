@@ -1,10 +1,12 @@
 <?php
 
+function test_support_deployhooks_deploy_only_in_deploy_php(): void {};
+
 /**
  * Sets the status of all users to 0, effectively blocked
  * Does not use a batch to process users
  */
-function test_support_update_hooks_deploy_no_batch_disable_users(): void
+function test_support_deployhooks_deploy_no_batch_disable_users(): void
 {
     $userEntityQuery = \Drupal::entityQuery('user');
 
@@ -23,7 +25,7 @@ function test_support_update_hooks_deploy_no_batch_disable_users(): void
  * Sets the status of all users to 0, effectively blocked
  * Uses a batch to process the users
  */
-function test_support_update_hooks_deploy_with_batch_disable_users(array &$sandbox): void
+function test_support_deployhooks_deploy_with_batch_disable_users(array &$sandbox): void
 {
     $userEntityQuery = \Drupal::entityQuery('user');
 
