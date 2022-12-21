@@ -28,29 +28,31 @@ trait InteractsWithSettings
     {
         if (isset($this->settings) === false) {
             $this->temporarilySupressErrors(function() {
-                $this->loadSettings();
+                $this->settings = $this->loadSettings();
             });
         }
 
         return $this->settings;
     }
 
-    private function loadSettings(): void
+    private function loadSettings(): Settings
     {
         if ($this->autoDiscoverSettings) {
-            $this->settings = new Settings($this->loadSettingsFromFinder());
-
-            return;
+            return new Settings($this->loadSettingsFromFinder());
         }
 
-        $this->settings = new Settings($this->loadSettingsFromSitesDirectory());
+        return new Settings($this->loadSettingsFromSitesDirectory());
     }
 
     private function loadSettingsFromSitesDirectory(): array
     {
         $settings = [];
 
-        require $this->appRoot() . '/' . ltrim($this->settingsLocation, '/');
+        $settingsFileLocation = $this->appRoot() . '/' . ltrim($this->settingsLocation, '/');
+
+        if (file_exists($settingsFileLocation)) {
+            require $settingsFileLocation;
+        }
 
         return $settings;
     }
