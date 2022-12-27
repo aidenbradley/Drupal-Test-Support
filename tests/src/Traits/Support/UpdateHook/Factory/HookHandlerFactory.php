@@ -24,6 +24,6 @@ class HookHandlerFactory
             return UpdateHandler::create($function);
         }
 
-        throw HookHandlerError::unableToHandle('unable to handle function "' . $function . '"');
+        throw HookHandlerError::unableToHandle('unable to handle hook function "' . $function . '"');
     }
 }
