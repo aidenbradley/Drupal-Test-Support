@@ -8,5 +8,9 @@ interface HookHandler
 
     public static function create(string $function): self;
 
-    public function run();
+    public static function requiredModuleFiles(): array;
+
+    public function getModuleName(): string;
+
+    public function run(): self;
 }

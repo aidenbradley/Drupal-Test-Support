@@ -2,46 +2,34 @@
 
 namespace Drupal\Tests\test_support\Traits\Support;
 
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\DeployHookHandler;
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\PostUpdateHandler;
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\UpdateHandler;
+use Drupal\Tests\test_support\Traits\Support\UpdateHook\Factory\HookHandlerFactory;
 
 trait InteractsWithUpdateHooks
 {
     public function runUpdateHook(string $function): self
     {
-        $handler = UpdateHandler::create($function);
-
-        $this->enableModule($handler->getModuleName());
-
-        $this->container->get('module_handler')->loadInclude($handler->getModuleName(), 'install');
-
-        $handler->run();
-
-        return $this;
+        return $this->handleHook($function);
     }
 
     public function runPostUpdateHook(string $function)
     {
-        $handler = PostUpdateHandler::create($function);
-
-        $this->enableModule($handler->getModuleName());
-
-        $this->container->get('module_handler')->loadInclude($handler->getModuleName(), 'post_update.php');
-
-        $handler->run();
-
-        return $this;
+        return $this->handleHook($function);
     }
 
     public function runDeployHook(string $function)
     {
-        $handler = DeployHookHandler::create($function);
+        return $this->handleHook($function);
+    }
+
+    private function handleHook(string $function): self
+    {
+        $handler = HookHandlerFactory::create($function);
 
         $this->enableModule($handler->getModuleName());
 
-        $this->container->get('module_handler')->loadInclude($handler->getModuleName(), 'install');
-        $this->container->get('module_handler')->loadInclude($handler->getModuleName(), 'deploy.php');
+        foreach ($handler->requiredModuleFiles() as $moduleFile) {
+            $this->container->get('module_handler')->loadInclude($handler->getModuleName(), $moduleFile);
+        }
 
         $handler->run();
 
@@ -57,10 +45,5 @@ trait InteractsWithUpdateHooks
         }
 
         return $this;
-    }
-
-    private function appRoot(): string
-    {
-        return $this->container->get('app.root');
     }
 }

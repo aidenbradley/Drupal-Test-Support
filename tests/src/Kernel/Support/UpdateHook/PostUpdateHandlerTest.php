@@ -27,14 +27,6 @@ class PostUpdateHandlerTest extends KernelTestBase
     }
 
     /** @test */
-    public function create_handler(): void
-    {
-        $handler = HookHandlerFactory::create('test_support_postupdatehooks_post_update_no_batch_disable_users');
-
-        $this->assertInstanceOf(PostUpdateHandler::class, $handler);
-    }
-
-    /** @test */
     public function enables_module_that_defines_function(): void
     {
         $this->assertModuleDisabled('test_support_postupdatehooks');

@@ -27,14 +27,6 @@ class DeployHookHandlerTest extends KernelTestBase
     }
 
     /** @test */
-    public function creates_handler(): void
-    {
-        $handler = HookHandlerFactory::create('test_support_deployhooks_deploy_no_batch_disable_users');
-
-        $this->assertInstanceOf(DeployHookHandler::class, $handler);
-    }
-
-    /** @test */
     public function enables_module_that_defines_function(): void
     {
         $this->assertModuleDisabled('test_support_deployhooks');

@@ -28,14 +28,6 @@ class UpdateHandlerTest extends KernelTestBase
     }
 
     /** @test */
-    public function create_handler(): void
-    {
-        $handler = HookHandlerFactory::create('test_support_updatehooks_update_9002');
-
-        $this->assertInstanceOf(UpdateHookHandler::class, $handler);
-    }
-
-    /** @test */
     public function enables_module_that_defines_function(): void
     {
         $this->assertModuleDisabled('test_support_updatehooks');

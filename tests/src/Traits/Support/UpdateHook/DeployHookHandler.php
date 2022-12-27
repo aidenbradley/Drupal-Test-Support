@@ -10,4 +10,12 @@ class DeployHookHandler extends UpdateHookHandler
     {
         return '(_deploy_)';
     }
+
+    public static function requiredModuleFiles(): array
+    {
+        return [
+            'install',
+            'deploy.php',
+        ];
+    }
 }

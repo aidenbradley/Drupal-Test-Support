@@ -24,7 +24,7 @@ abstract class UpdateHookHandler implements HookHandler
         $this->function = $function;
     }
 
-    public function run(): self
+    public function run(): HookHandler
     {
         $this->wantsBatch() ? $this->runAsBatch() : $this->runWithoutBatch();
 
