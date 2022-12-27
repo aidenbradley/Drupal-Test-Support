@@ -5,7 +5,6 @@ namespace Drupal\Tests\test_support\Traits\Support;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\DeployHookHandler;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\PostUpdateHandler;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\UpdateHandler;
-use Symfony\Component\Finder\Finder;
 
 trait InteractsWithUpdateHooks
 {
@@ -14,7 +13,8 @@ trait InteractsWithUpdateHooks
         $handler = UpdateHandler::create($function);
 
         $this->enableModule($handler->getModuleName());
-        $this->requireFIle($handler->getModuleName() . '.install');
+
+        $this->container->get('module_handler')->loadInclude($handler->getModuleName(), 'install');
 
         $handler->run();
 
@@ -26,7 +26,8 @@ trait InteractsWithUpdateHooks
         $handler = PostUpdateHandler::create($function);
 
         $this->enableModule($handler->getModuleName());
-        $this->requireFile($handler->getModuleName() . '.post_update.php');
+
+        $this->container->get('module_handler')->loadInclude($handler->getModuleName(), 'post_update.php');
 
         $handler->run();
 
@@ -38,25 +39,13 @@ trait InteractsWithUpdateHooks
         $handler = DeployHookHandler::create($function);
 
         $this->enableModule($handler->getModuleName());
-        $this->requireFile($handler->getModuleName() . '.install');
-        $this->requireFile($handler->getModuleName() . '.deploy.php');
+
+        $this->container->get('module_handler')->loadInclude($handler->getModuleName(), 'install');
+        $this->container->get('module_handler')->loadInclude($handler->getModuleName(), 'deploy.php');
 
         $handler->run();
 
         return $this;
-    }
-
-    private function requireFile(string $moduleFile): void
-    {
-        $finder = Finder::create()
-            ->ignoreUnreadableDirs()
-            ->ignoreDotFiles(true)
-            ->name($moduleFile)
-            ->in($this->appRoot());
-
-        foreach ($finder as $directory) {
-            require $directory->getPathname();
-        }
     }
 
     private function enableModule(string $module): self
