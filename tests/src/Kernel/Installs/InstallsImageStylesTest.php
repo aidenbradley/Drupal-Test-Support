@@ -10,7 +10,7 @@ class InstallsImageStylesTest extends KernelTestBase
 {
     use InstallsImageStyles;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

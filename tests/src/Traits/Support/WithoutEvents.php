@@ -24,7 +24,7 @@ trait WithoutEvents
 
         $dispatcher->dispatch(Argument::any(), Argument::any())->will([
             $this, 'registerDispatchedEvent'
-        ]);
+        ])->willReturn(new \stdClass());
 
         $this->container->set('event_dispatcher', $dispatcher->reveal());
 

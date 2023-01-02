@@ -294,9 +294,9 @@ class TestResponseTest extends UnitTestCase
             'example' => 'example',
         ];
 
-        $response = TestResponse::fromBaseResponse(
-            JsonResponse::create($content)
-        );
+        $jsonResponse = new JsonResponse($content);
+
+        $response = TestResponse::fromBaseResponse($jsonResponse);
 
         $response->assertJsonContent($content);
     }
@@ -310,9 +310,9 @@ class TestResponseTest extends UnitTestCase
             'example' => 'example',
         ];
 
-        $response = TestResponse::fromBaseResponse(
-            JsonResponse::create($content)
-        );
+        $jsonResponse = new JsonResponse($content);
+
+        $response = TestResponse::fromBaseResponse($jsonResponse);
 
         $response->assertJsonContentContains(['key' => 'value']);
         $response->assertJsonContentContains(['another_key' => 'another_value']);
@@ -322,8 +322,8 @@ class TestResponseTest extends UnitTestCase
     /** @param mixed $content */
     private function createMockResponse(int $statusCode, $content = ''): TestResponse
     {
-        return TestResponse::fromBaseResponse(
-            Response::create($content, $statusCode)
-        );
+        $symfonyResponse = new Response($content, $statusCode);
+
+        return TestResponse::fromBaseResponse($symfonyResponse);
     }
 }

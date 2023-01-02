@@ -8,7 +8,7 @@ function test_support_deployhooks_deploy_only_in_deploy_php(): void {};
  */
 function test_support_deployhooks_deploy_no_batch_disable_users(): void
 {
-    foreach (\Drupal::entityQuery('user')->execute() as $uid) {
+    foreach (\Drupal::entityQuery('user')->accessCheck(false)->execute() as $uid) {
         \Drupal\user\Entity\User::load($uid)->set('status', 0)->save();
     }
 }
@@ -19,7 +19,7 @@ function test_support_deployhooks_deploy_no_batch_disable_users(): void
  */
 function test_support_deployhooks_deploy_with_batch_disable_users(array &$sandbox): void
 {
-    $userEntityQuery = \Drupal::entityQuery('user');
+    $userEntityQuery = \Drupal::entityQuery('user')->accessCheck(false);
 
     if (isset($sandbox['total']) === false) {
         $uids = $userEntityQuery->execute();
@@ -66,7 +66,7 @@ function test_support_deployhooks_deploy_with_batch_disable_users(array &$sandbo
  */
 function test_support_deployhooks_deploy_with_no_finished_progression(array &$sandbox): void
 {
-    $userEntityQuery = \Drupal::entityQuery('user');
+    $userEntityQuery = \Drupal::entityQuery('user')->accessCheck(false);
 
     if (isset($sandbox['total']) === false) {
         $uids = $userEntityQuery->execute();

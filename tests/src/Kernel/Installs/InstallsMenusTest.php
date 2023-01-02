@@ -10,7 +10,7 @@ class InstallsMenusTest extends KernelTestBase
 {
     use InstallsMenus;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

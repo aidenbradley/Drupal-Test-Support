@@ -6,7 +6,7 @@
  */
 function test_support_update_hooks_deploy_no_batch_disable_users(): void
 {
-    $userEntityQuery = \Drupal::entityQuery('user');
+    $userEntityQuery = \Drupal::entityQuery('user')->accessCheck(false);
 
     $uids = $userEntityQuery->execute();
 
@@ -25,7 +25,7 @@ function test_support_update_hooks_deploy_no_batch_disable_users(): void
  */
 function test_support_update_hooks_deploy_with_batch_disable_users(array &$sandbox): void
 {
-    $userEntityQuery = \Drupal::entityQuery('user');
+    $userEntityQuery = \Drupal::entityQuery('user')->accessCheck(false);
 
     if (isset($sandbox['total']) === false) {
         $uids = $userEntityQuery->execute();

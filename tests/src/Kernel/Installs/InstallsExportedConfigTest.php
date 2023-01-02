@@ -51,10 +51,10 @@ class InstallsExportedConfigTest extends KernelTestBase
 
         $this->assertEmpty($this->container->get('theme_handler')->listInfo());
 
-        // the "views.view.media.yml" file declares a dependency on the "seven" theme
+        // the "views.view.media.yml" file declares a dependency on the "stark" theme
         $this->installViews('media');
 
-        $this->assertArrayHasKey('seven', $this->container->get('theme_handler')->listInfo());
+        $this->assertArrayHasKey('stark', $this->container->get('theme_handler')->listInfo());
     }
 
     /** @test */

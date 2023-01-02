@@ -36,7 +36,9 @@ class ResolveRequest implements ContainerInjectionInterface
             $content = $this->request->headers->getIterator()->getArrayCopy();
         }
 
-        return JsonResponse::create($content);
+        $jsonResponse = new JsonResponse($content);
+
+        return $jsonResponse;
     }
 
     public function xmlHttpOnly(): Response
@@ -45,7 +47,7 @@ class ResolveRequest implements ContainerInjectionInterface
             throw new NotFoundHttpException();
         }
 
-        return Response::create();
+        return new Response();
     }
 
     public function json(): Response
@@ -54,28 +56,32 @@ class ResolveRequest implements ContainerInjectionInterface
             throw new NotFoundHttpException();
         }
 
-        return JsonResponse::create();
+        return new JsonResponse();
     }
 
     public function redirect(?string $redirectRoute = null): Response
     {
         if ($redirectRoute !== null) {
-            return RedirectResponse::create(
+            $redirectResponse = new RedirectResponse(
                 Url::fromRoute($redirectRoute)->toString(true)->getGeneratedUrl()
             );
+
+            return $redirectResponse;
         }
 
-        return Response::create();
+        return new Response();
     }
 
     public function redirectFromExample(?string $redirectRoute = null): Response
     {
         if ($this->request->headers->get('referer') === 'https://example.com/from') {
-            return RedirectResponse::create(
+            $redirectResponse = new RedirectResponse(
                 Url::fromRoute($redirectRoute)->toString(true)->getGeneratedUrl()
             );
+
+            return $redirectResponse;
         }
 
-        return Response::create();
+        return new Response();
     }
 }

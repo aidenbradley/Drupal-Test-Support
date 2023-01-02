@@ -20,5 +20,10 @@
         "illuminate/collections": "^8.77",
         "opis/closure": "^3.6",
         "nesbot/carbon": "2.x-dev"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
