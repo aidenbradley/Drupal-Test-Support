@@ -108,10 +108,13 @@ trait MakesHttpRequests
     public function json(string $method, string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
     {
         $headers = array_merge([
-            'CONTENT_LENGTH' => mb_strlen($content, '8bit'),
             'CONTENT_TYPE' => 'application/json',
             'Accept' => 'application/json',
         ], $server);
+
+        if ($content !== null) {
+            $headers['CONTENT_LENGTH'] = mb_strlen($content, '8bit');
+        }
 
         return $this->call(
             $method,
