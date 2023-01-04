@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\test_support\Traits\Support;
 
-use Drupal\Tests\test_support\Traits\Support\Decorators\DecoratedEventDispatcher;
+use Drupal\Tests\test_support\Traits\Support\Contracts\TestEventDispatcher;
+use Drupal\Tests\test_support\Traits\Support\Decorators\Drupal10EventDispatcher;
+use Drupal\Tests\test_support\Traits\Support\Factory\EventDispatcherFactory;
 use Illuminate\Support\Collection;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -21,11 +23,9 @@ trait WithoutEvents
     /** Mock the event dispatcher. All dispatched events are collected */
     public function withoutEvents(): self
     {
-        $dispatcher = DecoratedEventDispatcher::create(
+        $this->container->set('event_dispatcher', EventDispatcherFactory::create(
             $this->container->get('event_dispatcher')
-        );
-
-        $this->container->set('event_dispatcher', $dispatcher);
+        ));
 
         return $this;
     }
@@ -86,9 +86,8 @@ trait WithoutEvents
         parent::teardown();
     }
 
-    private function eventDispatcher(): DecoratedEventDispatcher
+    private function eventDispatcher(): TestEventDispatcher
     {
-        // might need a check on the class returned here?
         return $this->container->get('event_dispatcher');
     }
 }
