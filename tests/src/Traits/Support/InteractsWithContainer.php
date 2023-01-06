@@ -10,13 +10,11 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 trait InteractsWithContainer
 {
     /**
-     * Gets a service based on the service ID or the class string that represents the service ID.
+     * Gets a service based on the service ID.
      *
      * E.G.
      *
      * $this->service('node.route_subscriber');
-     * $this->service('Drupal\node\Routing\RouteSubscriber::class');
-     * $this->service(RouteSubscriber::class);
      *
      * @param string $id              The service identifier or class string
      * @param int    $invalidBehavior The behavior when the service does not exist
@@ -32,17 +30,6 @@ trait InteractsWithContainer
      */
     public function service(string $serviceId)
     {
-        if (class_exists($serviceId) && $this->container->has($serviceId) === false) {
-            /** @var Definition $definition */
-            foreach ($this->container->getDefinitions() as $definition) {
-                if ($definition->getClass() !== $serviceId) {
-                    continue;
-                }
-
-                $serviceId = $definition->getProperties()['_serviceId'];
-            }
-        }
-
         return $this->container->get($serviceId);
     }
 }

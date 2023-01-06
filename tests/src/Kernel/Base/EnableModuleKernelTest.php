@@ -17,7 +17,7 @@ abstract class EnableModuleKernelTest extends KernelTestBase
     /** @var array */
     private $entityTypeDefinitionsPreInstall;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

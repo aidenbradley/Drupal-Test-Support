@@ -17,7 +17,7 @@ class InteractsWithAuthenticationTest extends KernelTestBase
         'user',
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

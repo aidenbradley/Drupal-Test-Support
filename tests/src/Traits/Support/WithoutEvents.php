@@ -2,6 +2,9 @@
 
 namespace Drupal\Tests\test_support\Traits\Support;
 
+use Drupal\Tests\test_support\Traits\Support\Contracts\TestEventDispatcher;
+use Drupal\Tests\test_support\Traits\Support\Decorators\Drupal10EventDispatcher;
+use Drupal\Tests\test_support\Traits\Support\Factory\EventDispatcherFactory;
 use Illuminate\Support\Collection;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -20,13 +23,9 @@ trait WithoutEvents
     /** Mock the event dispatcher. All dispatched events are collected */
     public function withoutEvents(): self
     {
-        $dispatcher = $this->prophesize(EventDispatcherInterface::class);
-
-        $dispatcher->dispatch(Argument::any(), Argument::any())->will([
-            $this, 'registerDispatchedEvent'
-        ]);
-
-        $this->container->set('event_dispatcher', $dispatcher->reveal());
+        $this->container->set('event_dispatcher', EventDispatcherFactory::create(
+            $this->container->get('event_dispatcher')
+        ));
 
         return $this;
     }
@@ -47,7 +46,7 @@ trait WithoutEvents
 
     public function assertDispatched($event, ?callable $callback = null): self
     {
-        $firedEvents = $this->getFiredEvents($event);
+        $firedEvents = $this->eventDispatcher()->getFiredEvents($event);
 
         $this->assertTrue($firedEvents->isNotEmpty(), $event . ' event was not dispatched');
 
@@ -60,7 +59,7 @@ trait WithoutEvents
 
     public function assertNotDispatched($event): self
     {
-        $this->assertTrue($this->getFiredEvents($event)->isEmpty(), $event . ' event was dispatched');
+        $this->assertTrue($this->eventDispatcher()->getFiredEvents($event)->isEmpty(), $event . ' event was dispatched');
 
         return $this;
     }
@@ -86,16 +85,9 @@ trait WithoutEvents
 
         parent::teardown();
     }
-    /**
-     * Get fired events.
-     * You can optionally pass an event name or event class to filter the list against
-     */
-    public function getFiredEvents(?string $event = null): Collection
+
+    private function eventDispatcher(): TestEventDispatcher
     {
-        return collect($this->firedEvents)->when($event, function(Collection $events, $event) {
-            return $events->filter(function($object, string $name) use ($event) {
-                return get_class($object) === $event || $name === $event;
-            });
-        });
+        return $this->container->get('event_dispatcher');
     }
 }

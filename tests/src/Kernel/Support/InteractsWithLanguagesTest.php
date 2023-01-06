@@ -14,7 +14,7 @@ class InteractsWithLanguagesTest extends KernelTestBase
         'system',
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

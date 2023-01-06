@@ -42,7 +42,9 @@ class DisableAllUsersBatch implements ContainerInjectionInterface
 
         batch_set($builder->toArray());
 
-        return Response::create('', 204);
+        $response = new Response('', Response::HTTP_NO_CONTENT);
+
+        return $response;
     }
 
     public function prepareBatchAndProcess(): RedirectResponse

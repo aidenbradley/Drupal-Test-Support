@@ -4,6 +4,7 @@ namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithSettings;
+use Symfony\Component\DependencyInjection\Reference;
 
 class InteractsWithSettingsTest extends KernelTestBase
 {
@@ -16,7 +17,7 @@ class InteractsWithSettingsTest extends KernelTestBase
      */
     public function supresses_errors_when_requiring_settings(): void
     {
-        $this->container->set('app.root', __DIR__);
+        $this->container->set('app.root', new Reference(__DIR__));
         $this->settingsLocation = '/__fixtures__/settings/fixture.settings.php';
 
         $this->assertEquals(

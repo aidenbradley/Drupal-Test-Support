@@ -6,7 +6,7 @@
  */
 function test_support_updatehooks_update_9001(array &$sandbox): void
 {
-    $userEntityQuery = \Drupal::entityQuery('user');
+    $userEntityQuery = \Drupal::entityQuery('user')->accessCheck(false);
 
     if (isset($sandbox['total']) === false) {
         $uids = $userEntityQuery->execute();
@@ -58,7 +58,7 @@ function test_support_updatehooks_update_9001(array &$sandbox): void
  */
 function test_support_updatehooks_update_9002(): void
 {
-    $userEntityQuery = \Drupal::entityQuery('user');
+    $userEntityQuery = \Drupal::entityQuery('user')->accessCheck(false);
 
     $uids = $userEntityQuery->execute();
 
@@ -76,7 +76,7 @@ function test_support_updatehooks_update_9002(): void
  */
 function test_support_updatehooks_update_9003(array &$sandbox): void
 {
-    $userEntityQuery = \Drupal::entityQuery('user');
+    $userEntityQuery = \Drupal::entityQuery('user')->accessCheck(false);
 
     if (isset($sandbox['total']) === false) {
         $uids = $userEntityQuery->execute();

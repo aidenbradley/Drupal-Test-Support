@@ -20,10 +20,4 @@ class InteractsWithContainerTest extends KernelTestBase
     {
         $this->assertInstanceOf(RouteSubscriber::class, $this->service('node.route_subscriber'));
     }
-
-    /** @test */
-    public function resolve_service_by_class_string(): void
-    {
-        $this->assertInstanceOf(RouteSubscriber::class, $this->service(RouteSubscriber::class));
-    }
 }

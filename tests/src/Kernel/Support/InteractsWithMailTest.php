@@ -21,7 +21,7 @@ class InteractsWithMailTest extends KernelTestBase
         'test_support_mail',
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

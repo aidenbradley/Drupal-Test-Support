@@ -10,7 +10,7 @@ class InstallsRolesTest extends KernelTestBase
 {
     use InstallsRoles;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
