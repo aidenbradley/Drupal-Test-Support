@@ -1,0 +1,8 @@
+time.request_time:
+    path: '/time/request-time'
+    defaults:
+        _controller: '\Drupal\test_support_time\Controller\TimeController::requestTime'
+    options:
+        no_cache: TRUE
+    requirements:
+        _access: 'TRUE'
