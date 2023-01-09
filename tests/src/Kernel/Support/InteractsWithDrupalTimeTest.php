@@ -162,7 +162,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     {
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
 
-        $this->assertEquals('Europe/Rome', date_default_timezone_get());
+        $this->assertEquals('Europe/London', date_default_timezone_get());
         $this->assertEquals('Europe/London', Carbon::now()->getTimezone());
 
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/Rome');
