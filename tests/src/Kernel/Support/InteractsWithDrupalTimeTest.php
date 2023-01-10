@@ -6,14 +6,16 @@ use Carbon\Carbon;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+use Drupal\node\Entity\NodeType;
+
+use Drupal\Tests\test_support\Traits\Support\InteractsWithAuthentication;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithDrupalTime;
 use Drupal\user\Entity\User;
 
 class InteractsWithDrupalTimeTest extends KernelTestBase
 {
     use InteractsWithDrupalTime,
-        MakesHttpRequests;
+        InteractsWithAuthentication;
 
     protected static $modules = [
         'test_support_time',
@@ -211,6 +213,55 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $user = $this->container->get('entity_type.manager')->getStorage('user')->load(100);
 
         $this->assertEquals('Europe/London', $user->getTimezone());
+    }
+
+    /** @test */
+    public function correctly_rendered_dates_adhere_to_user_timezone(): void
+    {
+        $this->enableModules([
+            'system',
+            'user',
+            'node',
+        ]);
+
+        $this->installEntitySchema('user');
+        $this->installEntitySchema('node');
+
+        NodeType::create([
+            'type' => 'page',
+            'name' => 'Basic page',
+        ])->save();
+
+        dump(date('jS F o H:i:s', $this->time()->getRequestTime()));
+        $this->travelTo('1st January 2000 15:00', 'Europe/London');
+        dump(date('jS F o H:i:s', $this->time()->getRequestTime()));
+
+        $node = $this->container->get('entity_type.manager')->getStorage('node')->create([
+            'type' => 'page',
+            'title' => 'node created on 1st January 2000 15:00 London time',
+            'created' => $this->time()->getRequestTime(),
+        ]);
+        $node->save();
+
+//        $userInRomeTimezone = $this->container->get('entity_type.manager')->getStorage('user')->create([
+//            'uid' => 100,
+//            'name' => 'user.timezone_test',
+//            'timezone' => 'Europe/Rome',
+//        ]);
+//        $userInRomeTimezone->save();
+
+        $nodeFormattedCreatedDate = $this->container->get('date.formatter')->format(
+            $node->created->value, 'custom', 'jS F o H:i:s'
+        );
+
+        $this->assertEquals('1st January 2000 15:00', $nodeFormattedCreatedDate);
+
+//        $this->actingAs($userInRomeTimezone);
+//
+//        $nodeFormattedCreatedDate = $this->container->get('date.formatter')->format(
+//            $node->created->value, 'custom', 'jS F o H:i:s'
+//        );
+//        $this->assertEquals('1st January 2000 16:00', $nodeFormattedCreatedDate);
     }
 
     private function assertTimeIs(string $time)
