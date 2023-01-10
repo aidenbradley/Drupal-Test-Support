@@ -3,6 +3,7 @@
 namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Carbon\Carbon;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
@@ -23,11 +24,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     {
         $this->travelTo('3rd January 2000 15:00:00');
 
-        $content = $this->get($this->route('time.request_time'))->getContent();
-
-        $response = json_decode($content);
-
-        $this->assertEquals('3rd January 2000 15:00:00', date('jS F o H:i:s', $response->request_time));
+        $this->assertTimeIs('3rd January 2000 15:00:00');
     }
 
     /** @test */
@@ -35,15 +32,11 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     {
         $this->travelTo('3rd January 2000 15:00:00');
 
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals('3rd January 2000 15:00:00', date('jS F o H:i:s', $response->request_time));
+        $this->assertTimeIs('3rd January 2000 15:00:00');
 
         $this->travel()->back();
 
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals(time(), $response->request_time);
+        $this->assertEquals(time(), $this->time()->getRequestTime());
     }
 
     /** @test */
@@ -53,33 +46,27 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
 
         $this->travel(5)->seconds();
 
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals('3rd January 2000 15:00:05', date('jS F o H:i:s', $response->request_time));
+        $this->assertTimeIs('3rd January 2000 15:00:05');
     }
 
     /** @test */
     public function minutes(): void
     {
-        Carbon::setTestNow('3rd January 2000 15:05:00');
+        $this->travelTo('3rd January 2000 15:05:00');
 
         $this->travel(5)->minutes();
 
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals('3rd January 2000 15:10:00', date('jS F o H:i:s', $response->request_time));
+        $this->assertTimeIs('3rd January 2000 15:10:00');
     }
 
     /** @test */
     public function hours(): void
     {
-        Carbon::setTestNow('3rd January 2000 15:00:00');
+        $this->travelTo('3rd January 2000 15:00:00');
 
         $this->travel(5)->hours();
 
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals('3rd January 2000 20:00:00', date('jS F o H:i:s', $response->request_time));
+        $this->assertTimeIs('3rd January 2000 20:00:00');
     }
 
     /** @test */
@@ -89,9 +76,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
 
         $this->travel(5)->days();
 
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals('8th January 2000 20:00:00', date('jS F o H:i:s', $response->request_time));
+        $this->assertTimeIs('8th January 2000 20:00:00');
     }
 
     /** @test */
@@ -101,33 +86,27 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
 
         $this->travel(2)->weeks();
 
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals('24th January 2000 20:00:00', date('jS F o H:i:s', $response->request_time));
+        $this->assertTimeIs('24th January 2000 20:00:00');
     }
 
     /** @test */
     public function months(): void
     {
-        Carbon::setTestNow('10th January 2000 20:00:00');
+        $this->travelTo('10th January 2000 20:00:00');
 
         $this->travel(2)->months();
 
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals('10th March 2000 20:00:00', date('jS F o H:i:s', $response->request_time));
+        $this->assertTimeIs('10th March 2000 20:00:00');
     }
 
     /** @test */
     public function years(): void
     {
-        Carbon::setTestNow('10th March 2000 20:00:00');
+        $this->travelTo('10th March 2000 20:00:00');
 
         $this->travel(2)->years();
 
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals('10th March 2002 20:00:00', date('jS F o H:i:s', $response->request_time));
+        $this->assertTimeIs('10th March 2002 20:00:00');
     }
 
     /** @test */
@@ -148,61 +127,41 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
             ])->save();
         });
 
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals(time(), $response->request_time);
+        $this->assertEquals(time(), $this->time()->getRequestTime());
 
         $timeTraveller = User::load(10);
+        $dateTimeTravellerWasCreated = date('jS F o H:i:s', $timeTraveller->created->value);
 
-        $this->assertEquals('3rd January 2005 15:00:00', date('jS F o H:i:s', $timeTraveller->created->value));
+        $this->assertEquals('3rd January 2005 15:00:00', $dateTimeTravellerWasCreated);
     }
 
     /** @test */
     public function travel_to_with_timezone(): void
     {
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
-
         $this->assertEquals('Europe/London', date_default_timezone_get());
-        $this->assertEquals('Europe/London', Carbon::now()->getTimezone());
 
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/Rome');
-
         $this->assertEquals('Europe/Rome', date_default_timezone_get());
-        $this->assertEquals('Europe/Rome', Carbon::now()->getTimezone());
     }
 
     /** @test */
     public function travel_to_timezone(): void
     {
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
-
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals('3rd January 2000 15:00:00', date('jS F o H:i:s', $response->request_time));
+        $this->assertTimeIs('3rd January 2000 15:00:00');
 
         $this->travel()->toTimezone('Europe/Rome');
-
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals('3rd January 2000 16:00:00', date('jS F o H:i:s', $response->request_time));
+        $this->assertTimeIs('3rd January 2000 16:00:00');
 
         $this->travel()->toTimezone('Europe/Athens');
-
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals('3rd January 2000 17:00:00', date('jS F o H:i:s', $response->request_time));
+        $this->assertTimeIs('3rd January 2000 17:00:00');
 
         $this->travel()->toTimezone('America/Los_Angeles');
-
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals('3rd January 2000 07:00:00', date('jS F o H:i:s', $response->request_time));
+        $this->assertTimeIs('3rd January 2000 07:00:00');
 
         $this->travel()->toTimezone('Europe/London');
-
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals('3rd January 2000 15:00:00', date('jS F o H:i:s', $response->request_time));
+        $this->assertTimeIs('3rd January 2000 15:00:00');
     }
 
     /** @test */
@@ -223,13 +182,35 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
             ])->save();
         });
 
-        $content = $this->get($this->route('time.request_time'))->getContent();
-        $response = json_decode($content);
-        $this->assertEquals(time(), $response->request_time);
+        $this->assertEquals(time(), $this->time()->getRequestTime());
 
         $timeTraveller = User::load(10);
+        $dateTimeTravellerWasCreated = date('jS F o H:i:s', $timeTraveller->created->value);
 
-        $this->assertEquals('3rd January 2000 16:00:00', date('jS F o H:i:s', $timeTraveller->created->value));
+        $this->assertEquals('3rd January 2000 16:00:00', $dateTimeTravellerWasCreated);
+    }
+
+    /** @test */
+    public function set_user_timezone(): void
+    {
+        $this->enableModules([
+            'user',
+        ]);
+        $this->installEntitySchema('user');
+
+        $user = $this->container->get('entity_type.manager')->getStorage('user')->create([
+            'uid' => 100,
+            'name' => 'user.timezone_test',
+        ]);
+        $user->save();
+
+        $this->assertNull($user->getTimeZone());
+
+        $this->setUsersTimezone($user, 'Europe/London');
+
+        $user = $this->container->get('entity_type.manager')->getStorage('user')->load(100);
+
+        $this->assertEquals('Europe/London', $user->getTimezone());
     }
 
     private function assertTimeIs(string $time)
@@ -243,5 +224,10 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     private function route(string $routeName, array $parameters = [], array $options = []): string
     {
         return Url::fromRoute(...func_get_args())->toString(true)->getGeneratedUrl();
+    }
+
+    private function time(): TimeInterface
+    {
+        return $this->container->get('datetime.time');
     }
 }
