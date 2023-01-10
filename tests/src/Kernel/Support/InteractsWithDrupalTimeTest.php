@@ -3,19 +3,20 @@
 namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Carbon\Carbon;
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\node\Entity\NodeType;
 
 use Drupal\Tests\test_support\Traits\Support\InteractsWithAuthentication;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithDrupalTime;
-use Drupal\user\Entity\User;
+use Drupal\Tests\test_support\Traits\Support\InteractsWithEntities;
 
 class InteractsWithDrupalTimeTest extends KernelTestBase
 {
     use InteractsWithDrupalTime,
-        InteractsWithAuthentication;
+        InteractsWithAuthentication,
+        InteractsWithEntities;
+
+    private const DATE_FORMAT = 'jS F o H:i:s';
 
     protected static $modules = [
         'test_support_time',
@@ -38,13 +39,13 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
 
         $this->travel()->back();
 
-        $this->assertEquals(time(), $this->time()->getRequestTime());
+        $this->assertEquals(time(), $this->getDrupalTime()->getRequestTime());
     }
 
     /** @test */
     public function seconds(): void
     {
-        Carbon::setTestNow('3rd January 2000 15:00:00');
+        $this->travelTo('3rd January 2000 15:00:00');
 
         $this->travel(5)->seconds();
 
@@ -74,7 +75,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     /** @test */
     public function days(): void
     {
-        Carbon::setTestNow('3rd January 2000 20:00:00');
+        $this->travelTo('3rd January 2000 20:00:00');
 
         $this->travel(5)->days();
 
@@ -84,7 +85,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     /** @test */
     public function weeks(): void
     {
-        Carbon::setTestNow('10th January 2000 20:00:00');
+        $this->travelTo('10th January 2000 20:00:00');
 
         $this->travel(2)->weeks();
 
@@ -122,17 +123,18 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->travelTo('3rd January 2000 15:00:00');
 
         $this->travel(5)->years(function() {
-            User::create([
+            $this->createEntity('user', [
                 'uid' => 10,
                 'name' => 'time.traveler',
                 'created' => Carbon::now()->timestamp,
-            ])->save();
+            ]);
         });
 
-        $this->assertEquals(time(), $this->time()->getRequestTime());
+        $this->assertEquals(time(), $this->getDrupalTime()->getRequestTime());
 
-        $timeTraveller = User::load(10);
-        $dateTimeTravellerWasCreated = date('jS F o H:i:s', $timeTraveller->created->value);
+        $dateTimeTravellerWasCreated = $this->formatDate(
+            $this->storage('user')->load(10)->created->value
+        );
 
         $this->assertEquals('3rd January 2005 15:00:00', $dateTimeTravellerWasCreated);
     }
@@ -177,17 +179,18 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
 
         $this->travel()->toTimezone('Europe/Rome', function() {
-            User::create([
+            $this->createEntity('user', [
                 'uid' => 10,
                 'name' => 'time.traveler',
                 'created' => Carbon::now()->timestamp,
-            ])->save();
+            ]);
         });
 
-        $this->assertEquals(time(), $this->time()->getRequestTime());
+        $this->assertEquals(time(), $this->getDrupalTime()->getRequestTime());
 
-        $timeTraveller = User::load(10);
-        $dateTimeTravellerWasCreated = date('jS F o H:i:s', $timeTraveller->created->value);
+        $dateTimeTravellerWasCreated = $this->formatDate(
+            $this->storage('user')->load(10)->created->value
+        );
 
         $this->assertEquals('3rd January 2000 16:00:00', $dateTimeTravellerWasCreated);
     }
@@ -200,17 +203,14 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         ]);
         $this->installEntitySchema('user');
 
-        $user = $this->container->get('entity_type.manager')->getStorage('user')->create([
+        $user = $this->createEntity('user', [
             'uid' => 100,
             'name' => 'user.timezone_test',
         ]);
-        $user->save();
 
         $this->assertNull($user->getTimeZone());
 
         $this->setUsersTimezone($user, 'Europe/London');
-
-        $user = $this->container->get('entity_type.manager')->getStorage('user')->load(100);
 
         $this->assertEquals('Europe/London', $user->getTimezone());
     }
@@ -227,49 +227,39 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->installEntitySchema('user');
         $this->installEntitySchema('node');
 
-        NodeType::create([
+        $this->createEntity('node_type', [
             'type' => 'page',
             'name' => 'Basic page',
-        ])->save();
+        ]);
 
-        dump(date('jS F o H:i:s', $this->time()->getRequestTime()));
-        $this->travelTo('1st January 2000 15:00', 'Europe/London');
-        dump(date('jS F o H:i:s', $this->time()->getRequestTime()));
+        $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
+        $this->assertTimeIs('3rd January 2000 15:00:00');
 
-        $node = $this->container->get('entity_type.manager')->getStorage('node')->create([
+        $node = $this->createEntity('node', [
             'type' => 'page',
             'title' => 'node created on 1st January 2000 15:00 London time',
-            'created' => $this->time()->getRequestTime(),
+            'created' => $this->getDrupalTime()->getRequestTime(),
         ]);
-        $node->save();
 
-//        $userInRomeTimezone = $this->container->get('entity_type.manager')->getStorage('user')->create([
-//            'uid' => 100,
-//            'name' => 'user.timezone_test',
-//            'timezone' => 'Europe/Rome',
-//        ]);
-//        $userInRomeTimezone->save();
+        $userInRomeTimezone = $this->createEntity('user', [
+            'uid' => 100,
+            'name' => 'user.timezone_test',
+            'timezone' => 'Europe/Rome',
+        ]);
 
-        $nodeFormattedCreatedDate = $this->container->get('date.formatter')->format(
-            $node->created->value, 'custom', 'jS F o H:i:s'
-        );
+        $nodeFormattedCreatedDate = $this->formatDateInUsersTimezone($node->created->value);
+        $this->assertEquals('3rd January 2000 15:00:00', $nodeFormattedCreatedDate);
 
-        $this->assertEquals('1st January 2000 15:00', $nodeFormattedCreatedDate);
+        $this->actingAs($userInRomeTimezone);
 
-//        $this->actingAs($userInRomeTimezone);
-//
-//        $nodeFormattedCreatedDate = $this->container->get('date.formatter')->format(
-//            $node->created->value, 'custom', 'jS F o H:i:s'
-//        );
-//        $this->assertEquals('1st January 2000 16:00', $nodeFormattedCreatedDate);
+        $nodeFormattedCreatedDate = $this->formatDateInUsersTimezone($node->created->value);
+        $this->assertEquals('3rd January 2000 16:00:00', $nodeFormattedCreatedDate);
     }
 
     private function assertTimeIs(string $time)
     {
-        $drupalTime = $this->container->get('datetime.time');
-
-        $this->assertEquals($time, date('jS F o H:i:s', $drupalTime->getRequestTime()));
-        $this->assertEquals($time, date('jS F o H:i:s', $drupalTime->getCurrentTime()));
+        $this->assertEquals($time, $this->formatDate($this->getDrupalTime()->getRequestTime()));
+        $this->assertEquals($time, $this->formatDate($this->getDrupalTime()->getCurrentTime()));
     }
 
     private function route(string $routeName, array $parameters = [], array $options = []): string
@@ -277,8 +267,15 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         return Url::fromRoute(...func_get_args())->toString(true)->getGeneratedUrl();
     }
 
-    private function time(): TimeInterface
+    private function formatDate(int $timestamp, string $format = self::DATE_FORMAT): string
     {
-        return $this->container->get('datetime.time');
+        return date($format, $timestamp);
+    }
+
+    private function formatDateInUsersTimezone(int $timestamp, string $format = self::DATE_FORMAT): string
+    {
+        return $this->container->get('date.formatter')->format(
+            $timestamp, 'custom', $format, $this->container->get('current_user')->getTimezone()
+        );
     }
 }

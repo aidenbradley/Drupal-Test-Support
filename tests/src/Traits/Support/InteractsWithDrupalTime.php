@@ -3,6 +3,7 @@
 namespace Drupal\Tests\test_support\Traits\Support;
 
 use Carbon\Carbon;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Tests\test_support\Traits\Support\Time\Tardis;
 use Drupal\Tests\test_support\Traits\Support\Time\Time;
 use Drupal\user\UserInterface;
@@ -38,6 +39,11 @@ trait InteractsWithDrupalTime
         $this->setDrupalTime();
 
         return Tardis::createFromTravel($travel);
+    }
+
+    protected function getDrupalTime(): TimeInterface
+    {
+        return $this->container->get('datetime.time');
     }
 
     private function setDrupalTime(): void
