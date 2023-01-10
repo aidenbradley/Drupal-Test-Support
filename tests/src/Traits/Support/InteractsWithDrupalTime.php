@@ -4,6 +4,7 @@ namespace Drupal\Tests\test_support\Traits\Support;
 
 use Carbon\Carbon;
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Tests\test_support\Traits\Installs\InstallsExportedConfig;
 use Drupal\Tests\test_support\Traits\Support\Time\Tardis;
 use Drupal\Tests\test_support\Traits\Support\Time\Time;
 use Drupal\user\UserInterface;
@@ -11,6 +12,8 @@ use Drupal\user\UserInterface;
 /** Useful test trait if you are using nesbot/caron to handle datetime */
 trait InteractsWithDrupalTime
 {
+    use InstallsExportedConfig;
+
     protected function setUsersTimezone(UserInterface $user, string $timezone): self
     {
         $user->set('timezone', $timezone);
@@ -44,6 +47,15 @@ trait InteractsWithDrupalTime
     protected function getDrupalTime(): TimeInterface
     {
         return $this->container->get('datetime.time');
+    }
+
+    protected function setSystemDefaultTimezone(string $timezone): self
+    {
+        $this->installExportedConfig('system.date');
+
+        $this->config('system.date')->set('timezone.default', $timezone)->save();
+
+        return $this;
     }
 
     private function setDrupalTime(): void

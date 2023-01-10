@@ -17,6 +17,7 @@ class InteractsWithSettingsTest extends KernelTestBase
      */
     public function supresses_errors_when_requiring_settings(): void
     {
+        // for Drupal 10, this needs to use ->setParameter instead as the app.root service no longer exists
         $this->container->set('app.root', new Reference(__DIR__));
         $this->settingsLocation = '/__fixtures__/settings/fixture.settings.php';
 
