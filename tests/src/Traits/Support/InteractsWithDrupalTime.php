@@ -14,6 +14,9 @@ trait InteractsWithDrupalTime
 {
     use InstallsExportedConfig;
 
+    /** @var bool */
+    private $setupDateDependencies = false;
+
     protected function setUsersTimezone(UserInterface $user, string $timezone): self
     {
         $user->set('timezone', $timezone);
@@ -51,7 +54,7 @@ trait InteractsWithDrupalTime
 
     protected function setSystemDefaultTimezone(string $timezone): self
     {
-        $this->installExportedConfig('system.date');
+        $this->setupDateDependencies();
 
         $this->config('system.date')->set('timezone.default', $timezone)->save();
 
@@ -61,5 +64,20 @@ trait InteractsWithDrupalTime
     private function setDrupalTime(): void
     {
         $this->container->set('datetime.time', Time::fake());
+    }
+
+    private function setupDateDependencies(): void
+    {
+        if ($this->setupDateDependencies === true) {
+            return;
+        }
+
+        $this->enableModules([
+            'system',
+        ]);
+        $this->installConfig('system');
+        $this->installExportedConfig('system.date');
+
+        $this->setupDateDependencies = true;
     }
 }

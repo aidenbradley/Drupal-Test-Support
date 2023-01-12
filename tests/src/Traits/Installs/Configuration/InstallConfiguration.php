@@ -54,12 +54,19 @@ trait InstallConfiguration
                 }
             }
 
-            /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $storage */
-            $storage = $this->container->get('entity_type.manager')->getStorage(
-                $this->container->get('config.manager')->getEntityTypeIdByName($configName)
-            );
+            $entityType = $this->container->get('config.manager')->getEntityTypeIdByName($configName);
 
-            $storage->createFromStorageRecord($configRecord)->save();
+            if ($entityType) {
+                $storage = $this->container->get('entity_type.manager')->getStorage($entityType);
+
+                if (is_array($configRecord) === false) {
+                    throw ConfigInstallFailed::couldNotHandle($configName);
+                }
+
+                $storage->createFromStorageRecord($configRecord)->save();
+            } else {
+                $this->container->get('config.factory')->getEditable($configName)->setData($configRecord)->save();
+            }
         }
 
         return $this;

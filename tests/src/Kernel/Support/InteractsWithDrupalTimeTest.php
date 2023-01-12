@@ -26,10 +26,11 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     public function set_system_default_timezone(): void
     {
         $this->assertNull($this->config('system.date')->get('timezone'));
+
         $this->assertFalse(isset($this->config('system.date')->get('timezone')['default']));
 
         $this->setSystemDefaultTimezone('Europe/Rome');
-        dump($this->config('system.date')->get('timezone'));
+
         $this->assertEquals('Europe/Rome', $this->config('system.date')->get('timezone')['default']);
     }
 
