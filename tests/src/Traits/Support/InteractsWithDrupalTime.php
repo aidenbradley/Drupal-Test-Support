@@ -27,6 +27,8 @@ trait InteractsWithDrupalTime
 
     protected function travelTo(string $date, ?string $timezone = null): self
     {
+        $this->setupDateDependencies();
+
         if ($timezone === null) {
             $timezone = Carbon::now()->getTimezone();
         }
@@ -35,20 +37,20 @@ trait InteractsWithDrupalTime
             Carbon::createFromTimeString($date)->shiftTimezone($timezone)
         );
 
-        $this->setDrupalTime();
-
         return $this;
     }
 
     protected function travel(?int $travel = null): Tardis
     {
-        $this->setDrupalTime();
+        $this->setupDateDependencies();
 
         return Tardis::createFromTravel($travel);
     }
 
     protected function getDrupalTime(): TimeInterface
     {
+        $this->setupDateDependencies();
+
         return $this->container->get('datetime.time');
     }
 
@@ -59,11 +61,6 @@ trait InteractsWithDrupalTime
         $this->config('system.date')->set('timezone.default', $timezone)->save();
 
         return $this;
-    }
-
-    private function setDrupalTime(): void
-    {
-        $this->container->set('datetime.time', Time::fake());
     }
 
     private function setupDateDependencies(): void
@@ -77,6 +74,8 @@ trait InteractsWithDrupalTime
         ]);
         $this->installConfig('system');
         $this->installExportedConfig('system.date');
+
+        $this->container->set('datetime.time', Time::fake());
 
         $this->setupDateDependencies = true;
     }
