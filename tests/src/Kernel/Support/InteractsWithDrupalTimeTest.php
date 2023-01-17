@@ -183,23 +183,23 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     /** @test */
     public function travel_to_timezone(): void
     {
-        $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
-        $this->assertTimeIs('3rd January 2000 15:00:00');
+        $this->travelTo('10th January 2020 15:00:00', 'Europe/London');
+        $this->assertTimeIs('10th January 2020 15:00:00');
 
         $this->travel()->toTimezone('Europe/Rome');
-        $this->assertTimeIs('3rd January 2000 16:00:00');
+        $this->assertTimeIs('10th January 2020 16:00:00');
 
         $this->travel()->toTimezone('Europe/Athens');
-        $this->assertTimeIs('3rd January 2000 17:00:00');
+        $this->assertTimeIs('10th January 2020 17:00:00');
 
         $this->travel()->toTimezone('Europe/Istanbul');
-        $this->assertTimeIs('3rd January 2000 18:00:00');
+        $this->assertTimeIs('10th January 2020 18:00:00');
 
         $this->travel()->toTimezone('America/Los_Angeles');
-        $this->assertTimeIs('3rd January 2000 07:00:00');
+        $this->assertTimeIs('10th January 2020 07:00:00');
 
         $this->travel()->toTimezone('Europe/London');
-        $this->assertTimeIs('3rd January 2000 15:00:00');
+        $this->assertTimeIs('10th January 2020 15:00:00');
     }
 
     /** @test */
