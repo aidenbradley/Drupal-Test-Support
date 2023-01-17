@@ -38,19 +38,19 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     /** @test */
     public function set_system_timezone_and_travel(): void
     {
-        $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
-        $this->assertTimeIs('3rd January 2000 15:00:00');
+        $this->travelTo('15th January 2020 15:00:00', 'Europe/London');
+        $this->assertTimeIs('15th January 2020 15:00:00');
 
         $this->setSystemDefaultTimezone('Europe/Rome');
         $this->assertEquals('Europe/Rome', date_default_timezone_get());
-        $this->assertTimeIs('3rd January 2000 16:00:00');
+        $this->assertTimeIs('15th January 2020 16:00:00');
 
-        $this->travelTo('3rd January 2000 17:00:00', 'Europe/Athens');
-        $this->assertTimeIs('3rd January 2000 17:00:00');
+        $this->travelTo('15th January 2020 17:00:00', 'Europe/Athens');
+        $this->assertTimeIs('15th January 2020 17:00:00');
 
         $this->setSystemDefaultTimezone('Europe/Istanbul');
         $this->assertEquals('Europe/Istanbul', date_default_timezone_get());
-        $this->assertTimeIs('3rd January 2000 18:00:00');
+        $this->assertTimeIs('15th January 2020 18:00:00');
     }
 
     /** @test */
