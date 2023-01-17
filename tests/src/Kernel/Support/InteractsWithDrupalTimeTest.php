@@ -157,7 +157,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
             $this->createEntity('user', [
                 'uid' => 10,
                 'name' => 'time.traveler',
-                'created' => Carbon::now()->timestamp,
+                'created' => $this->getDrupalTime()->getCurrentTime(),
             ]);
         });
 
@@ -216,7 +216,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
             $this->createEntity('user', [
                 'uid' => 10,
                 'name' => 'time.traveler',
-                'created' => Carbon::now()->timestamp,
+                'created' => $this->getDrupalTime()->getCurrentTime(),
             ]);
         });
 

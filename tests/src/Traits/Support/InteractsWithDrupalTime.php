@@ -9,7 +9,6 @@ use Drupal\Tests\test_support\Traits\Support\Time\Tardis;
 use Drupal\Tests\test_support\Traits\Support\Time\Time;
 use Drupal\user\UserInterface;
 
-/** Useful test trait if you are using nesbot/caron to handle datetime */
 trait InteractsWithDrupalTime
 {
     use InstallsExportedConfig;
