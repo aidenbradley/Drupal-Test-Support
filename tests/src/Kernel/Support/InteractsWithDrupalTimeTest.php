@@ -3,7 +3,6 @@
 namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Carbon\Carbon;
-use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 
 use Drupal\Tests\test_support\Traits\Support\InteractsWithAuthentication;
@@ -21,37 +20,6 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     protected static $modules = [
         'test_support_time',
     ];
-
-    /** @test */
-    public function set_system_default_timezone(): void
-    {
-        $this->assertNull($this->config('system.date')->get('timezone'));
-
-        $this->assertFalse(isset($this->config('system.date')->get('timezone')['default']));
-
-        $this->setSystemDefaultTimezone('Europe/Rome');
-        $this->assertEquals('Europe/Rome', date_default_timezone_get());
-
-        $this->assertEquals('Europe/Rome', $this->config('system.date')->get('timezone')['default']);
-    }
-
-    /** @test */
-    public function set_system_timezone_and_travel(): void
-    {
-        $this->travelTo('15th January 2020 15:00:00', 'Europe/London');
-        $this->assertTimeIs('15th January 2020 15:00:00');
-
-        $this->setSystemDefaultTimezone('Europe/Rome');
-        $this->assertEquals('Europe/Rome', date_default_timezone_get());
-        $this->assertTimeIs('15th January 2020 16:00:00');
-
-        $this->travelTo('15th January 2020 17:00:00', 'Europe/Athens');
-        $this->assertTimeIs('15th January 2020 17:00:00');
-
-        $this->setSystemDefaultTimezone('Europe/Istanbul');
-        $this->assertEquals('Europe/Istanbul', date_default_timezone_get());
-        $this->assertTimeIs('15th January 2020 18:00:00');
-    }
 
     /** @test */
     public function travel_to(): void
@@ -184,22 +152,58 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     public function travel_to_timezone(): void
     {
         $this->travelTo('10th January 2020 15:00:00', 'Europe/London');
+        $this->assertTimezoneIs('Europe/London');
         $this->assertTimeIs('10th January 2020 15:00:00');
 
         $this->travel()->toTimezone('Europe/Rome');
+        $this->assertTimezoneIs('Europe/Rome');
         $this->assertTimeIs('10th January 2020 16:00:00');
 
         $this->travel()->toTimezone('Europe/Athens');
+        $this->assertTimezoneIs('Europe/Athens');
         $this->assertTimeIs('10th January 2020 17:00:00');
 
         $this->travel()->toTimezone('Europe/Istanbul');
+        $this->assertTimezoneIs('Europe/Istanbul');
         $this->assertTimeIs('10th January 2020 18:00:00');
 
         $this->travel()->toTimezone('America/Los_Angeles');
+        $this->assertTimezoneIs('America/Los_Angeles');
         $this->assertTimeIs('10th January 2020 07:00:00');
 
         $this->travel()->toTimezone('Europe/London');
+        $this->assertTimezoneIs('Europe/London');
         $this->assertTimeIs('10th January 2020 15:00:00');
+    }
+
+    /** @test */
+    public function set_system_default_timezone(): void
+    {
+        $this->assertNull($this->config('system.date')->get('timezone'));
+
+        $this->setSystemDefaultTimezone('Europe/Rome');
+
+        $this->assertTimezoneIs('Europe/Rome');
+    }
+
+    /** @test */
+    public function set_system_timezone_and_travel(): void
+    {
+        $this->travelTo('15th January 2020 15:00:00', 'Europe/London');
+        $this->assertTimezoneIs('Europe/London');
+        $this->assertTimeIs('15th January 2020 15:00:00');
+
+        $this->setSystemDefaultTimezone('Europe/Rome');
+        $this->assertTimezoneIs('Europe/Rome');
+        $this->assertTimeIs('15th January 2020 16:00:00');
+
+        $this->travelTo('15th January 2020 17:00:00', 'Europe/Athens');
+        $this->assertTimezoneIs('Europe/Athens');
+        $this->assertTimeIs('15th January 2020 17:00:00');
+
+        $this->setSystemDefaultTimezone('Europe/Istanbul');
+        $this->assertTimezoneIs('Europe/Istanbul');
+        $this->assertTimeIs('15th January 2020 18:00:00');
     }
 
     /** @test */
@@ -260,34 +264,27 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->installEntitySchema('node');
         $this->installEntitySchema('user');
 
-        $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
+        $this->travelTo('5th April 2020 15:00:00', 'Europe/London');
+        $this->assertTimezoneIs('Europe/London');
 
         $node = $this->createEntity('node', [
             'type' => 'page',
-            'title' => 'node created on 1st January 2000 15:00 London time',
+            'title' => 'node created on 5th April 2020 at 15:00:00 London time',
             'created' => $this->getDrupalTime()->getRequestTime(),
         ]);
-
-        $nodeCreatedDateFormatted = $this->container->get('date.formatter')->format(
-            $node->created->value, 'custom', self::DATE_FORMAT
-        );
-        $this->assertEquals('3rd January 2000 15:00:00', $nodeCreatedDateFormatted);
+        $this->assertEquals('5th April 2020 15:00:00', $this->formatDate($node->created->value));
 
         $this->setSystemDefaultTimezone('Europe/Rome');
-        $this->assertEquals('Europe/Rome', date_default_timezone_get());
-
-        $nodeCreatedDateFormatted = $this->container->get('date.formatter')->format(
-            $node->created->value, 'custom', self::DATE_FORMAT
-        );
-        $this->assertEquals('3rd January 2000 16:00:00', $nodeCreatedDateFormatted);
+        $this->assertTimezoneIs('Europe/Rome');
+        $this->assertEquals('5th April 2020 16:00:00', $this->formatDate($node->created->value));
 
         $this->setSystemDefaultTimezone('Europe/Athens');
-        $this->assertEquals('Europe/Athens', date_default_timezone_get());
+        $this->assertTimezoneIs('Europe/Athens');
+        $this->assertEquals('5th April 2020 17:00:00', $this->formatDate($node->created->value));
 
-        $nodeCreatedDateFormatted = $this->container->get('date.formatter')->format(
-            $node->created->value, 'custom', self::DATE_FORMAT
-        );
-        $this->assertEquals('3rd January 2000 17:00:00', $nodeCreatedDateFormatted);
+        $this->setSystemDefaultTimezone('Europe/Istanbul');
+        $this->assertTimezoneIs('Europe/Istanbul');
+        $this->assertEquals('5th April 2020 18:00:00', $this->formatDate($node->created->value));
     }
 
     /** @test */
@@ -308,6 +305,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         ]);
 
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
+        $this->assertTimezoneIs('Europe/London');
         $this->assertTimeIs('3rd January 2000 15:00:00');
 
         $node = $this->createEntity('node', [
@@ -321,36 +319,32 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
             'name' => 'user.timezone_test',
             'timezone' => 'Europe/Rome',
         ]);
-
-        $nodeFormattedCreatedDate = $this->formatDateInUsersTimezone($node->created->value);
-        $this->assertEquals('3rd January 2000 15:00:00', $nodeFormattedCreatedDate);
+        $this->assertEquals('3rd January 2000 15:00:00', $this->formatDate($node->created->value));
 
         $this->actingAs($userInRomeTimezone);
-
-        $nodeFormattedCreatedDate = $this->formatDateInUsersTimezone($node->created->value);
-        $this->assertEquals('3rd January 2000 16:00:00', $nodeFormattedCreatedDate);
+        $this->assertEquals('3rd January 2000 16:00:00', $this->formatDate($node->created->value));
     }
 
-    private function assertTimeIs(string $time)
+    private function assertTimeIs(string $time): void
     {
         $this->assertEquals($time, $this->formatDate($this->getDrupalTime()->getRequestTime()));
         $this->assertEquals($time, $this->formatDate($this->getDrupalTime()->getCurrentTime()));
     }
 
-    private function route(string $routeName, array $parameters = [], array $options = []): string
+    private function assertTimezoneIs(?string $timezone): void
     {
-        return Url::fromRoute(...func_get_args())->toString(true)->getGeneratedUrl();
+        if ($timezone !== null) {
+            // The 'Australia/Sydney' time zone is set in core/tests/bootstrap.php, so null will fail this assertion
+            $this->assertEquals($timezone, date_default_timezone_get());
+        }
+
+        $this->assertEquals($timezone, $this->config('system.date')->get('timezone')['default']);
     }
 
-    private function formatDate(int $timestamp, string $format = self::DATE_FORMAT): string
-    {
-        return date($format, $timestamp);
-    }
-
-    private function formatDateInUsersTimezone(int $timestamp, string $format = self::DATE_FORMAT): string
+    private function formatDate(int $timestamp, string $timezone = null, string $format = self::DATE_FORMAT): string
     {
         return $this->container->get('date.formatter')->format(
-            $timestamp, 'custom', $format, $this->container->get('current_user')->getTimezone()
+            $timestamp, 'custom', $format, $timezone
         );
     }
 }
