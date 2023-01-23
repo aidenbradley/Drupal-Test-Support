@@ -36,7 +36,7 @@ trait InteractsWithDrupalTime
             Carbon::createFromTimeString($date)->shiftTimezone($timezone)
         );
 
-        $this->setSystemDefaultTimezone($timezone);
+        $this->travel()->toTimezone($timezone);
 
         return $this;
     }
@@ -53,17 +53,6 @@ trait InteractsWithDrupalTime
         $this->setupDateDependencies();
 
         return $this->container->get('datetime.time');
-    }
-
-    protected function setSystemDefaultTimezone(string $timezone): self
-    {
-        $this->setupDateDependencies();
-
-        $this->config('system.date')->set('timezone.default', $timezone)->save();
-
-        $this->travel()->toTimezone($timezone);
-
-        return $this;
     }
 
     private function setupDateDependencies(): void

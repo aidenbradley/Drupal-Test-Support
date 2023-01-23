@@ -186,11 +186,11 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
-    public function set_system_default_timezone(): void
+    public function travelling_timezone_set_to_system_default_timezone(): void
     {
         $this->assertNull($this->config('system.date')->get('timezone'));
 
-        $this->setSystemDefaultTimezone('Europe/Rome');
+        $this->travel()->toTimezone('Europe/Rome');
 
         $this->assertTimezoneIs('Europe/Rome');
     }
@@ -202,15 +202,15 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->assertTimezoneIs('Europe/London');
         $this->assertTimeIs('15th January 2020 15:00:00');
 
-        $this->setSystemDefaultTimezone('Europe/Rome');
+        $this->travel()->toTimezone('Europe/Rome');
         $this->assertTimezoneIs('Europe/Rome');
         $this->assertTimeIs('15th January 2020 16:00:00');
 
-        $this->setSystemDefaultTimezone('Europe/Athens');
+        $this->travel()->toTimezone('Europe/Athens');
         $this->assertTimezoneIs('Europe/Athens');
         $this->assertTimeIs('15th January 2020 17:00:00');
 
-        $this->setSystemDefaultTimezone('Europe/Istanbul');
+        $this->travel()->toTimezone('Europe/Istanbul');
         $this->assertTimezoneIs('Europe/Istanbul');
         $this->assertTimeIs('15th January 2020 18:00:00');
     }
@@ -255,7 +255,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     /** @test */
     public function correctly_rendered_dates_adhere_to_system_timezone(): void
     {
-        $this->setSystemDefaultTimezone('Europe/London');
+        $this->travel()->toTimezone('Europe/London');
         $this->assertTimezoneIs('Europe/London');
         $this->travelTo('5th February 2022 15:00:00');
 
@@ -266,15 +266,15 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         ]);
         $this->assertEquals('5th February 2022 15:00:00', $this->formatDate($node->created->value));
 
-        $this->setSystemDefaultTimezone('Europe/Rome');
+        $this->travel()->toTimezone('Europe/Rome');
         $this->assertTimezoneIs('Europe/Rome');
         $this->assertEquals('5th February 2022 16:00:00', $this->formatDate($node->created->value));
 
-        $this->setSystemDefaultTimezone('Europe/Athens');
+        $this->travel()->toTimezone('Europe/Athens');
         $this->assertTimezoneIs('Europe/Athens');
         $this->assertEquals('5th February 2022 17:00:00', $this->formatDate($node->created->value));
 
-        $this->setSystemDefaultTimezone('Europe/Istanbul');
+        $this->travel()->toTimezone('Europe/Istanbul');
         $this->assertTimezoneIs('Europe/Istanbul');
         $this->assertEquals('5th February 2022 18:00:00', $this->formatDate($node->created->value));
     }
