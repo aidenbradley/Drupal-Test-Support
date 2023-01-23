@@ -151,10 +151,10 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     public function travel_to_with_timezone(): void
     {
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
-        $this->assertEquals('Europe/London', date_default_timezone_get());
+        $this->assertTimezoneIs('Europe/London');
 
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/Rome');
-        $this->assertEquals('Europe/Rome', date_default_timezone_get());
+        $this->assertTimezoneIs('Europe/Rome');
     }
 
     /** @test */
