@@ -309,7 +309,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->assertEquals($time, $this->formatDate($this->getDrupalTime()->getCurrentTime()));
     }
 
-    private function assertTimezoneIs(?string $timezone): void
+    private function assertTimezoneIs(?string $timezone = null): void
     {
         if ($timezone !== null) {
             // The 'Australia/Sydney' time zone is set in core/tests/bootstrap.php, so null will fail this assertion
