@@ -45,7 +45,7 @@ trait InteractsWithDrupalTime
     {
         $this->setupDateDependencies();
 
-        return Tardis::createFromTravel($travel);
+        return Tardis::createFromTravel($this->container, $travel);
     }
 
     protected function getDrupalTime(): TimeInterface
