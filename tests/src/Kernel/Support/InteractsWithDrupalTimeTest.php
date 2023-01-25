@@ -219,8 +219,11 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     public function freeze_timezone_travel(): void
     {
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
+        $this->assertTimezoneIs('Europe/London');
 
         $this->travel()->toTimezone('Europe/Rome', function() {
+            $this->assertTimezoneIs('Europe/Rome');
+
             $this->createEntity('user', [
                 'uid' => 10,
                 'name' => 'time.traveler',
@@ -229,11 +232,18 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         });
 
         $this->assertEquals(time(), $this->getDrupalTime()->getRequestTime());
+        $this->assertTimezoneIs('Europe/London');
 
         $dateTimeTravellerWasCreated = $this->formatDate(
             $this->storage('user')->load(10)->created->value
         );
+        $this->assertEquals('3rd January 2000 15:00:00', $dateTimeTravellerWasCreated);
 
+        $this->travel()->toTimezone('Europe/Rome');
+
+        $dateTimeTravellerWasCreated = $this->formatDate(
+            $this->storage('user')->load(10)->created->value
+        );
         $this->assertEquals('3rd January 2000 16:00:00', $dateTimeTravellerWasCreated);
     }
 

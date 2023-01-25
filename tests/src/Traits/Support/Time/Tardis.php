@@ -32,14 +32,39 @@ class Tardis
         $this->travel = $travel;
     }
 
-    public function back(): Carbon
+    public function back(): void
     {
         Carbon::setTestNow();
-
-        return Carbon::now();
     }
 
     public function toTimezone(string $timezone, ?callable $callback = null): void
+    {
+        $currentTimezone = Carbon::now()->getTimezone()->getName();
+
+        $this->setTimezone($timezone);
+
+        if ($callback === null) {
+            return;
+        }
+
+        $this->freezeTime($callback);
+
+        $this->setTimezone($currentTimezone);
+    }
+
+    /** @test */
+    public function freezeTime(?callable $callback = null): void
+    {
+        if (is_callable($callback) === false) {
+            return;
+        }
+
+        $callback();
+
+        $this->back();
+    }
+
+    private function setTimezone(string $timezone): void
     {
         Carbon::setTestNowAndTimezone(
             Carbon::now()->setTimezone($timezone)
@@ -49,12 +74,6 @@ class Tardis
             ->getEditable('system.date')
             ->set('timezone.default', $timezone)
             ->save();
-
-        if ($callback === null) {
-            return;
-        }
-
-        $this->freezeTime($callback);
     }
 
     public function __call(string $method, array $args): void
@@ -75,17 +94,5 @@ class Tardis
         }
 
         $this->freezeTime($args[0]);
-    }
-
-    /** @test */
-    public function freezeTime(?callable $callback = null): void
-    {
-        if (is_callable($callback) === false) {
-            return;
-        }
-
-        $callback();
-
-        $this->back();
     }
 }
