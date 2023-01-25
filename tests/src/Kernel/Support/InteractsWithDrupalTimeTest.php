@@ -344,10 +344,10 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->assertEquals($timezone, $this->config('system.date')->get('timezone')['default']);
     }
 
-    private function formatDate(int $timestamp, string $timezone = null, string $format = self::DATE_FORMAT): string
+    private function formatDate(int $timestamp): string
     {
         return $this->container->get('date.formatter')->format(
-            $timestamp, 'custom', $format, $timezone
+            $timestamp, 'custom', self::DATE_FORMAT
         );
     }
 }
