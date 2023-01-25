@@ -1,7 +1,0 @@
-name: Test Traits Time
-type: module
-description: 'Supporting module for the Test Traits module'
-package: Custom
-version: VERSION
-hidden: true
-core_version_requirement: ^8 || ^9
