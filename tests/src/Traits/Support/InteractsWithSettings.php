@@ -97,6 +97,7 @@ trait InteractsWithSettings
             return $this->container->getParameter('app.root');
         }
 
+
         return $this->container->get('app.root');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\test_support\Kernel\Support;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithSettings;
 use Symfony\Component\DependencyInjection\Reference;
@@ -10,6 +11,23 @@ class InteractsWithSettingsTest extends KernelTestBase
 {
     use InteractsWithSettings;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $container = new ContainerBuilder();
+
+        $container->set('kernel', $this->container->get('kernel'));
+
+        if (str_starts_with(\Drupal::VERSION, '10.')) {
+            $container->setParameter('app.root', __DIR__);
+        } else {
+            $container->set('app.root', new Reference(__DIR__));
+        }
+
+        $this->container = $container;
+    }
+
     /**
      * @test
      *
@@ -17,12 +35,10 @@ class InteractsWithSettingsTest extends KernelTestBase
      */
     public function supresses_errors_when_requiring_settings(): void
     {
-        // for Drupal 10, this needs to use ->setParameter instead as the app.root service no longer exists
-        $this->container->set('app.root', new Reference(__DIR__));
         $this->settingsLocation = '/__fixtures__/settings/fixture.settings.php';
 
         $this->assertEquals(
-            $this->container->get('app.root') . '/test/config/directory',
+            $this->container->getParameter('app.root') . '/test/config/directory',
             $this->getConfigurationDirectory()
         );
     }
