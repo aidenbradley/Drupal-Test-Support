@@ -148,6 +148,16 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    public function travelling_timezone_set_to_system_default_timezone(): void
+    {
+        $this->assertNull($this->config('system.date')->get('timezone'));
+
+        $this->travel()->toTimezone('Europe/Rome');
+
+        $this->assertEquals('Europe/Rome', $this->config('system.date')->get('timezone')['default']);
+    }
+
+    /** @test */
     public function travel_to_with_timezone(): void
     {
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
@@ -183,16 +193,6 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->travel()->toTimezone('Europe/London');
         $this->assertTimezoneIs('Europe/London');
         $this->assertTimeIs('10th January 2020 15:00:00');
-    }
-
-    /** @test */
-    public function travelling_timezone_set_to_system_default_timezone(): void
-    {
-        $this->assertNull($this->config('system.date')->get('timezone'));
-
-        $this->travel()->toTimezone('Europe/Rome');
-
-        $this->assertTimezoneIs('Europe/Rome');
     }
 
     /** @test */
