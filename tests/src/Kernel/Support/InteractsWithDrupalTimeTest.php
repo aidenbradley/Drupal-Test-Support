@@ -2,11 +2,13 @@
 
 namespace Drupal\Tests\test_support\Kernel\Support;
 
+use Drupal\Component\Utility\Random;
 use Drupal\KernelTests\KernelTestBase;
 
 use Drupal\Tests\test_support\Traits\Support\InteractsWithAuthentication;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithDrupalTime;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithEntities;
+use Drupal\user\Entity\User;
 
 class InteractsWithDrupalTimeTest extends KernelTestBase
 {
@@ -287,33 +289,24 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->assertTimezoneIs('Europe/London');
         $this->assertFalse($this->container->get('current_user')->isAuthenticated());
 
-        $romeUser = $this->createEntity('user', [
-            'name' => 'rome.user',
-            'timezone' => 'Europe/Rome',
-        ]);
+        $romeUser = $this->createUserWithTimezone('Europe/Rome');
         $this->actingAs($romeUser);
         $this->assertTimeIs('3rd January 2000 16:00:00');
         $this->assertEquals('Europe/Rome', date_default_timezone_get());
 
-        $athensUser = $this->createEntity('user', [
-            'name' => 'athens.user',
-            'timezone' => 'Europe/Athens',
-        ]);
+        $athensUser = $this->createUserWithTimezone('Europe/Athens');
         $this->actingAs($athensUser);
         $this->assertTimeIs('3rd January 2000 17:00:00');
         $this->assertEquals('Europe/Athens', date_default_timezone_get());
 
-        $moscowUser = $this->createEntity('user', [
-            'name' => 'moscow.user',
-            'timezone' => 'Europe/Moscow',
-        ]);
+        $moscowUser = $this->createUserWithTimezone('Europe/Moscow');
         $this->actingAs($moscowUser);
         $this->assertTimeIs('3rd January 2000 18:00:00');
         $this->assertEquals('Europe/Moscow', date_default_timezone_get());
     }
 
     /** @test */
-    public function correctly_rendered_dates_adhere_to_user_timezone(): void
+    public function dates_adhere_to_users_timezone(): void
     {
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
         $this->assertTimezoneIs('Europe/London');
@@ -321,18 +314,14 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
 
         $node = $this->createEntity('node', [
             'type' => 'page',
-            'title' => 'node created on 1st January 2000 15:00 London time',
+            'title' => 'node created on 3rd January 2000 15:00:00 London time',
             'created' => $this->getDrupalTime()->getRequestTime(),
         ]);
 
-        $userInRomeTimezone = $this->createEntity('user', [
-            'uid' => 100,
-            'name' => 'user.timezone_test',
-            'timezone' => 'Europe/Rome',
-        ]);
-        $this->assertEquals('3rd January 2000 15:00:00', $this->formatDate($node->created->value));
+        $romeUser = $this->createUserWithTimezone('Europe/Rome');
 
-        $this->actingAs($userInRomeTimezone);
+        $this->assertEquals('3rd January 2000 15:00:00', $this->formatDate($node->created->value));
+        $this->actingAs($romeUser);
         $this->assertEquals('3rd January 2000 16:00:00', $this->formatDate($node->created->value));
     }
 
@@ -357,5 +346,13 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         return $this->container->get('date.formatter')->format(
             $timestamp, 'custom', self::DATE_FORMAT
         );
+    }
+
+    private function createUserWithTimezone(string $timezone): User
+    {
+        return $this->createEntity('user', [
+            'name' => (new Random())->string(),
+            'timezone' => $timezone,
+        ]);
     }
 }
