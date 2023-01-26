@@ -287,6 +287,14 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->assertTimezoneIs('Europe/London');
         $this->assertFalse($this->container->get('current_user')->isAuthenticated());
 
+        $romeUser = $this->createEntity('user', [
+            'name' => 'rome.user',
+            'timezone' => 'Europe/Rome',
+        ]);
+        $this->actingAs($romeUser);
+        $this->assertTimeIs('3rd January 2000 16:00:00');
+        $this->assertEquals('Europe/Rome', date_default_timezone_get());
+
         $athensUser = $this->createEntity('user', [
             'name' => 'athens.user',
             'timezone' => 'Europe/Athens',
