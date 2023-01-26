@@ -3,6 +3,7 @@
 namespace Drupal\Tests\test_support\Traits\Support\Time;
 
 use Carbon\Carbon;
+use Drupal\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @method void seconds(?\Closure $callback = null)
@@ -14,37 +15,65 @@ use Carbon\Carbon;
  */
 class Tardis
 {
+    /** @var ContainerInterface */
+    private $container;
+
     /** @var int */
     private $travel;
 
-    public static function createFromTravel(?int $travel = null): self
+    public static function createFromTravel(ContainerInterface $container, ?int $travel = null): self
     {
-        return new self($travel);
+        return new self($container, $travel);
     }
 
-    public function __construct(?int $travel = null)
+    public function __construct(ContainerInterface $container, ?int $travel = null)
     {
+        $this->container = $container;
         $this->travel = $travel;
     }
 
-    public function back(): Carbon
+    public function back(): void
     {
         Carbon::setTestNow();
-
-        return Carbon::now();
     }
 
     public function toTimezone(string $timezone, ?callable $callback = null): void
     {
-        Carbon::setTestNowAndTimezone(
-            Carbon::now()->setTimezone($timezone)
-        );
+        $currentTimezone = Carbon::now()->getTimezone()->getName();
+
+        $this->setTimezone($timezone);
 
         if ($callback === null) {
             return;
         }
 
         $this->freezeTime($callback);
+
+        $this->setTimezone($currentTimezone);
+    }
+
+    /** @test */
+    public function freezeTime(?callable $callback = null): void
+    {
+        if (is_callable($callback) === false) {
+            return;
+        }
+
+        $callback();
+
+        $this->back();
+    }
+
+    private function setTimezone(string $timezone): void
+    {
+        Carbon::setTestNowAndTimezone(
+            Carbon::now()->setTimezone($timezone)
+        );
+
+        $this->container->get('config.factory')
+            ->getEditable('system.date')
+            ->set('timezone.default', $timezone)
+            ->save();
     }
 
     public function __call(string $method, array $args): void
@@ -65,17 +94,5 @@ class Tardis
         }
 
         $this->freezeTime($args[0]);
-    }
-
-    /** @test */
-    public function freezeTime(?callable $callback = null): void
-    {
-        if (is_callable($callback) === false) {
-            return;
-        }
-
-        $callback();
-
-        $this->back();
     }
 }

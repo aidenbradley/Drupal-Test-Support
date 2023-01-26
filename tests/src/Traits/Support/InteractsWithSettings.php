@@ -93,6 +93,11 @@ trait InteractsWithSettings
 
     private function appRoot(): string
     {
+        if (str_starts_with(\Drupal::VERSION, '10.')) {
+            return $this->container->getParameter('app.root');
+        }
+
+
         return $this->container->get('app.root');
     }
 }

@@ -10,11 +10,11 @@ trait InstallsFields
     use InstallConfiguration;
 
     /** @var bool */
-    private $setupDependencies = false;
+    private $setupFieldDependencies = false;
 
     public function installField(string $fieldName, string $entityType, ?string $bundle = null): self
     {
-        $this->setupDependencies();
+        $this->setupFieldDependencies();
 
         return $this->installExportedConfig([
             'field.storage.' . $entityType . '.' . $fieldName,
@@ -24,7 +24,7 @@ trait InstallsFields
 
     public function installFields(array $fieldNames, string $entityType, ?string $bundle = null): self
     {
-        $this->setupDependencies();
+        $this->setupFieldDependencies();
 
         foreach ($fieldNames as $fieldName) {
             $this->installField($fieldName, $entityType, $bundle);
@@ -35,7 +35,7 @@ trait InstallsFields
 
     public function installAllFieldsForEntity(string $entityType, ?string $bundle = null): self
     {
-        $this->setupDependencies();
+        $this->setupFieldDependencies();
 
         $configStorage = new FileStorage($this->configDirectory());
 
@@ -44,12 +44,12 @@ trait InstallsFields
         }, $configStorage->listAll('field.storage.' . $entityType)), $entityType, $bundle);
     }
 
-    private function setupDependencies(): self
+    private function setupFieldDependencies(): self
     {
-        if ($this->setupDependencies === false) {
+        if ($this->setupFieldDependencies === false) {
             $this->enableModules(['field']);
 
-            $this->setupDependencies = true;
+            $this->setupFieldDependencies = true;
         }
 
 
