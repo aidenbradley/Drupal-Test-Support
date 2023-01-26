@@ -39,8 +39,15 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     public function travel_to(): void
     {
         $this->travelTo('3rd January 2000 15:00:00');
-
         $this->assertTimeIs('3rd January 2000 15:00:00');
+
+        $this->travelTo('30th January 2000 15:00:00', 'Europe/London');
+        $this->assertTimezoneIs('Europe/London');
+        $this->assertTimeIs('30th January 2000 15:00:00');
+
+        $this->travelTo('30th January 2000 18:00:00');
+        $this->assertTimezoneIs('Europe/London');
+        $this->assertTimeIs('30th January 2000 18:00:00');
     }
 
     /** @test */
@@ -128,7 +135,8 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     /** @test */
     public function freeze_time_travel(): void
     {
-        $this->travelTo('3rd January 2000 15:00:00');
+        $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
+        $this->assertTimezoneIs('Europe/London');
 
         $this->travel(5)->years(function() {
             $this->createEntity('user', [
@@ -138,6 +146,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
             ]);
         });
 
+        $this->assertTimezoneIs('Europe/London');
         $this->assertEquals(time(), $this->getDrupalTime()->getRequestTime());
 
         $dateTimeTravellerWasCreated = $this->formatDate(
@@ -153,12 +162,14 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->assertNull($this->config('system.date')->get('timezone'));
 
         $this->travel()->toTimezone('Europe/Rome');
-
         $this->assertEquals('Europe/Rome', $this->config('system.date')->get('timezone')['default']);
+
+        $this->travel()->toTimezone('Europe/Athens');
+        $this->assertEquals('Europe/Athens', $this->config('system.date')->get('timezone')['default']);
     }
 
     /** @test */
-    public function travel_to_with_timezone(): void
+    public function travel_to_date_with_timezone(): void
     {
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
         $this->assertTimezoneIs('Europe/London');
@@ -196,26 +207,6 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
-    public function set_system_timezone_and_travel(): void
-    {
-        $this->travelTo('15th January 2020 15:00:00', 'Europe/London');
-        $this->assertTimezoneIs('Europe/London');
-        $this->assertTimeIs('15th January 2020 15:00:00');
-
-        $this->travel()->toTimezone('Europe/Rome');
-        $this->assertTimezoneIs('Europe/Rome');
-        $this->assertTimeIs('15th January 2020 16:00:00');
-
-        $this->travel()->toTimezone('Europe/Athens');
-        $this->assertTimezoneIs('Europe/Athens');
-        $this->assertTimeIs('15th January 2020 17:00:00');
-
-        $this->travel()->toTimezone('Europe/Istanbul');
-        $this->assertTimezoneIs('Europe/Istanbul');
-        $this->assertTimeIs('15th January 2020 18:00:00');
-    }
-
-    /** @test */
     public function freeze_timezone_travel(): void
     {
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
@@ -240,7 +231,6 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->assertEquals('3rd January 2000 15:00:00', $dateTimeTravellerWasCreated);
 
         $this->travel()->toTimezone('Europe/Rome');
-
         $dateTimeTravellerWasCreated = $this->formatDate(
             $this->storage('user')->load(10)->created->value
         );
@@ -263,7 +253,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
-    public function correctly_rendered_dates_adhere_to_system_timezone(): void
+    public function date_formatter_service_adheres_to_timezones(): void
     {
         $this->travel()->toTimezone('Europe/London');
         $this->assertTimezoneIs('Europe/London');
