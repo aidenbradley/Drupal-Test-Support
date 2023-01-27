@@ -145,6 +145,9 @@ class WithoutEventSubscribersTest extends KernelTestBase
 
     private function assertSubscriberNotListening(string $subscriber): void
     {
-        $this->assertFalse(in_array($subscriber, $this->container->get('event_dispatcher')->getListeners()));
+        $this->assertNotNull(
+            collect($this->container->get('event_dispatcher')->getListeners())->get($subscriber),
+            'The `' . $subscriber . '` event subscriber is still listening'
+        );
     }
 }

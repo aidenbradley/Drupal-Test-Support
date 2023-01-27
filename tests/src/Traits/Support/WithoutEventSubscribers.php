@@ -65,6 +65,11 @@ trait WithoutEventSubscribers
         return $this;
     }
 
+    public function assertSubscribing(string $event, string $subscriber): void
+    {
+
+    }
+
     protected function enableModules(array $modules): void
     {
         parent::enableModules($modules);
