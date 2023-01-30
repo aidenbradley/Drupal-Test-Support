@@ -4,6 +4,7 @@ namespace Drupal\Tests\test_support\Traits\Support;
 
 use Drupal\Tests\test_support\Traits\Support\Decorators\DecoratedListener as Listener;
 use Illuminate\Support\Collection;
+use PHPUnit\Framework\Assert;
 
 trait WithoutEventSubscribers
 {
@@ -65,9 +66,26 @@ trait WithoutEventSubscribers
         return $this;
     }
 
-    public function assertSubscribing(string $event, string $subscriber): void
+    public function assertNotListening(string $listener, ?string $event = null): void
     {
+        Assert::assertEmpty(
+            $this->getListeners($event)->filter(function(Listener $decoratedListener) use($listener) {
+                return $decoratedListener->inList((array) $listener);
+            })
+        );
+    }
 
+    public function assertListening(string $listener, ?string $event = null): void
+    {
+        $this->getListeners($event)->filter(function(Listener $decoratedListener) use($listener) {
+//            dump($listener, $decoratedListener->getClass(), $decoratedListener->getServiceId());
+            return $decoratedListener->inList((array) $listener);
+        });
+        Assert::assertNotEmpty(
+            $this->getListeners($event)->filter(function(Listener $decoratedListener) use($listener) {
+                return $decoratedListener->inList((array) $listener);
+            })
+        );
     }
 
     protected function enableModules(array $modules): void
@@ -104,6 +122,14 @@ trait WithoutEventSubscribers
 
         return collect($listeners)->unless($event, function(Collection $listeners) {
             return $listeners->values()->collapse();
+        })->transform(function(array $listener) {
+            $serviceMap = $this->container->get('kernel')->getServiceIdMapping();
+
+            $serviceHash = $this->container->generateServiceIdHash($listener[0]);
+
+            $listener[2] = $serviceMap[$serviceHash];
+
+            return $listener;
         })->mapInto(Listener::class);
     }
 }

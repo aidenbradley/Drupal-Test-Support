@@ -12,6 +12,9 @@ class DecoratedListener
     /** @var array|null */
     private $callable;
 
+    /** @var string|null */
+    private $serviceId;
+
     public static function createFromArray(array $listener): self
     {
         return new self($listener);
@@ -21,19 +24,12 @@ class DecoratedListener
     {
         $this->listener = $listener[0] ?? null;
         $this->callable = $listener[1] ?? null;
+        $this->serviceId = $listener[2] ?? null;
     }
 
     public function getServiceId(): ?string
     {
-        if (isset($this->listener) === false) {
-            return null;
-        }
-
-        if (property_exists($this->listener, '_serviceId') === false) {
-            return null;
-        }
-
-        return $this->listener->_serviceId;
+        return $this->serviceId;
     }
 
     public function getClass(): ?string

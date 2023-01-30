@@ -8,6 +8,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\EventSubscriber\ConfigSubscriber;
 use Drupal\node\Routing\RouteSubscriber;
 use Drupal\Tests\test_support\Traits\Support\WithoutEventSubscribers;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 class WithoutEventSubscribersTest extends KernelTestBase
 {
@@ -15,6 +16,24 @@ class WithoutEventSubscribersTest extends KernelTestBase
 
     /** @var ContainerAwareEventDispatcher */
     private $eventDispatcher;
+
+    /** @test */
+    public function assert_not_listening(): void
+    {
+        $this->assertNotListening('system.timezone_resolver', KernelEvents::REQUEST);
+    }
+
+    /** @test */
+    public function assert_listening(): void
+    {
+        $this->assertNotListening('system.timezone_resolver', KernelEvents::REQUEST);
+
+        $this->enableModules([
+            'system',
+        ]);
+
+        $this->assertListening('system.timezone_resolver', KernelEvents::REQUEST);
+    }
 
     /** @test */
     public function without_event_subscribers(): void
@@ -29,15 +48,18 @@ class WithoutEventSubscribersTest extends KernelTestBase
     /** @test */
     public function ignores_event_subscribers_after_enabling_module(): void
     {
+        $this->assertNotEmpty($this->eventDispatcher()->getListeners());
+
         $this->withoutSubscribers();
+
+        $this->assertEmpty($this->eventDispatcher()->getListeners());
 
         $this->enableModules([
             'language',
             'node',
         ]);
 
-        $this->assertSubscriberNotListening('node.route_subscriber');
-        $this->assertSubscriberNotListening('language.config_subscriber');
+        $this->assertEmpty($this->eventDispatcher()->getListeners());
     }
 
     /** @test */
@@ -145,7 +167,7 @@ class WithoutEventSubscribersTest extends KernelTestBase
 
     private function assertSubscriberNotListening(string $subscriber): void
     {
-        $this->assertNotNull(
+        $this->assertNull(
             collect($this->container->get('event_dispatcher')->getListeners())->get($subscriber),
             'The `' . $subscriber . '` event subscriber is still listening'
         );
