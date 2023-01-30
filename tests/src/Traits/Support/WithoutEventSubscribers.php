@@ -9,10 +9,13 @@ use PHPUnit\Framework\Assert;
 trait WithoutEventSubscribers
 {
     /** @var Collection */
-    private $ignoredSubscribers;
+    private $ignoredSubscribers = null;
 
     /** @var Collection */
-    private $ignoredEvents;
+    private $ignoredEvents = null;
+
+    /** @var array */
+    private $deferredSubscribers = null;
 
     /**
      * Prevents event subscribers from acting when an event it's listening for is triggered.
@@ -33,6 +36,10 @@ trait WithoutEventSubscribers
     {
         $this->getListeners()->when($listeners, function (Collection $collection, $listeners) {
             return $collection->filter->inList($listeners);
+        })->whenEmpty(function(Collection $collection) use($listeners) {
+            $this->deferredSubscribers = collect($this->deferredSubscribers)->merge($listeners)->unique()->toArray();
+
+            return $collection;
         })->each(function (Listener $listener) {
             $this->removeSubscriber($listener);
         });
@@ -88,11 +95,15 @@ trait WithoutEventSubscribers
     {
         parent::enableModules($modules);
 
-        if (isset($this->ignoredSubscribers)) {
+        if ($this->ignoredSubscribers !== null) {
             $this->withoutSubscribers($this->ignoredSubscribers->keys()->toArray());
         }
 
-        if (isset($this->ignoredEvents) === false) {
+        if ($this->deferredSubscribers !== null) {
+            $this->withoutSubscribers($this->deferredSubscribers);
+        }
+
+        if ($this->ignoredEvents === null) {
             return;
         }
 
