@@ -7,6 +7,7 @@ use Drupal\Core\Config\ConfigEvents;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\EventSubscriber\ConfigSubscriber;
 use Drupal\node\Routing\RouteSubscriber;
+use Drupal\system\TimeZoneResolver;
 use Drupal\Tests\test_support\Traits\Support\WithoutEventSubscribers;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -18,20 +19,26 @@ class WithoutEventSubscribersTest extends KernelTestBase
     private $eventDispatcher;
 
     /** @test */
-    public function assert_not_listening(): void
+    public function assert_not_listening_against_event(): void
     {
+        $this->assertNotListening(TimeZoneResolver::class);
+        $this->assertNotListening('system.timezone_resolver');
         $this->assertNotListening('system.timezone_resolver', KernelEvents::REQUEST);
     }
 
     /** @test */
     public function assert_listening(): void
     {
+        $this->assertNotListening(TimeZoneResolver::class);
+        $this->assertNotListening('system.timezone_resolver');
         $this->assertNotListening('system.timezone_resolver', KernelEvents::REQUEST);
 
         $this->enableModules([
             'system',
         ]);
 
+        $this->assertListening(TimeZoneResolver::class);
+        $this->assertListening('system.timezone_resolver');
         $this->assertListening('system.timezone_resolver', KernelEvents::REQUEST);
     }
 
@@ -70,13 +77,16 @@ class WithoutEventSubscribersTest extends KernelTestBase
             'node',
         ]);
 
+        $this->assertListening(RouteSubscriber::class);
+        $this->assertListening(ConfigSubscriber::class);
+
         $this->withoutSubscribers([
             RouteSubscriber::class, // node.route_subscriber
             ConfigSubscriber::class, // language.config_subscriber
         ]);
 
-        $this->assertSubscriberNotListening('node.route_subscriber');
-        $this->assertSubscriberNotListening('language.config_subscriber');
+        $this->assertNotListening(RouteSubscriber::class);
+        $this->assertNotListening(ConfigSubscriber::class);
     }
 
     /** @test */
@@ -87,13 +97,16 @@ class WithoutEventSubscribersTest extends KernelTestBase
             ConfigSubscriber::class, // language.config_subscriber
         ]);
 
+        $this->assertNotListening(RouteSubscriber::class);
+        $this->assertNotListening(ConfigSubscriber::class);
+
         $this->enableModules([
             'language',
             'node',
         ]);
 
-        $this->assertSubscriberNotListening('node.route_subscriber');
-        $this->assertSubscriberNotListening('language.config_subscriber');
+        $this->assertNotListening(RouteSubscriber::class);
+        $this->assertNotListening(ConfigSubscriber::class);
     }
 
     /** @test */
@@ -135,8 +148,8 @@ class WithoutEventSubscribersTest extends KernelTestBase
             'language.config_subscriber',
         ]);
 
-        $this->assertSubscriberNotListening('node.route_subscriber');
-        $this->assertSubscriberNotListening('language.config_subscriber');
+        $this->assertNotListening('node.route_subscriber');
+        $this->assertNotListening('language.config_subscriber');
     }
 
     /** @test */
@@ -152,8 +165,8 @@ class WithoutEventSubscribersTest extends KernelTestBase
             'node',
         ]);
 
-        $this->assertSubscriberNotListening('node.route_subscriber');
-        $this->assertSubscriberNotListening('language.config_subscriber');
+        $this->assertNotListening('node.route_subscriber');
+        $this->assertNotListening('language.config_subscriber');
     }
 
     private function eventDispatcher(): ContainerAwareEventDispatcher
@@ -163,13 +176,5 @@ class WithoutEventSubscribersTest extends KernelTestBase
         }
 
         return $this->eventDispatcher;
-    }
-
-    private function assertSubscriberNotListening(string $subscriber): void
-    {
-        $this->assertNull(
-            collect($this->container->get('event_dispatcher')->getListeners())->get($subscriber),
-            'The `' . $subscriber . '` event subscriber is still listening'
-        );
     }
 }

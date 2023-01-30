@@ -77,10 +77,6 @@ trait WithoutEventSubscribers
 
     public function assertListening(string $listener, ?string $event = null): void
     {
-        $this->getListeners($event)->filter(function(Listener $decoratedListener) use($listener) {
-//            dump($listener, $decoratedListener->getClass(), $decoratedListener->getServiceId());
-            return $decoratedListener->inList((array) $listener);
-        });
         Assert::assertNotEmpty(
             $this->getListeners($event)->filter(function(Listener $decoratedListener) use($listener) {
                 return $decoratedListener->inList((array) $listener);
