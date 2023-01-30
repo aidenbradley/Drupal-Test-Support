@@ -8,13 +8,13 @@ use PHPUnit\Framework\Assert;
 
 trait WithoutEventSubscribers
 {
-    /** @var Collection */
+    /** @var Collection|null */
     private $ignoredSubscribers = null;
 
-    /** @var Collection */
+    /** @var Collection|null */
     private $ignoredEvents = null;
 
-    /** @var array */
+    /** @var array|null */
     private $deferredSubscribers = null;
 
     /**
