@@ -19,7 +19,7 @@ class WithoutEventSubscribersTest extends KernelTestBase
     private $eventDispatcher;
 
     /** @test */
-    public function assert_not_listening_against_event(): void
+    public function assert_not_listening(): void
     {
         $this->assertNotListening(TimeZoneResolver::class);
         $this->assertNotListening('system.timezone_resolver');
