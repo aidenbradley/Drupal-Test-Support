@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\Tests\test_traits\Kernel\Base;
+namespace Drupal\Tests\test_support\Kernel\Base;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_traits\Kernel\Testing\Concerns\InstallsModules;
+use Drupal\Tests\test_support\Traits\Installs\InstallsModules;
 
 /**
  * This class will act as a base set of tests to test whether a module will work or not.
@@ -17,7 +17,7 @@ abstract class EnableModuleKernelTest extends KernelTestBase
     /** @var array */
     private $entityTypeDefinitionsPreInstall;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -31,7 +31,7 @@ abstract class EnableModuleKernelTest extends KernelTestBase
     /** @test */
     public function install_module_entity_definitions(): void
     {
-        $this->installModuleWithDependencies($this->module());
+        $this->enableModuleWithDependencies($this->module());
 
         $moduleEntityDefinitions = array_diff(
             array_keys($this->container->get('entity_type.manager')->getDefinitions()),

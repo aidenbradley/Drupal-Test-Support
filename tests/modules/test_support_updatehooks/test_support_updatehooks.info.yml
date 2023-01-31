@@ -1,0 +1,7 @@
+name: Drupal Test Support Update Hooks
+type: module
+description: 'Provides concerns that help with testing'
+package: Custom
+version: 0.0.1
+hidden: true
+core_version_requirement: ^8 || ^9

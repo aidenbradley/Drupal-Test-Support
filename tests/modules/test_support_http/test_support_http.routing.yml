@@ -1,0 +1,29 @@
+route_callbacks:
+  - '\Drupal\test_support_http\Routing\TestRoutes::routes'
+
+route.direct_from_example:
+  path: '/redirect/example/{redirectRoute}'
+  defaults:
+    _controller: '\Drupal\test_support_http\Controller\ResolveRequest::redirectFromExample'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'
+
+route.redirect:
+  path: '/redirect/{redirectRoute}'
+  defaults:
+    _controller: '\Drupal\test_support_http\Controller\ResolveRequest::redirect'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'
+
+route.redirect_to:
+  path: '/redirect-to'
+  defaults:
+    _controller: '\Drupal\test_support_http\Controller\ResolveRequest::redirect'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'

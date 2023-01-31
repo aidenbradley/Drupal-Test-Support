@@ -1,0 +1,6 @@
+<?php
+
+function test_support_cron_cron(): void
+{
+    \Drupal::state()->set('CRON_TRIGGERED', true);
+}
