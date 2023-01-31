@@ -146,7 +146,11 @@ trait WithoutEventSubscribers
         if ($this->container->has(ReverseContainer::class)) {
             return $this->container->get(ReverseContainer::class)->getId($listener);
         }
-        dump($listener);
-        return null;
+
+        $serviceMap = $this->container->get('kernel')->getServiceIdMapping();
+
+        $serviceHash = $this->container->generateServiceIdHash($listener);
+
+        return $serviceMap[$serviceHash] ?? null;
     }
 }
