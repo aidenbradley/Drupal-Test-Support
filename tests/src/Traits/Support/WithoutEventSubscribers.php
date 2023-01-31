@@ -5,6 +5,7 @@ namespace Drupal\Tests\test_support\Traits\Support;
 use Drupal\Tests\test_support\Traits\Support\Decorators\DecoratedListener as Listener;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert;
+use Symfony\Component\DependencyInjection\ReverseContainer;
 
 trait WithoutEventSubscribers
 {
@@ -130,13 +131,22 @@ trait WithoutEventSubscribers
         return collect($listeners)->unless($event, function(Collection $listeners) {
             return $listeners->values()->collapse();
         })->transform(function(array $listener) {
-            $serviceMap = $this->container->get('kernel')->getServiceIdMapping();
-
-            $serviceHash = $this->container->generateServiceIdHash($listener[0]);
-
-            $listener[2] = $serviceMap[$serviceHash];
+            $listener[2] = $this->resolveListenerServiceId($listener[0]);
 
             return $listener;
         })->mapInto(Listener::class);
+    }
+
+    private function resolveListenerServiceId(object $listener): ?string
+    {
+        if (property_exists($listener, '_serviceId')) {
+            return $listener->_serviceId;
+        }
+
+        if ($this->container->has(ReverseContainer::class)) {
+            return $this->container->get(ReverseContainer::class)->getId($listener);
+        }
+        dump($listener);
+        return null;
     }
 }
