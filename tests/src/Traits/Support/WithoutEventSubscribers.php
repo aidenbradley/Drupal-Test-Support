@@ -4,14 +4,18 @@ namespace Drupal\Tests\test_support\Traits\Support;
 
 use Drupal\Tests\test_support\Traits\Support\Decorators\DecoratedListener as Listener;
 use Illuminate\Support\Collection;
+use PHPUnit\Framework\Assert;
 
 trait WithoutEventSubscribers
 {
-    /** @var Collection */
-    private $ignoredSubscribers;
+    /** @var Collection|null */
+    private $ignoredSubscribers = null;
 
-    /** @var Collection */
-    private $ignoredEvents;
+    /** @var Collection|null */
+    private $ignoredEvents = null;
+
+    /** @var array|null */
+    private $deferredSubscribers = null;
 
     /**
      * Prevents event subscribers from acting when an event it's listening for is triggered.
@@ -32,6 +36,10 @@ trait WithoutEventSubscribers
     {
         $this->getListeners()->when($listeners, function (Collection $collection, $listeners) {
             return $collection->filter->inList($listeners);
+        })->whenEmpty(function(Collection $collection) use($listeners) {
+            $this->deferredSubscribers = collect($this->deferredSubscribers)->merge($listeners)->unique()->toArray();
+
+            return $collection;
         })->each(function (Listener $listener) {
             $this->removeSubscriber($listener);
         });
@@ -65,15 +73,37 @@ trait WithoutEventSubscribers
         return $this;
     }
 
+    public function assertNotListening(string $listener, ?string $event = null): void
+    {
+        Assert::assertEmpty(
+            $this->getListeners($event)->filter(function(Listener $decoratedListener) use($listener) {
+                return $decoratedListener->inList((array) $listener);
+            })
+        );
+    }
+
+    public function assertListening(string $listener, ?string $event = null): void
+    {
+        Assert::assertNotEmpty(
+            $this->getListeners($event)->filter(function(Listener $decoratedListener) use($listener) {
+                return $decoratedListener->inList((array) $listener);
+            })
+        );
+    }
+
     protected function enableModules(array $modules): void
     {
         parent::enableModules($modules);
 
-        if (isset($this->ignoredSubscribers)) {
+        if ($this->ignoredSubscribers !== null) {
             $this->withoutSubscribers($this->ignoredSubscribers->keys()->toArray());
         }
 
-        if (isset($this->ignoredEvents) === false) {
+        if ($this->deferredSubscribers !== null) {
+            $this->withoutSubscribers($this->deferredSubscribers);
+        }
+
+        if ($this->ignoredEvents === null) {
             return;
         }
 
@@ -99,6 +129,27 @@ trait WithoutEventSubscribers
 
         return collect($listeners)->unless($event, function(Collection $listeners) {
             return $listeners->values()->collapse();
+        })->transform(function(array $listener) {
+            $listener[2] = $this->resolveListenerServiceId($listener[0]);
+
+            return $listener;
         })->mapInto(Listener::class);
+    }
+
+    private function resolveListenerServiceId(object $listener): ?string
+    {
+        if (property_exists($listener, '_serviceId')) {
+            return $listener->_serviceId;
+        }
+
+        if ($this->container->has('Drupal\Core\DependencyInjection\ReverseContainer')) {
+            return $this->container->get('Drupal\Core\DependencyInjection\ReverseContainer')->getId($listener);
+        }
+
+        $serviceMap = $this->container->get('kernel')->getServiceIdMapping();
+
+        $serviceHash = $this->container->generateServiceIdHash($listener);
+
+        return $serviceMap[$serviceHash] ?? null;
     }
 }
