@@ -5,7 +5,6 @@ namespace Drupal\Tests\test_support\Traits\Support;
 use Drupal\Tests\test_support\Traits\Support\Decorators\DecoratedListener as Listener;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert;
-use Symfony\Component\DependencyInjection\ReverseContainer;
 
 trait WithoutEventSubscribers
 {
@@ -143,8 +142,8 @@ trait WithoutEventSubscribers
             return $listener->_serviceId;
         }
 
-        if ($this->container->has(ReverseContainer::class)) {
-            return $this->container->get(ReverseContainer::class)->getId($listener);
+        if ($this->container->has('Drupal\Core\DependencyInjection\ReverseContainer')) {
+            return $this->container->get('Drupal\Core\DependencyInjection\ReverseContainer')->getId($listener);
         }
 
         $serviceMap = $this->container->get('kernel')->getServiceIdMapping();
