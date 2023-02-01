@@ -41,9 +41,6 @@ jobs:
             - name: Install Drupal core dependencies
               run: |
                   composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
-            - name: Install module dependencies
-              run: |
-                  composer --no-interaction --no-progress
             - name: Run tests
               run: |
                   ./vendor/bin/phpunit
