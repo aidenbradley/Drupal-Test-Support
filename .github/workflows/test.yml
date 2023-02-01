@@ -12,9 +12,6 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - uses: php-actions/composer@v6
-            - uses: php-actions/phpunit@v3
-              with:
-                configuration: ./phpunit.xml
 
             - name: Checkout Drupal core
               uses: actions/checkout@v2
@@ -46,6 +43,10 @@ jobs:
 
             - name: Install Drupal core dependencies
               run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+            -   uses: php-actions/phpunit@v3
+                with:
+                    configuration: ./phpunit.xml
 
             - name: PHPUnit tests
               run: ./vendor/bin/phpunit
