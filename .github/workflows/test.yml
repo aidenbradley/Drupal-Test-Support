@@ -7,12 +7,15 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                drupal-core: ['10.0.x', '9.5.x']
-                php-versions: ['7.4', '8.0', '8.1']
+                drupal-core: ['10.0.x']
+                php-versions: ['8.1']
         steps:
             - uses: actions/checkout@v2
             - uses: php-actions/composer@v6
             - uses: php-actions/phpunit@v3
+              with:
+                configuration: ./phpunit.xml
+
             - name: Checkout Drupal core
               uses: actions/checkout@v2
               with:
