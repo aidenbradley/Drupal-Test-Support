@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e54359c77205e50fda183ac17d43246",
+    "content-hash": "0f3fd373bbc3a290bdaf44687d4c9468",
     "packages": [],
     "packages-dev": [
         {
@@ -4775,12 +4775,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "3b213e88832612c5eee0f8a9b764897896b23bf0"
+                "reference": "4716bf95dcf7cc99750965ca7efc4ebee82cf7bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/3b213e88832612c5eee0f8a9b764897896b23bf0",
-                "reference": "3b213e88832612c5eee0f8a9b764897896b23bf0",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/4716bf95dcf7cc99750965ca7efc4ebee82cf7bc",
+                "reference": "4716bf95dcf7cc99750965ca7efc4ebee82cf7bc",
                 "shasum": ""
             },
             "require": {
@@ -4850,7 +4850,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-01T08:32:19+00:00"
+            "time": "2023-01-24T14:02:46+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",

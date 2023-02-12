@@ -19,7 +19,8 @@
         "phpunit/phpunit": "^9.5",
         "illuminate/collections": "^8.77",
         "opis/closure": "^3.6",
-        "nesbot/carbon": "2.x-dev"
+        "nesbot/carbon": "2.x-dev",
+        "symfony/phpunit-bridge": "5.4.x-dev"
     },
     "config": {
         "allow-plugins": {
