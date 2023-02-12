@@ -41,5 +41,8 @@ jobs:
             - name: Install Drupal core dependencies
               run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
+            - name: Debug PHPUnit
+              run: ls modules
+
             - name: PHPUnit
-              run: ls; vendor/bin/phpunit -c ./modules/test_support/phpunit.xml
+              run: vendor/bin/phpunit -c ./modules/test_support/phpunit.xml
