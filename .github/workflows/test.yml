@@ -42,4 +42,4 @@ jobs:
               run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
             - name: PHPUnit
-              run: ls; vendor/bin/phpunit -c ./web/modules/test_support/phpunit.xml
+              run: ls; vendor/bin/phpunit -c ./modules/test_support/phpunit.xml
