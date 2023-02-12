@@ -21,6 +21,11 @@ jobs:
               with:
                   path: modules/test_support
 
+            - name: Install module dependencies
+              run: |
+                cd modules/test_support
+                composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
             - name: Setup PHP, with composer and extensions
               uses: shivammathur/setup-php@v2
               with:
