@@ -13,7 +13,7 @@
         }
     ],
     "minimum-stability": "dev",
-    "require-dev": {
+    "require": {
         "drupal/core-dev": "^9.4",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.5",
