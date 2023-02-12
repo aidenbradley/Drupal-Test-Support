@@ -13,8 +13,7 @@
          beStrictAboutChangesToGlobalState="true"
          failOnWarning="true"
          cacheResult="false"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
-         printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter">
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
     <php>
         <!-- Set error reporting to E_ALL. -->
         <ini name="error_reporting" value="32767"/>
