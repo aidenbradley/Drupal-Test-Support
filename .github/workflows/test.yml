@@ -1,5 +1,7 @@
 name: Test
 on: [push]
+env:
+  MODULE_NAME: "test_support"
 jobs:
     drupal-10-matrix:
         name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
@@ -15,6 +17,23 @@ jobs:
               with:
                   repository: drupal/drupal
                   ref: ${{ matrix.drupal-core }}
+
+            # The next two steps exposes $DRUPAL_ROOT and $MODULE_FOLDER environment
+            # variables.
+            #
+            # They have to be set in separate steps because $DRUPAL_ROOT variable
+            # won't be accessible in currently active step.
+            # You can access them either with $DRUPAL_ROOT and $MODULE_FOLDER or
+            # ${{ env.DRUPAL_ROOT }} and ${{ env.MODULE_FOLDER }}.
+            - name: Define DRUPAL_ROOT env variable
+              run: echo "DRUPAL_ROOT=$HOME/drupal" >> $GITHUB_ENV
+
+            # Change the module folder according to your needs, it's probably either
+            # modules/contrib/$MODULE_NAME or modules/custom/$MODULE_NAME.
+            - name: Set module folder
+              run: |
+                echo "MODULE_FOLDER=$DRUPAL_ROOT/modules/$MODULE_NAME" \
+                  >> $GITHUB_ENV
 
             - name: Checkout module
               uses: actions/checkout@v2
@@ -49,5 +68,8 @@ jobs:
             - name: Debug PHPUnit
               run: ls modules/test_support/vendor
 
-            - name: PHPUnit
-              run: ./modules/test_support/vendor/bin/phpunit -c ./modules/test_support/phpunit.xml
+            - name: Run PHPUnit tests
+              working-directory: ${{ env.DRUPAL_ROOT }}
+              run: |
+                vendor/bin/phpunit --bootstrap $DRUPAL_ROOT/core/tests/bootstrap.php \
+                -c $MODULE_FOLDER/phpunit.xml $MODULE_FOLDER
