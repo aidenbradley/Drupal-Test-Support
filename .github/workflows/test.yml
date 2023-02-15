@@ -52,5 +52,5 @@ jobs:
             - name: PHPUnit
               run: modules/test_support/vendor/bin/phpunit \
                 -c modules/test_support/phpunit.xml \
-                --bootstrap /core/tests/bootstrap.php
+                --bootstrap core/tests/bootstrap.php
 
