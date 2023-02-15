@@ -8,8 +8,7 @@
 <phpunit colors="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
-         beStrictAboutChangesToGlobalState="true"
-         printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter">
+         beStrictAboutChangesToGlobalState="true">
   <php>
     <!-- Set error reporting to E_ALL. -->
     <ini name="error_reporting" value="32767"/>
@@ -34,19 +33,10 @@
   </php>
   <testsuites>
     <testsuite name="unit">
-      <file>./web/core/tests/TestSuites/UnitTestSuite.php</file>
+      <file>/tests/src/Unit</file>
     </testsuite>
     <testsuite name="kernel">
-      <file>./web/core/tests/TestSuites/KernelTestSuite.php</file>
-    </testsuite>
-    <testsuite name="functional">
-      <file>./web/core/tests/TestSuites/FunctionalTestSuite.php</file>
-    </testsuite>
-    <testsuite name="functional-javascript">
-      <file>./web/core/tests/TestSuites/FunctionalJavascriptTestSuite.php</file>
-    </testsuite>
-    <testsuite name="build">
-      <file>./web/core//tests/TestSuites/BuildTestSuite.php</file>
+      <file>/tests/src/Kernel</file>
     </testsuite>
   </testsuites>
   <listeners>
