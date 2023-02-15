@@ -47,7 +47,7 @@ jobs:
               run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
             - name: Debug PHPUnit
-              run: ls /core/tests
+              run: ls /core
 
             - name: PHPUnit
               run: modules/test_support/vendor/bin/phpunit \
