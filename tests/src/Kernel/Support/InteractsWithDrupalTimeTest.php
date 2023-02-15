@@ -35,6 +35,8 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
             'type' => 'page',
             'name' => 'Basic page',
         ]);
+
+        $this->setupSystemDateConfig();
     }
 
     /** @test */
@@ -350,5 +352,19 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
             'name' => (new Random())->string(),
             'timezone' => $timezone,
         ]);
+    }
+
+    private function setupSystemDateConfig(): void
+    {
+        $systemDateConfig = $this->container->get('config.factory')->getEditable('system.date');
+
+        $systemDateConfig->set('country.default', 'GB')
+        ->set('timezone.default', 'Europe/London')
+        ->set('timezone.user.configurable', true)
+        ->set('timezone.user.default', 0)
+        ->set('timezone.user.warn', false)
+        ->set('first_day', '1');
+
+        $systemDateConfig->save();
     }
 }
