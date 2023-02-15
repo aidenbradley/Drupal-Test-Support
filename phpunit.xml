@@ -33,10 +33,10 @@
   </php>
   <testsuites>
     <testsuite name="unit">
-      <directory>/tests/src/Unit</directory>
+      <directory>./tests/src/Unit</directory>
     </testsuite>
     <testsuite name="kernel">
-      <directory>/tests/src/Kernel</directory>
+      <directory>./tests/src/Kernel</directory>
     </testsuite>
   </testsuites>
   <listeners>
