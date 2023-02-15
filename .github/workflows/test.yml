@@ -10,6 +10,22 @@ jobs:
                 drupal-core: ['10.0.x']
                 php-versions: ['8.1']
         steps:
+            - name: Checkout Drupal core
+              uses: actions/checkout@v2
+              with:
+                  repository: drupal/drupal
+                  ref: ${{ matrix.drupal-core }}
+
+            - name: Checkout module
+              uses: actions/checkout@v2
+              with:
+                  path: modules/test_support
+
+            - name: Install module dependencies
+              run: |
+                cd modules/test_support
+                composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
             - name: Setup PHP, with composer and extensions
               uses: shivammathur/setup-php@v2
               with:
@@ -27,29 +43,14 @@ jobs:
                   key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
                   restore-keys: ${{ runner.os }}-composer-
 
-            - name: Checkout Drupal core
-              uses: actions/checkout@v2
-              with:
-                repository: drupal/drupal
-                ref: ${{ matrix.drupal-core }}
-
             - name: Install Drupal core dependencies
               run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
-            - name: Checkout module
-              uses: actions/checkout@v2
-              with:
-                path: modules/test_support
-
-            - name: Install module dependencies
-              run: |
-                cd modules/test_support
-                composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
-
             - name: Debug PHPUnit
-              run: ls /.core/tests
+              run: ls
 
             - name: PHPUnit
-              run: ./modules/test_support/vendor/bin/phpunit \
-                --bootstrap ./core/tests/bootstrap.php \
-                -c ./modules/test_support/phpunit.xml
+              run: modules/test_support/vendor/bin/phpunit \
+                -c modules/test_support/phpunit.xml \
+                --bootstrap /core/tests/bootstrap.php
+
