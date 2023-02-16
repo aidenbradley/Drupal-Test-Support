@@ -8,7 +8,60 @@ jobs:
             fail-fast: false
             matrix:
                 drupal-core: [ '10.0.x' ]
-                php-versions: [ '8.1', '8.0' ]
+                php-versions: [ '8.2', '8.1', '8.0.27' ]
+        steps:
+            -   name: Checkout Drupal core
+                uses: actions/checkout@v2
+                with:
+                    repository: drupal/drupal
+                    ref: ${{ matrix.drupal-core }}
+
+            -   name: Checkout module
+                uses: actions/checkout@v2
+                with:
+                    path: modules/test_support
+
+            -   name: Build module including dependencies dependencies
+                run: |
+                    cd modules/test_support
+                    composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+            -   name: Setup PHP, with composer and extensions
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php-versions }}
+                    coverage: none
+
+            -   name: Get composer cache directory
+                id: composercache
+                run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            -   name: Cache composer dependencies
+                uses: actions/cache@v2
+                with:
+                    path: ${{ steps.composercache.outputs.dir }}
+                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                    restore-keys: ${{ runner.os }}-composer-
+
+            -   name: Install Drupal core dependencies
+                run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+            -   name: Run PHPUnit tests
+                run: |
+                    modules/test_support/vendor/bin/paratest \
+                    --path modules/test_support/tests \
+                    -c modules/test_support/phpunit.xml \
+                    --bootstrap core/tests/bootstrap.php  \
+                    --testsuite unit,kernel
+
+    drupal-9-matrix:
+        name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                drupal-core: [ '9.5.x', '9.4.x', '9.3.x', '9.2.x', '9.1.x', '9.0.x' ]
+                php-versions: [ '7.3', '7.4', '8.0', '8.1' ]
         steps:
             -   name: Checkout Drupal core
                 uses: actions/checkout@v2
