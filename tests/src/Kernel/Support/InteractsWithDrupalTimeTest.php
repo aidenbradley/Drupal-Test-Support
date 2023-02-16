@@ -5,6 +5,7 @@ namespace Drupal\Tests\test_support\Kernel\Support;
 use Drupal\Component\Utility\Random;
 use Drupal\KernelTests\KernelTestBase;
 
+use Drupal\Tests\test_support\Traits\Installs\InstallsExportedConfig;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithAuthentication;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithDrupalTime;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithEntities;
@@ -12,7 +13,8 @@ use Drupal\user\Entity\User;
 
 class InteractsWithDrupalTimeTest extends KernelTestBase
 {
-    use InteractsWithDrupalTime,
+    use InstallsExportedConfig,
+        InteractsWithDrupalTime,
         InteractsWithAuthentication,
         InteractsWithEntities;
 
@@ -28,6 +30,8 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     {
         parent::setUp();
 
+        $this->setConfigDirectory(__DIR__ . '/__fixtures__/config/sync/time_travel');
+
         $this->installEntitySchema('node');
         $this->installEntitySchema('user');
 
@@ -35,8 +39,6 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
             'type' => 'page',
             'name' => 'Basic page',
         ]);
-
-        $this->setupSystemDateConfig();
     }
 
     /** @test */
@@ -352,19 +354,5 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
             'name' => (new Random())->string(),
             'timezone' => $timezone,
         ]);
-    }
-
-    private function setupSystemDateConfig(): void
-    {
-        $systemDateConfig = $this->container->get('config.factory')->getEditable('system.date');
-
-        $systemDateConfig->set('country.default', 'GB')
-        ->set('timezone.default', 'Europe/London')
-        ->set('timezone.user.configurable', true)
-        ->set('timezone.user.default', 0)
-        ->set('timezone.user.warn', false)
-        ->set('first_day', '1');
-
-        $systemDateConfig->save();
     }
 }
