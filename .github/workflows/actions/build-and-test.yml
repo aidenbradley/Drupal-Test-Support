@@ -1,27 +1,29 @@
-name: Test
-on: [ push ]
+on:
+    workflow_call:
+        inputs:
+            drupal-core:
+                required: true
+                type: string
+            php-version:
+                required: true
+                type: string
 jobs:
-    drupal-10-matrix:
-        name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
+    test:
+        name: Drupal ${{ input.drupal-core }} - PHP ${{ input.php-version }}
         runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
-            matrix:
-                drupal-core: [ '10.0.x' ]
-                php-versions: [ '8.1' ]
         steps:
             -   name: Checkout Drupal core
                 uses: actions/checkout@v2
                 with:
                     repository: drupal/drupal
-                    ref: ${{ matrix.drupal-core }}
+                    ref: ${{ input.drupal-core }}
 
             -   name: Checkout module
                 uses: actions/checkout@v2
                 with:
                     path: modules/test_support
 
-            -   name: Install module dependencies
+            -   name: Build module including dependencies dependencies
                 run: |
                     cd modules/test_support
                     composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
@@ -29,7 +31,7 @@ jobs:
             -   name: Setup PHP, with composer and extensions
                 uses: shivammathur/setup-php@v2
                 with:
-                    php-version: ${{ matrix.php-versions }}
+                    php-version: ${{ input.php-version }}
                     coverage: none
 
             -   name: Get composer cache directory
@@ -46,11 +48,10 @@ jobs:
             -   name: Install Drupal core dependencies
                 run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
-            -   name: PHPUnit
+            -   name: Run PHPUnit tests
                 run: |
                     modules/test_support/vendor/bin/paratest \
                     --path modules/test_support/tests \
                     -c modules/test_support/phpunit.xml \
                     --bootstrap core/tests/bootstrap.php  \
                     --testsuite unit,kernel
-
