@@ -7,10 +7,7 @@ on:
             php-version:
                 required: true
                 type: string
-jobs:
-    test:
-        name: Drupal ${{ input.drupal-core }} - PHP ${{ input.php-version }}
-        runs-on: ubuntu-latest
+
         steps:
             -   name: Checkout Drupal core
                 uses: actions/checkout@v2
