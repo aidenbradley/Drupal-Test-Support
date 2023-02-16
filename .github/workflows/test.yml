@@ -50,7 +50,5 @@ jobs:
               run: ls core/tests
 
             - name: PHPUnit
-              run: modules/test_support/vendor/bin/paratest \
-                -c modules/test_support/phpunit.xml \
-                --bootstrap core/tests/bootstrap.php
+              run: modules/test_support/vendor/bin/paratest
 
