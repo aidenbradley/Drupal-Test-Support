@@ -9,9 +9,6 @@ on:
                 type: string
 
         steps:
-            -   name: Checkout repo
-                uses: actions/checkout@v2
-
             -   name: Checkout Drupal core
                 uses: actions/checkout@v2
                 with:
