@@ -9,17 +9,6 @@ on:
                 type: string
 
         steps:
-            -   name: Checkout Drupal core
-                uses: actions/checkout@v2
-                with:
-                    repository: drupal/drupal
-                    ref: ${{ input.drupal-core }}
-
-            -   name: Checkout module
-                uses: actions/checkout@v2
-                with:
-                    path: modules/test_support
-
             -   name: Build module including dependencies dependencies
                 run: |
                     cd modules/test_support

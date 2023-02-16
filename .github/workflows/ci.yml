@@ -10,8 +10,16 @@ jobs:
                 drupal-core: [ '10.0.x' ]
                 php-versions: [ '8.1', '8.0' ]
         steps:
-            -   name: Checkout repo
+            -   name: Checkout Drupal core
                 uses: actions/checkout@v2
+                with:
+                    repository: drupal/drupal
+                    ref: ${{ input.drupal-core }}
+
+            -   name: Checkout module
+                uses: actions/checkout@v2
+                with:
+                    path: modules/test_support
 
             -   name: Build and test
                 uses: ./.github/workflows/build-and-test.yml
