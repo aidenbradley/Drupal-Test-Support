@@ -50,6 +50,6 @@ jobs:
               run: modules/test_support/vendor/bin/paratest \
                 -c modules/test_support/phpunit.xml \
                 --bootstrap core/tests/bootstrap.php \
+                --testsuite unit,kernel \
                 --path modules/test_support/tests
-                --testsuite unit,kernel
 
