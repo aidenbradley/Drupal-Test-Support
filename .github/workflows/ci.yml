@@ -63,7 +63,7 @@ jobs:
                 drupal-core: [ '9.5.x', '9.4.x', '9.3.x', '9.2.x', '9.1.x', '9.0.x' ]
                 php-versions: [ '8.1', '8.0', '7.4', '7.3' ]
         steps:
-            -   name: Checkout Drupal core
+            -   name: Checkout Drupal core v${{ matrix.drupal-core }}
                 uses: actions/checkout@v2
                 with:
                     repository: drupal/drupal
@@ -79,7 +79,7 @@ jobs:
                     cd modules/test_support
                     composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
-            -   name: Setup PHP, with composer and extensions
+            -   name: Setup PHP v${{ matrix.php-versions }}, with composer and extensions
                 uses: shivammathur/setup-php@v2
                 with:
                     php-version: ${{ matrix.php-versions }}
