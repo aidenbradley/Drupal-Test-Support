@@ -12,7 +12,7 @@
             "email": "mraidenbradley@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require-dev": {
         "drupal/core-dev": "^9.4",
         "phpspec/prophecy-phpunit": "^2.0",
