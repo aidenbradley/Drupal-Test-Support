@@ -10,7 +10,7 @@ use Drupal\Tests\test_support\Traits\Installs\InstallsModules;
  * The idea is to expand this class to provide default coverage for modules where all
  * they need to do is extend this kernel test base and provide their module name
  */
-abstract class EnableModuleKernelTest extends KernelTestBase
+abstract class EnableModuleKernelTestBase extends KernelTestBase
 {
     use InstallsModules;
 
