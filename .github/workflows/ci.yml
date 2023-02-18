@@ -63,7 +63,7 @@ jobs:
 #                drupal-core: [ '9.5.x', '9.4.x', '9.3.x', '9.2.x', '9.1.x', '9.0.x' ]
                 drupal-core: [ '9.5.x' ]
 #                php-versions: [ '8.1', '8.0', '7.4', '7.3' ]
-                php-versions: [ '7.3' ]
+                php-versions: [ '7.4' ]
         steps:
             -   name: Checkout Drupal core v${{ matrix.drupal-core }}
                 uses: actions/checkout@v2
