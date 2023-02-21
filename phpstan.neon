@@ -8,3 +8,9 @@ parameters:
             - messages:
                    - '#Unsafe usage of new static\(\)#'
                    - '#Access to constant VERSION on an unknown class Drupal#'
+                   - '#length of method Drupal\Core\Entity\Query\QueryInterface::range\(\) expects null, int given#'
+                   - '#^Parameter \#2 \$length of method Drupal\\Core\\Entity\\Query\\QueryInterface\:\:range\(\) expects null, int given\.$#'
+        excludePaths:
+            -  tests/src/Traits/Support/Decorators/Drupal10EventDispatcher.php
+includes:
+    - vendor/mglaman/phpstan-drupal/extension.neon

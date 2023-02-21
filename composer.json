@@ -31,6 +31,6 @@
     "scripts": {
         "lint": "vendor/bin/pint --test -v",
         "lint-cbf": "vendor/bin/pint",
-        "stan": "vendor/bin/phpstan analyse -c phpstan.neon"
+        "stan": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon"
     }
 }
