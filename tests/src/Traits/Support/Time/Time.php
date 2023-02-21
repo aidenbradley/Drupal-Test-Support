@@ -11,22 +11,22 @@ class Time implements TimeInterface
         return new self();
     }
 
-    public function getRequestTime()
+    public function getRequestTime(): int
     {
         return Carbon::now()->getTimestamp();
     }
 
-    public function getRequestMicroTime()
+    public function getRequestMicroTime(): int
     {
         return Carbon::now()->getTimestampMs();
     }
 
-    public function getCurrentTime()
+    public function getCurrentTime(): int
     {
         return Carbon::now()->getTimestamp();
     }
 
-    public function getCurrentMicroTime()
+    public function getCurrentMicroTime(): int
     {
         return Carbon::now()->getTimestampMs();
     }

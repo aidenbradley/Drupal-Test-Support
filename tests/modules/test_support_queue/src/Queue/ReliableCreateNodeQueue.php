@@ -6,50 +6,41 @@ use Drupal\Core\Queue\QueueInterface;
 
 class ReliableCreateNodeQueue implements QueueInterface
 {
-    /** @var string */
-    private $name;
-
-    public static function create(string $name): self
-    {
-        return new self($name);
-    }
-
-    public function __construct(string $name)
-    {
-        $this->name = $name;
-    }
-
-    public function createItem($data)
+    /** @param mixed $data */
+    public function createItem($data): void
     {
         // silence is golden
     }
 
-    public function numberOfItems()
+    public function numberOfItems(): int
+    {
+        return 0;
+    }
+
+    /** @param int|mixed $leaseTime */
+    public function claimItem($leaseTime = 3600): void
     {
         // silence is golden
     }
 
-    public function claimItem($lease_time = 3600)
+    /** @param mixed $item */
+    public function deleteItem($item): void
     {
         // silence is golden
     }
 
-    public function deleteItem($item)
+    /** @param mixed $item */
+    public function releaseItem($item): bool
+    {
+        return true;
+    }
+
+    public function createQueue(): void
     {
         // silence is golden
     }
 
-    public function releaseItem($item)
-    {
-        // silence is golden
-    }
-
-    public function createQueue()
-    {
-        // silence is golden
-    }
-
-    public function deleteQueue()
+    public function deleteQueue(): void
     {
         // silence is golden
     }

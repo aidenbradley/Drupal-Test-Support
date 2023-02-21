@@ -51,34 +51,51 @@ abstract class UpdateHookHandler implements HookHandler
 
     private function runWithoutBatch(): void
     {
+        if (is_callable($this->function) === false) {
+            return;
+        }
+
         call_user_func($this->function);
     }
 
     private function runAsBatch(): void
     {
+        if (is_callable($this->function) === false) {
+            return;
+        }
+
         $batch = [
             '#finished' => 0,
         ];
 
-        while ($batch['#finished'] !== 1) {
-            $progressBefore = $batch['#finished'];
+        $lastBatchFinished = 0;
 
+        do {
             call_user_func_array($this->function, [&$batch]);
 
-            $progressAfter  = $batch['#finished'];
+            /** @var mixed $batchFinished */
+            $batchFinished = $batch['#finished'];
 
-            if ($progressBefore !== $progressAfter) {
-                continue;
+            if (is_float($batchFinished) === false && is_int($batchFinished) === false) {
+                throw UpdateHookFailed::invalidFinishedValue($batchFinished);
             }
 
-            throw UpdateHookFailed::noBatchProgression();
-        }
+            if ($batchFinished < 0 || $batchFinished > 1) {
+                throw UpdateHookFailed::invalidFinishedValue($batchFinished);
+            }
+
+            if ($lastBatchFinished === $batchFinished) {
+                throw UpdateHookFailed::noBatchProgression($batchFinished);
+            }
+
+            $lastBatchFinished = $batchFinished;
+        } while ($batchFinished < 1);
     }
 
     private function wantsBatch(): bool
     {
         $reflection = new ReflectionFunction($this->function);
 
-        return $reflection->getNumberOfParameters();
+        return (bool) $reflection->getNumberOfParameters();
     }
 }

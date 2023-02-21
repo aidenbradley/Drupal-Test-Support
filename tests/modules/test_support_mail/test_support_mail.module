@@ -1,6 +1,6 @@
 <?php
 
-function test_support_mail_mail($key, &$message): void
+function test_support_mail_mail(string $key, array &$message): void
 {
     if ($key !== 'test_support_mail') {
         return;

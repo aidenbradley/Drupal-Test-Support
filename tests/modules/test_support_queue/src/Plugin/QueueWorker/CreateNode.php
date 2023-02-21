@@ -25,7 +25,7 @@ class CreateNode extends QueueWorkerBase implements ContainerFactoryPluginInterf
      */
     public static function create(ContainerInterface $container, array $configuration, $pluginId, $pluginDefinition)
     {
-        return new self(
+        return new static(
             $configuration,
             $pluginId,
             $pluginDefinition,
@@ -33,6 +33,10 @@ class CreateNode extends QueueWorkerBase implements ContainerFactoryPluginInterf
         );
     }
 
+    /**
+     * @param string|mixed $pluginId
+     * @param mixed $pluginDefinition
+     */
     public function __construct(array $configuration, $pluginId, $pluginDefinition, EntityTypeManager $entityTypeManager)
     {
         parent::__construct($configuration, $pluginId, $pluginDefinition);

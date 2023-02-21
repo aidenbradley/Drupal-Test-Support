@@ -24,44 +24,50 @@ class Drupal9EventDispatcher implements TestEventDispatcher
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    /** @phpstan-ignore-next-line */
     public function addListener($eventName, $listener, $priority = 0)
     {
         return $this->eventDispatcher->addListener($eventName, $listener, $priority);
     }
 
-    public function addSubscriber(EventSubscriberInterface $subscriber)
+    public function addSubscriber(EventSubscriberInterface $subscriber): void
     {
-        return $this->eventDispatcher->addSubscriber($subscriber);
+        $this->eventDispatcher->addSubscriber($subscriber);
     }
 
-    public function removeListener($eventName, $listener)
+    public function removeListener($eventName, $listener): void
     {
-        return $this->eventDispatcher->removeListener($eventName, $listener);
+        $this->eventDispatcher->removeListener($eventName, $listener);
     }
 
-    public function removeSubscriber(EventSubscriberInterface $subscriber)
+    public function removeSubscriber(EventSubscriberInterface $subscriber): void
     {
-        return $this->eventDispatcher->removeSubscriber($subscriber);
+        $this->eventDispatcher->removeSubscriber($subscriber);
     }
 
-    public function getListeners($eventName = null)
+    public function getListeners(?string $eventName = null): array
     {
         return $this->eventDispatcher->getListeners($eventName);
     }
 
-    public function dispatch($event, string $eventName = null)
+    /** @param null|string|mixed $event */
+    public function dispatch($event, string $eventName = null): object
     {
         $this->registerDispatchedEvent($event, $eventName);
 
         return $this->eventDispatcher->dispatch($event, $eventName);
     }
 
-    public function getListenerPriority($eventName, $listener)
+    /**
+     * @param string|mixed $eventName
+     * @param callable|mixed $listener
+     */
+    public function getListenerPriority($eventName, $listener): ?int
     {
         return $this->eventDispatcher->getListenerPriority($eventName, $listener);
     }
 
-    public function hasListeners($eventName = null)
+    public function hasListeners(?string $eventName = null)
     {
         return $this->eventDispatcher->hasListeners($eventName);
     }

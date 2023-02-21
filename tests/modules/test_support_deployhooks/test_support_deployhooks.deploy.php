@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\user\Entity\User;
+
 function test_support_deployhooks_deploy_only_in_deploy_php(): void {};
 
 /**
@@ -9,7 +11,13 @@ function test_support_deployhooks_deploy_only_in_deploy_php(): void {};
 function test_support_deployhooks_deploy_no_batch_disable_users(): void
 {
     foreach (\Drupal::entityQuery('user')->accessCheck(false)->execute() as $uid) {
-        \Drupal\user\Entity\User::load($uid)->set('status', 0)->save();
+        $user = User::load($uid);
+
+        if ($user === null) {
+            continue;
+        }
+
+        $user->set('status', 0)->save();
     }
 }
 
@@ -47,7 +55,13 @@ function test_support_deployhooks_deploy_with_batch_disable_users(array &$sandbo
     }
 
     foreach ($uids as $uid) {
-        \Drupal\user\Entity\User::load($uid)->set('status', 0)->save();
+        $user = User::load($uid);
+
+        if ($user === null) {
+            continue;
+        }
+
+        $user->set('status', 0)->save();
 
         $sandbox['current']++;
     }

@@ -24,6 +24,7 @@ class Drupal10EventDispatcher implements TestEventDispatcher
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    /** @phpstan-ignore-next-line */
     public function addListener(string $eventName, callable $listener, int $priority = 0)
     {
         return $this->eventDispatcher->addListener($eventName, $listener, $priority);
