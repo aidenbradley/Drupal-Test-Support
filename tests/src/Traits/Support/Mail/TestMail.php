@@ -48,7 +48,7 @@ class TestMail
         return preg_replace('/\s+/', ' ', trim($this->getValue('body')));
     }
 
-    /** @param mixed body */
+    /** @param mixed $body */
     public function assertBody($body): self
     {
         Assert::assertEquals($body, $this->getBody());
