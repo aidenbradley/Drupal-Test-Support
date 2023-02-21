@@ -1,0 +1,10 @@
+parameters:
+        level: 8
+        paths:
+            - tests/modules
+            - tests/src/Traits
+        checkMissingIterableValueType: false
+        ignoreErrors:
+            - messages:
+                   - '#Unsafe usage of new static\(\)#'
+                   - '#Access to constant VERSION on an unknown class Drupal#'
