@@ -14,20 +14,20 @@ trait InteractsWithSettings
     /** @var string */
     private $settingsLocation = '/sites/default/settings.php';
 
-    /** @var Settings|null  */
+    /** @var Settings|null */
     private $settings = null;
 
     public function getConfigurationDirectory(): string
     {
         $directory = $this->getSettings()->get('config_sync_directory');
 
-        return $this->appRoot() . '/' . ltrim($directory, '/');
+        return $this->appRoot().'/'.ltrim($directory, '/');
     }
 
     protected function getSettings(): Settings
     {
         if (isset($this->settings) === false) {
-            $this->temporarilySupressErrors(function() {
+            $this->temporarilySupressErrors(function () {
                 $this->settings = $this->loadSettings();
             });
         }
@@ -65,7 +65,7 @@ trait InteractsWithSettings
             ->ignoreUnreadableDirs()
             ->ignoreDotFiles(true)
             ->name('settings.php')
-            ->filter(function(SplFileInfo $file) {
+            ->filter(function (SplFileInfo $file) {
                 return str_contains($file->getPathname(), 'simpletest') === false;
             })
             ->in($this->appRoot());
@@ -96,7 +96,6 @@ trait InteractsWithSettings
         if (str_starts_with(\Drupal::VERSION, '10.')) {
             return $this->container->getParameter('app.root');
         }
-
 
         return $this->container->get('app.root');
     }

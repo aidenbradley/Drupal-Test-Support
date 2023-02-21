@@ -3,11 +3,7 @@
 namespace Drupal\Tests\test_support\Traits\Support;
 
 use Drupal\Tests\test_support\Traits\Support\Contracts\TestEventDispatcher;
-use Drupal\Tests\test_support\Traits\Support\Decorators\Drupal10EventDispatcher;
 use Drupal\Tests\test_support\Traits\Support\Factory\EventDispatcherFactory;
-use Illuminate\Support\Collection;
-use Prophecy\Argument;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 trait WithoutEvents
 {

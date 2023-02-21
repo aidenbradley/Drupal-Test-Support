@@ -67,7 +67,7 @@ class TestMail
     }
 
     /**
-     * @param mixed $value
+     * @param  mixed  $value
      *
      * The closure will pass back the value attributed to the given parameter
      */

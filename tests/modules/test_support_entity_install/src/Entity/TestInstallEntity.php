@@ -23,7 +23,7 @@ class TestInstallEntity extends ContentEntityBase
         $fields['id'] = BaseFieldDefinition::create('integer')
             ->setLabel(t('ID'))
             ->setDescription(t('The ID of the Advertiser entity.'))
-            ->setReadOnly(TRUE);
+            ->setReadOnly(true);
 
         $fields['text'] = BaseFieldDefinition::create('text')
             ->setLabel(t('Text'));

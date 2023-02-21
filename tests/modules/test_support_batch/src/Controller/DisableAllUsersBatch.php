@@ -5,7 +5,6 @@ namespace Drupal\test_support_batch\Controller;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -58,7 +57,7 @@ class DisableAllUsersBatch implements ContainerInjectionInterface
             return $redirect;
         }
 
-        return (new RedirectResponse('/'));
+        return new RedirectResponse('/');
     }
 
     public function disableUser(UserInterface $user): void

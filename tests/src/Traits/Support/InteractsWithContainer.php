@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\test_support\Traits\Support;
 
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -16,9 +15,8 @@ trait InteractsWithContainer
      *
      * $this->service('node.route_subscriber');
      *
-     * @param string $id              The service identifier or class string
-     * @param int    $invalidBehavior The behavior when the service does not exist
-     *
+     * @param  string  $id              The service identifier or class string
+     * @param  int  $invalidBehavior The behavior when the service does not exist
      * @return object|null The associated service
      *
      * @throws InvalidArgumentException          when no definitions are available

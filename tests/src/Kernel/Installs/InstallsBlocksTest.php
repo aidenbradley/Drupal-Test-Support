@@ -76,7 +76,7 @@ class InstallsBlocksTest extends KernelTestBase
             'stark_second_block',
         ]);
 
-      $this->assertInstanceOf(Block::class, $blockStorage->load('stark_messages'));
-      $this->assertInstanceOf(Block::class, $blockStorage->load('stark_second_block'));
+        $this->assertInstanceOf(Block::class, $blockStorage->load('stark_messages'));
+        $this->assertInstanceOf(Block::class, $blockStorage->load('stark_second_block'));
     }
 }

@@ -11,7 +11,7 @@ trait InteractsWithLanguages
 
     /** @var array */
     protected $installedLanguages = [
-        'en' // EN is installed by default
+        'en', // EN is installed by default
     ];
 
     /** @var bool */
@@ -22,13 +22,13 @@ trait InteractsWithLanguages
         return $this->container->get('language_manager');
     }
 
-    /** @param string|array $langcode */
+    /** @param  string|array  $langcode */
     protected function installLanguage($langcodes): void
     {
         $this->setupLanguageDependencies();
 
-        foreach ((array)$langcodes as $langcode) {
-            $this->installExportedConfig('language.entity.' . $langcode);
+        foreach ((array) $langcodes as $langcode) {
+            $this->installExportedConfig('language.entity.'.$langcode);
         }
     }
 

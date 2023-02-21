@@ -52,7 +52,6 @@ trait InstallsFields
             $this->setupFieldDependencies = true;
         }
 
-
         return $this;
     }
 }

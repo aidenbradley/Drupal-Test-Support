@@ -5,8 +5,6 @@ namespace Drupal\Tests\test_support\Kernel\Http;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class MakesHttpRequestsTest extends KernelTestBase
 {

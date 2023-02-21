@@ -28,15 +28,16 @@ trait WithoutEventSubscribers
      *         'Drupal\node\Routing\RouteSubscriber',
      *         'language.config_subscriber',
      *     ]);
+     *
      * @endcode
      *
-     * @param string|array $listeners
+     * @param  string|array  $listeners
      */
     public function withoutSubscribers($listeners = []): self
     {
         $this->getListeners()->when($listeners, function (Collection $collection, $listeners) {
             return $collection->filter->inList($listeners);
-        })->whenEmpty(function(Collection $collection) use($listeners) {
+        })->whenEmpty(function (Collection $collection) use ($listeners) {
             $this->deferredSubscribers = collect($this->deferredSubscribers)->merge($listeners)->unique()->toArray();
 
             return $collection;
@@ -58,13 +59,14 @@ trait WithoutEventSubscribers
      *         '\Drupal\Core\Routing\RoutingEvents::ALTER',
      *         'routing.route_finished',
      *     ]);
+     *
      * @endcode
      *
-     * @param string|array $eventNames
+     * @param  string|array  $eventNames
      */
     public function withoutSubscribersForEvents($eventNames): self
     {
-        collect($eventNames)->each(function(string $event): void {
+        collect($eventNames)->each(function (string $event): void {
             $this->getListeners($event)->each(function (Listener $listener) use ($event): void {
                 $this->removeSubscriber($listener, $event);
             });
@@ -76,7 +78,7 @@ trait WithoutEventSubscribers
     public function assertNotListening(string $listener, ?string $event = null): void
     {
         Assert::assertEmpty(
-            $this->getListeners($event)->filter(function(Listener $decoratedListener) use($listener) {
+            $this->getListeners($event)->filter(function (Listener $decoratedListener) use ($listener) {
                 return $decoratedListener->inList((array) $listener);
             })
         );
@@ -85,7 +87,7 @@ trait WithoutEventSubscribers
     public function assertListening(string $listener, ?string $event = null): void
     {
         Assert::assertNotEmpty(
-            $this->getListeners($event)->filter(function(Listener $decoratedListener) use($listener) {
+            $this->getListeners($event)->filter(function (Listener $decoratedListener) use ($listener) {
                 return $decoratedListener->inList((array) $listener);
             })
         );
@@ -112,7 +114,7 @@ trait WithoutEventSubscribers
 
     private function removeSubscriber(Listener $listener, ?string $event = null): self
     {
-        $this->ignoredEvents = collect($this->ignoredEvents)->when($event, function(Collection $collection, string $event) {
+        $this->ignoredEvents = collect($this->ignoredEvents)->when($event, function (Collection $collection, string $event) {
             return $collection->put($event, $event);
         });
 
@@ -127,9 +129,9 @@ trait WithoutEventSubscribers
     {
         $listeners = $this->container->get('event_dispatcher')->getListeners($event);
 
-        return collect($listeners)->unless($event, function(Collection $listeners) {
+        return collect($listeners)->unless($event, function (Collection $listeners) {
             return $listeners->values()->collapse();
-        })->transform(function(array $listener) {
+        })->transform(function (array $listener) {
             $listener[2] = $this->resolveListenerServiceId($listener[0]);
 
             return $listener;

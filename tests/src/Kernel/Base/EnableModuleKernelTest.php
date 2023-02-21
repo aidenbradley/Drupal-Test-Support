@@ -38,7 +38,7 @@ abstract class EnableModuleKernelTest extends KernelTestBase
             $this->entityTypeDefinitionsPreInstall,
         );
 
-        foreach($moduleEntityDefinitions as $moduleEntityDefinition) {
+        foreach ($moduleEntityDefinitions as $moduleEntityDefinition) {
             $this->installEntitySchema($moduleEntityDefinition);
         }
 

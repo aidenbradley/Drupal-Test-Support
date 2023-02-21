@@ -103,7 +103,7 @@ class TestMailTest extends UnitTestCase
 
         $mail->assertParameter('message', 'mail message');
         $mail->assertParameter('article_title', 'arbitrary value');
-        $mail->assertParameter('user', $user->reveal(), function(User $user) {
+        $mail->assertParameter('user', $user->reveal(), function (User $user) {
             $this->assertEquals('hello@example.com', $user->getEmail());
         });
     }

@@ -2,7 +2,9 @@
 
 use Drupal\user\Entity\User;
 
-function test_support_deployhooks_deploy_only_in_deploy_php(): void {};
+function test_support_deployhooks_deploy_only_in_deploy_php(): void
+{
+};
 
 /**
  * Sets the status of all users to 0, effectively blocked

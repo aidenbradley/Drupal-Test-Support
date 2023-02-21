@@ -15,8 +15,8 @@ trait InteractsWithMail
             return [];
         }
 
-        return collect($mail)->when($fromModule, function(Collection $mail, string $fromModule) {
-            return $mail->filter(function(array $mail) use($fromModule) {
+        return collect($mail)->when($fromModule, function (Collection $mail, string $fromModule) {
+            return $mail->filter(function (array $mail) use ($fromModule) {
                 return $mail['module'] === $fromModule;
             });
         })->mapInto(TestMail::class)->toArray();
