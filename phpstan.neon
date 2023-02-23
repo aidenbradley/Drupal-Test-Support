@@ -1,17 +1,17 @@
 parameters:
-        level: 8
-        paths:
-            - tests/modules
-            - tests/src/Traits
-        excludePaths:
-                    analyseAndScan:
-                        -  tests/src/Traits/Support/Decorators
-        checkMissingIterableValueType: false
-        ignoreErrors:
-            - messages:
-                   - '#Unsafe usage of new static\(\)#'
-                   - '#Access to constant VERSION on an unknown class Drupal#'
-                   - '#length of method Drupal\Core\Entity\Query\QueryInterface::range\(\) expects null, int given#'
-                   - '#^Parameter \#2 \$length of method Drupal\\Core\\Entity\\Query\\QueryInterface\:\:range\(\) expects null, int given\.$#'
+    level: 8
+    paths:
+        - tests/modules
+        - tests/src/Traits
+    excludePaths:
+      analyse:
+        -  tests/src/Traits/Support/Decorators
+    checkMissingIterableValueType: false
+    ignoreErrors:
+        - messages:
+               - '#Unsafe usage of new static\(\)#'
+               - '#Access to constant VERSION on an unknown class Drupal#'
+               - '#length of method Drupal\Core\Entity\Query\QueryInterface::range\(\) expects null, int given#'
+               - '#^Parameter \#2 \$length of method Drupal\\Core\\Entity\\Query\\QueryInterface\:\:range\(\) expects null, int given\.$#'
 includes:
     - vendor/mglaman/phpstan-drupal/extension.neon
