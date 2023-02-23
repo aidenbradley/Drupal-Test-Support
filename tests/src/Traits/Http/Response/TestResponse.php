@@ -7,9 +7,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TestResponse extends Response
 {
-    public static function fromBaseResponse(Response $response)
+    public static function fromBaseResponse(Response $response): self
     {
-        return new static(
+        return new self(
             $response->getContent(),
             $response->getStatusCode(),
             $response->headers->all()
@@ -395,7 +395,13 @@ class TestResponse extends Response
     /** @return static */
     public function assertJsonContent(array $json)
     {
-        Assert::assertEquals($json, (array) json_decode($this->getContent()));
+        $contents = $this->getContent();
+
+        if ($contents === false) {
+            $contents = '';
+        }
+
+        Assert::assertEquals($json, (array) json_decode($contents));
 
         return $this;
     }
@@ -403,7 +409,13 @@ class TestResponse extends Response
     /** @return static */
     public function assertJsonContentContains(array $json)
     {
-        $decodedResponse = (array) json_decode($this->getContent());
+        $contents = $this->getContent();
+
+        if ($contents === false) {
+            $contents = '';
+        }
+
+        $decodedResponse = (array) json_decode($contents);
 
         foreach ($json as $key => $value) {
             Assert::assertEquals($value, $decodedResponse[$key]);
