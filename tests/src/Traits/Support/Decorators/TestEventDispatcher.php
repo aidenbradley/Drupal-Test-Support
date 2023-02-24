@@ -51,7 +51,10 @@ class TestEventDispatcher
         return $this;
     }
 
-    /** @return mixed */
+    /**
+     * @param mixed $name
+     * @return mixed
+     */
     public function __get($name)
     {
         return $this->eventDispatcher->$name;

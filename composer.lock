@@ -6245,8 +6245,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "nesbot/carbon": 20,
-        "mglaman/phpstan-drupal": 20
+        "nesbot/carbon": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
