@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\test_support\Kernel\Support;
 
-use Drupal\Component\EventDispatcher\Event;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\locale\LocaleEvent;
 use Drupal\Tests\test_support\Traits\Support\WithoutEvents;
@@ -16,10 +15,16 @@ class WithoutEventsTest extends KernelTestBase
     {
         $this->withoutEvents();
 
-        $this->container->get('event_dispatcher')->dispatch(new Event(), 'test_event');
+        if (str_starts_with(\Drupal::VERSION, '10.')) {
+            $event = new \Symfony\Contracts\EventDispatcher\Event();
+        } else {
+            $event = new \Symfony\Component\EventDispatcher\Event();
+        }
+
+        $this->container->get('event_dispatcher')->dispatch('test_event', $event);
 
         $this->assertDispatched('test_event');
-        $this->assertDispatched(Event::class);
+        $this->assertDispatched(get_class($event));
     }
 
     /** @test */

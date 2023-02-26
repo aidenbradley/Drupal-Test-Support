@@ -2,10 +2,14 @@
 
 namespace Drupal\Tests\test_support\Traits\Support\Decorators;
 
+use Illuminate\Support\Collection;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class TestEventDispatcher
 {
+    /** @var array */
+    private $firedEvents = [];
+
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
@@ -25,8 +29,16 @@ class TestEventDispatcher
      */
     public function __call(string $name, $arguments)
     {
-        if (method_exists($this->eventDispatcher, $name) === false) {
-            return $this;
+        if ($name === 'dispatch' && count($arguments) === 2) {
+            $event = collect($arguments)->filter(function ($argument): bool {
+                return is_object($argument);
+            })->first();
+
+            $eventName = collect($arguments)->filter(function ($argument): bool {
+                return is_string($argument);
+            })->first();
+
+            $this->registerDispatchedEvent($event, $eventName);
         }
 
         $return = $this->eventDispatcher->$name(...$arguments);
@@ -58,5 +70,19 @@ class TestEventDispatcher
     public function __get($name)
     {
         return $this->eventDispatcher->$name;
+    }
+
+    public function getFiredEvents(?string $event = null): Collection
+    {
+        return collect($this->firedEvents)->when($event, function(Collection $events, $event) {
+            return $events->filter(function($object, string $name) use ($event) {
+                return get_class($object) === $event || $name === $event;
+            });
+        });
+    }
+
+    private function registerDispatchedEvent(object $event, string $eventName = null): void
+    {
+        $this->firedEvents[$eventName] = $event;
     }
 }
