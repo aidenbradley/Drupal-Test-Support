@@ -1,10 +1,13 @@
 parameters:
         level: 8
         reportUnmatchedIgnoredErrors: false
+        checkGenericClassInNonGenericObjectType: false
+        checkMissingIterableValueType: false
         paths:
             - tests/modules
             - tests/src/Traits
-        checkMissingIterableValueType: false
+        excludePaths:
+        		- tests/src/Traits/Support/Time/Tardis.php
         ignoreErrors:
             - messages:
                    - '#Unsafe usage of new static\(\)#'

@@ -12,24 +12,25 @@
             "email": "mraidenbradley@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
-    "require-dev": {
-        "drupal/core-dev": "^9.4",
-        "phpspec/prophecy-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.5",
-        "illuminate/collections": "^8.77",
-        "opis/closure": "^3.6",
-        "nesbot/carbon": "2.x-dev",
-        "mglaman/phpstan-drupal": "508.x-dev"
-    },
+    "minimum-stability": "stable",
     "config": {
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
         }
     },
     "scripts": {
         "lint": "vendor/bin/pint --test -v",
         "lint-cbf": "vendor/bin/pint",
         "stan": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon"
+    },
+    "require-dev": {
+        "drupal/core-dev": "9.0.0",
+        "phpunit/phpunit": "^8.5",
+        "phpspec/prophecy-phpunit": "^1.1",
+        "illuminate/collections": "^10.1",
+        "opis/closure": "^3.6",
+        "nesbot/carbon": "^2.66",
+        "mglaman/phpstan-drupal": "^1.1"
     }
 }
