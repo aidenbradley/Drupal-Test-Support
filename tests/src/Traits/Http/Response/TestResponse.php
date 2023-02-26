@@ -5,12 +5,19 @@ namespace Drupal\Tests\test_support\Traits\Http\Response;
 use PHPUnit\Framework\Assert;
 use Symfony\Component\HttpFoundation\Response;
 
+/** @method string getContent() */
 class TestResponse extends Response
 {
-    public static function fromBaseResponse(Response $response)
+    public static function fromBaseResponse(Response $response): self
     {
-        return new static(
-            $response->getContent(),
+        $content = $response->getContent();
+
+        if ($content === false) {
+            $content = '';
+        }
+
+        return new self(
+            $content,
             $response->getStatusCode(),
             $response->headers->all()
         );
@@ -395,7 +402,7 @@ class TestResponse extends Response
     /** @return static */
     public function assertJsonContent(array $json)
     {
-        Assert::assertEquals($json, (array) json_decode($this->getContent()));
+        Assert::assertEquals($json, (array)json_decode($this->getContent()));
 
         return $this;
     }
@@ -403,7 +410,7 @@ class TestResponse extends Response
     /** @return static */
     public function assertJsonContentContains(array $json)
     {
-        $decodedResponse = (array) json_decode($this->getContent());
+        $decodedResponse = (array)json_decode($this->getContent());
 
         foreach ($json as $key => $value) {
             Assert::assertEquals($value, $decodedResponse[$key]);

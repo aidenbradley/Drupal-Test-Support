@@ -89,7 +89,7 @@ trait MakesHttpRequests
     public function ajax(): self
     {
         $this->headers = array_merge($this->headers, [
-            'X-Requested-With' => 'XMLHttpRequest'
+            'X-Requested-With' => 'XMLHttpRequest',
         ]);
 
         return $this;
@@ -183,7 +183,7 @@ trait MakesHttpRequests
         return $this;
     }
 
-    /** @param mixed $value */
+    /** @param  mixed  $value */
     protected function withHeader(string $header, $value): self
     {
         $this->headers = array_merge($this->headers, [
@@ -196,7 +196,6 @@ trait MakesHttpRequests
     /**
      * Transform headers array to array of $_SERVER vars with HTTP_* format.
      *
-     * @param  array  $headers
      * @return array
      */
     protected function transformHeadersToServerVars(array $headers)

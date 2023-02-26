@@ -36,9 +36,11 @@ function test_support_updatehooks_update_9001(array &$sandbox): void
     foreach ($uids as $uid) {
         $user = \Drupal\user\Entity\User::load($uid);
 
-        $user->set('status', 0);
+        if ($user === null) {
+            continue;
+        }
 
-        $user->save();
+        $user->set('status', 0)->save();
 
         $sandbox['current']++;
     }
@@ -65,9 +67,11 @@ function test_support_updatehooks_update_9002(): void
     foreach ($uids as $uid) {
         $user = \Drupal\user\Entity\User::load($uid);
 
-        $user->set('status', 0);
+        if ($user === null) {
+            continue;
+        }
 
-        $user->save();
+        $user->set('status', 0)->save();
     }
 }
 

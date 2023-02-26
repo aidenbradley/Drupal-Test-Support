@@ -36,9 +36,11 @@ function test_support_update_hooks_post_update_batch_block_users(array &$sandbox
     foreach ($uids as $uid) {
         $user = \Drupal\user\Entity\User::load($uid);
 
-        $user->set('status', 0);
+        if ($user === null) {
+            continue;
+        }
 
-        $user->save();
+        $user->set('status', 0)->save();
 
         $sandbox['current']++;
     }
@@ -65,8 +67,10 @@ function test_support_update_hooks_post_update_no_batch_block_users(): void
     foreach ($uids as $uid) {
         $user = \Drupal\user\Entity\User::load($uid);
 
-        $user->set('status', 0);
+        if ($user === null) {
+            continue;
+        }
 
-        $user->save();
+        $user->set('status', 0)->save();
     }
 }

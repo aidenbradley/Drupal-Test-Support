@@ -1,6 +1,10 @@
 <?php
 
-function test_support_postupdatehooks_post_update_only_in_post_update_php(): void {};
+use Drupal\user\Entity\User;
+
+function test_support_postupdatehooks_post_update_only_in_post_update_php(): void
+{
+};
 
 /**
  * Sets the status of all users to 0, effectively blocked
@@ -9,7 +13,13 @@ function test_support_postupdatehooks_post_update_only_in_post_update_php(): voi
 function test_support_postupdatehooks_post_update_no_batch_disable_users(): void
 {
     foreach (\Drupal::entityQuery('user')->accessCheck(false)->execute() as $uid) {
-        \Drupal\user\Entity\User::load($uid)->set('status', 0)->save();
+        $user = User::load($uid);
+
+        if ($user === null) {
+            continue;
+        }
+
+        $user->set('status', 0)->save();
     }
 }
 
@@ -47,7 +57,13 @@ function test_support_postupdatehooks_post_update_with_batch_disable_users(array
     }
 
     foreach ($uids as $uid) {
-        \Drupal\user\Entity\User::load($uid)->set('status', 0)->save();
+        $user = User::load($uid);
+
+        if ($user === null) {
+            continue;
+        }
+
+        $user->set('status', 0)->save();
 
         $sandbox['current']++;
     }

@@ -1,0 +1,16 @@
+parameters:
+        level: 8
+        reportUnmatchedIgnoredErrors: false
+        checkGenericClassInNonGenericObjectType: false
+        checkMissingIterableValueType: false
+        paths:
+            - tests/modules
+            - tests/src/Traits
+        excludePaths:
+        		- tests/src/Traits/Support/Time/Tardis.php
+        ignoreErrors:
+            - messages:
+                   - '#Unsafe usage of new static\(\)#'
+                   - '#^Parameter \#2 \$length of method Drupal\\Core\\Entity\\Query\\QueryInterface\:\:range\(\) expects null, int given\.$#'
+includes:
+    - vendor/mglaman/phpstan-drupal/extension.neon

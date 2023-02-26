@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\Tests\test_support\Traits\Installs;
+
 use Drupal\Tests\test_support\Traits\Installs\Configuration\InstallConfiguration;
 
 trait InstallsEntityTypes
@@ -26,11 +27,11 @@ trait InstallsEntityTypes
         return $this;
     }
 
-    /** @param string|array $bundles */
+    /** @param  string|array  $bundles */
     public function installEntitySchemaWithBundles(string $entityType, $bundles): self
     {
         $this->installEntitySchema($entityType);
 
-        return $this->installBundles($entityType, (array)$bundles);
+        return $this->installBundles($entityType, (array) $bundles);
     }
 }

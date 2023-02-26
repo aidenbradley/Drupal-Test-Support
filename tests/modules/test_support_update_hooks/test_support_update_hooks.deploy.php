@@ -13,9 +13,11 @@ function test_support_update_hooks_deploy_no_batch_disable_users(): void
     foreach ($uids as $uid) {
         $user = \Drupal\user\Entity\User::load($uid);
 
-        $user->set('status', 0);
+        if ($user === null) {
+            continue;
+        }
 
-        $user->save();
+        $user->set('status', 0)->save();
     }
 }
 
@@ -55,9 +57,11 @@ function test_support_update_hooks_deploy_with_batch_disable_users(array &$sandb
     foreach ($uids as $uid) {
         $user = \Drupal\user\Entity\User::load($uid);
 
-        $user->set('status', 0);
+        if ($user === null) {
+            continue;
+        }
 
-        $user->save();
+        $user->set('status', 0)->save();
 
         $sandbox['current']++;
     }

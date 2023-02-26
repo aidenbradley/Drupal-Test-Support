@@ -40,7 +40,7 @@ trait InteractsWithUpdateHooks
     {
         if ($this->container->get('module_handler')->moduleExists($module) === false) {
             $this->enableModules([
-                $module
+                $module,
             ]);
         }
 

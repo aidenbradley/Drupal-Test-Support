@@ -4,8 +4,8 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_support\Traits\Support\Exceptions\ConfigInstallFailed;
 use Drupal\Tests\test_support\Traits\Installs\InstallsExportedConfig;
+use Drupal\Tests\test_support\Traits\Support\Exceptions\ConfigInstallFailed;
 
 class InstallsExportedConfigTest extends KernelTestBase
 {
@@ -119,7 +119,7 @@ class InstallsExportedConfigTest extends KernelTestBase
         }
     }
 
-    /** @param string|array $modules */
+    /** @param  string|array  $modules */
     private function assertModulesEnabled($modules): self
     {
         foreach ((array) $modules as $module) {
@@ -131,7 +131,7 @@ class InstallsExportedConfigTest extends KernelTestBase
         return $this;
     }
 
-    /** @param string|array $modules */
+    /** @param  string|array  $modules */
     private function assertModulesDisabled($modules): self
     {
         foreach ((array) $modules as $module) {

@@ -9,9 +9,6 @@ class DecoratedListener
     /** @var \Symfony\Component\EventDispatcher\EventSubscriberInterface|null */
     private $listener;
 
-    /** @var array|null */
-    private $callable;
-
     /** @var string|null */
     private $serviceId;
 
@@ -23,7 +20,6 @@ class DecoratedListener
     public function __construct(array $listener)
     {
         $this->listener = $listener[0] ?? null;
-        $this->callable = $listener[1] ?? null;
         $this->serviceId = $listener[2] ?? null;
     }
 
@@ -46,7 +42,7 @@ class DecoratedListener
         return in_array($this->getClass(), $listeners) || in_array($this->getServiceId(), $listeners);
     }
 
-    public function getOriginal(): EventSubscriberInterface
+    public function getOriginal(): ?EventSubscriberInterface
     {
         return $this->listener;
     }

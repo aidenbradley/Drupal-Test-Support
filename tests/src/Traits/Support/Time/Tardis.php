@@ -18,7 +18,7 @@ class Tardis
     /** @var ContainerInterface */
     private $container;
 
-    /** @var int */
+    /** @var int|null */
     private $travel;
 
     public static function createFromTravel(ContainerInterface $container, ?int $travel = null): self

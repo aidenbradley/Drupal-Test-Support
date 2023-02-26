@@ -7,9 +7,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\Exceptions\UpdateHookFailed;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithUpdateHooks;
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\Base\UpdateHookHandler;
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\Factory\HookHandlerFactory;
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\UpdateHandler;
 use Drupal\user\Entity\User;
 
 class UpdateHandlerTest extends KernelTestBase
@@ -100,20 +97,20 @@ class UpdateHandlerTest extends KernelTestBase
         $this->assertTrue($this->container->get('module_handler')->moduleExists($module));
     }
 
-    /** @param array|User $users */
+    /** @param  array|User  $users */
     private function assertUsersBlocked($users): self
     {
-        foreach((array) $users as $user) {
+        foreach ((array) $users as $user) {
             $this->assertEquals(0, $user->get('status')->value);
         }
 
         return $this;
     }
 
-    /** @param array|User $users */
+    /** @param  array|User  $users */
     private function assertUsersNotBlocked($users): self
     {
-        foreach((array) $users as $user) {
+        foreach ((array) $users as $user) {
             $this->assertEquals(1, $user->get('status')->value);
         }
 
