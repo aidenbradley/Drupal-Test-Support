@@ -8,12 +8,8 @@ trait InstallsModules
 {
     public function enableModuleWithDependencies($modules): self
     {
-        $pathResolver = $this->container->get('extension.path.resolver');
-
         foreach ((array) $modules as $module) {
-            $fileLocation = $pathResolver->getPath('module', $module) . '/' . $module . '.info.yml';
-
-            $infoYaml = Yaml::decode(file_get_contents($fileLocation));
+            $infoYaml = $this->getModuleInfoFileContents($module);
 
             if (isset($infoYaml['dependencies']) === false) {
                 $this->enableModules((array) $module);
@@ -29,5 +25,18 @@ trait InstallsModules
         }
 
         return $this;
+    }
+
+    private function getModuleInfoFileContents(string $module): array
+    {
+        if ($this->container->has('extension.path.resolver')) {
+            $path = $this->container->get('extension.path.resolver')->getPath('module', $module);
+        } else {
+            $path = drupal_get_path('module', $module);
+        }
+
+        $fileLocation = $path . '/' . $module . '.info.yml';
+
+        return Yaml::decode(file_get_contents($fileLocation));
     }
 }

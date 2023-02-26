@@ -23,6 +23,7 @@ class TestEventDispatcher
         $this->eventDispatcher = $eventDispatcher;
     }
 
+
     /**
      * @param mixed $arguments
      * @return mixed
@@ -74,8 +75,8 @@ class TestEventDispatcher
 
     public function getFiredEvents(?string $event = null): Collection
     {
-        return collect($this->firedEvents)->when($event, function(Collection $events, $event) {
-            return $events->filter(function($object, string $name) use ($event) {
+        return collect($this->firedEvents)->when($event, function (Collection $events, $event) {
+            return $events->filter(function ($object, string $name) use ($event) {
                 return get_class($object) === $event || $name === $event;
             });
         });

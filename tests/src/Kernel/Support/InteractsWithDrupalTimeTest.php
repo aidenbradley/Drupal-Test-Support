@@ -34,6 +34,8 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->installEntitySchema('node');
         $this->installEntitySchema('user');
 
+        $this->installSchema('system', 'sequences');
+
         $this->createEntity('node_type', [
             'type' => 'page',
             'name' => 'Basic page',
