@@ -73,7 +73,7 @@ class InstallsImageStylesTest extends KernelTestBase
 
         $this->assertNotEmpty($imageStyles);
 
-        $imageStyleIds = array_map(function(ImageStyle $imageStyle) {
+        $imageStyleIds = array_map(function (ImageStyle $imageStyle) {
             return $imageStyle->id();
         }, $imageStyles);
 

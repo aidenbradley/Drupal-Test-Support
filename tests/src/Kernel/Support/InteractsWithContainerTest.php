@@ -6,7 +6,6 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Routing\RouteSubscriber;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithContainer;
 
-
 class InteractsWithContainerTest extends KernelTestBase
 {
     use InteractsWithContainer;

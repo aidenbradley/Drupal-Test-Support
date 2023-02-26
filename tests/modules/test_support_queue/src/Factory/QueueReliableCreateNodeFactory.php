@@ -6,7 +6,8 @@ use Drupal\test_support_queue\Queue\ReliableCreateNodeQueue;
 
 class QueueReliableCreateNodeFactory
 {
-    public function get(string $name) {
-        return ReliableCreateNodeQueue::create($name);
+    public function get(string $name): ReliableCreateNodeQueue
+    {
+        return new ReliableCreateNodeQueue();
     }
 }

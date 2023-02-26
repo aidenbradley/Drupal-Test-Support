@@ -4,7 +4,6 @@ namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\Component\Utility\Random;
 use Drupal\KernelTests\KernelTestBase;
-
 use Drupal\Tests\test_support\Traits\Support\InteractsWithAuthentication;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithDrupalTime;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithEntities;
@@ -140,7 +139,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
         $this->assertTimezoneIs('Europe/London');
 
-        $this->travel(5)->years(function() {
+        $this->travel(5)->years(function () {
             $this->createEntity('user', [
                 'uid' => 10,
                 'name' => 'time.traveler',
@@ -214,7 +213,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
         $this->assertTimezoneIs('Europe/London');
 
-        $this->travel()->toTimezone('Europe/Rome', function() {
+        $this->travel()->toTimezone('Europe/Rome', function () {
             $this->assertTimezoneIs('Europe/Rome');
 
             $this->createEntity('user', [

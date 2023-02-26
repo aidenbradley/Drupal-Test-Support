@@ -21,7 +21,7 @@ trait InteractsWithEntities
     protected function updateEntity(EntityInterface $entity, array $values): EntityInterface
     {
         foreach ($values as $field => $value) {
-            $entity->set($field,  $value);
+            $entity->set($field, $value);
         }
 
         $entity->save();

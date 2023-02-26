@@ -37,7 +37,6 @@ trait InstallsImageStyles
             $this->setupImageStyleDependencies = true;
         }
 
-
         return $this;
     }
 }

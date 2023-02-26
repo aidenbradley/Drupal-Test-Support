@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\Tests\test_support\Traits\Support\Time;
+
 use Carbon\Carbon;
 use Drupal\Component\Datetime\TimeInterface;
 
@@ -11,21 +12,23 @@ class Time implements TimeInterface
         return new self();
     }
 
-    public function getRequestTime()
+    public function getRequestTime(): int
     {
         return Carbon::now()->getTimestamp();
     }
 
+    /** @return int|float */
     public function getRequestMicroTime()
     {
         return Carbon::now()->getTimestampMs();
     }
 
-    public function getCurrentTime()
+    public function getCurrentTime(): int
     {
         return Carbon::now()->getTimestamp();
     }
 
+    /** @return int|float */
     public function getCurrentMicroTime()
     {
         return Carbon::now()->getTimestampMs();

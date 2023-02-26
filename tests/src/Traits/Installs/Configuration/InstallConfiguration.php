@@ -22,12 +22,12 @@ trait InstallConfiguration
     /** @var array */
     private $installedConfig = [];
 
-    /** @param string|array $config */
+    /** @param  string|array  $config */
     public function installExportedConfig($config): self
     {
         $configStorage = new FileStorage($this->configDirectory());
 
-        foreach ((array)$config as $configName) {
+        foreach ((array) $config as $configName) {
             if (in_array($configName, $this->installedConfig)) {
                 continue;
             }

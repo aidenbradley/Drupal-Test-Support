@@ -35,7 +35,6 @@ trait InstallsMenus
             $this->setupMenuDependencies = true;
         }
 
-
         return $this;
     }
 }
