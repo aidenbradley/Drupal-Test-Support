@@ -15,11 +15,7 @@ class WithoutEventsTest extends KernelTestBase
     {
         $this->withoutEvents();
 
-        if (str_starts_with(\Drupal::VERSION, '10.')) {
-            $event = new \Symfony\Contracts\EventDispatcher\Event();
-        } else {
-            $event = new \Symfony\Component\EventDispatcher\Event();
-        }
+        $event = $this->createEvent();
 
         $this->container->get('event_dispatcher')->dispatch('test_event', $event);
 
@@ -30,9 +26,11 @@ class WithoutEventsTest extends KernelTestBase
     /** @test */
     public function expects_events_class_string(): void
     {
-        $this->expectsEvents(Event::class);
+        $event = $this->createEvent();
 
-        $this->container->get('event_dispatcher')->dispatch(new Event(), 'test_event');
+        $this->expectsEvents(get_class($event));
+
+        $this->container->get('event_dispatcher')->dispatch('test_event', $event);
     }
 
     /** @test */
@@ -40,15 +38,15 @@ class WithoutEventsTest extends KernelTestBase
     {
         $this->expectsEvents('test_event');
 
-        $this->container->get('event_dispatcher')->dispatch(new Event(), 'test_event');
+        $this->container->get('event_dispatcher')->dispatch('test_event', $this->createEvent());
     }
 
     /** @test */
     public function doesnt_expect_events_class_string(): void
     {
-        $this->doesntExpectEvents(Event::class);
+        $this->doesntExpectEvents(get_class($this->createEvent()));
 
-        $this->container->get('event_dispatcher')->dispatch(new LocaleEvent([]), 'second_event');
+        $this->container->get('event_dispatcher')->dispatch('second_event', new LocaleEvent([]));
     }
 
     /** @test */
@@ -56,7 +54,7 @@ class WithoutEventsTest extends KernelTestBase
     {
         $this->doesntExpectEvents('first_event');
 
-        $this->container->get('event_dispatcher')->dispatch(new Event(), 'second_event');
+        $this->container->get('event_dispatcher')->dispatch('second_event', new LocaleEvent([]));
     }
 
     /** @test */
@@ -64,17 +62,40 @@ class WithoutEventsTest extends KernelTestBase
     {
         $this->expectsEvents('test_event');
 
-        $event = new Event();
+        $event = $this->createEvent();
         $event->title = 'hello';
 
-        $this->container->get('event_dispatcher')->dispatch($event, 'test_event');
+        $this->container->get('event_dispatcher')->dispatch('test_event', $event);
 
-        $this->assertDispatched('test_event', function (Event $firedEvent) use ($event) {
+        /** @param object $firedEvent */
+        $this->assertDispatched('test_event', function ($firedEvent) use ($event) {
             return $firedEvent->title === $event->title;
         });
 
-        $this->assertDispatched(Event::class, function (Event $firedEvent) use ($event) {
+        /** @param object $firedEvent */
+        $this->assertDispatched(get_class($event), function ($firedEvent) use ($event) {
             return $firedEvent->title === $event->title;
         });
+    }
+
+    /** @return mixed */
+    private function createEvent()
+    {
+        $eventClasses = [
+            '\Symfony\Component\EventDispatcher\Event', // Drupal 9
+            '\Symfony\Contracts\EventDispatcher\Event' // Drupal 10
+        ];
+
+        foreach ($eventClasses as $class) {
+            if (class_exists($class) === false) {
+                continue;
+            }
+
+            return new $class();
+        }
+
+        throw new \Exception(
+            'None of the following event classes exist' . implode(', ', $eventClasses)
+        );
     }
 }
