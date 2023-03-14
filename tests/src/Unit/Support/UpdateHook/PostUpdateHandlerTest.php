@@ -7,7 +7,6 @@ use Drupal\Tests\UnitTestCase;
 
 class PostUpdateHandlerTest extends UnitTestCase
 {
-    /** @test */
     public function get_module_name(): void
     {
         $handler = PostUpdateHandler::create('test_support_post_update_hook');
@@ -38,7 +37,6 @@ class PostUpdateHandlerTest extends UnitTestCase
         $this->assertEquals('contrib_module', $handler->getModuleName());
     }
 
-    /** @test */
     public function can_handle(): void
     {
         $this->assertTrue(PostUpdateHandler::canHandle('test_support_post_update_disable_users'));
