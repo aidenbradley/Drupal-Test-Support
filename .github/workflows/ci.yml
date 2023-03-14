@@ -51,7 +51,6 @@ jobs:
 #                    modules/test_support/vendor/bin/paratest \
 #                    --path modules/test_support/tests \
 #                    -c modules/test_support/phpunit.xml \
-#                    --bootstrap core/tests/bootstrap.php  \
 #                    --testsuite unit,kernel
 
     drupal-9-matrix:
@@ -106,5 +105,4 @@ jobs:
                     modules/test_support/vendor/bin/phpunit \
                     modules/test_support/tests \
                     -c modules/test_support/phpunit.xml \
-                    --bootstrap core/tests/bootstrap.php  \
                     --testsuite unit,kernel
