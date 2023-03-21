@@ -30,6 +30,10 @@ class TestEventDispatcher
      */
     public function __call(string $name, $arguments)
     {
+        if (is_countable($arguments) === false) {
+            throw new \Exception('Failed to handle: ' . $name);
+        }
+
         if ($name === 'dispatch' && count($arguments) === 2) {
             $event = collect($arguments)->filter(function ($argument): bool {
                 return is_object($argument);
