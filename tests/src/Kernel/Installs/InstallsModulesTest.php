@@ -25,11 +25,30 @@ class InstallsModulesTest extends KernelTestBase
             ->assertModulesEnabled($expectedDependencies);
     }
 
+    /** @test */
+    public function handles_nested_mutual_dependencies(): void
+    {
+        $this->assertModulesDisabled([
+            'test_support_dependencies',
+            'test_support_mutual_dependency_one',
+            'test_support_mutual_dependency_two',
+        ]);
+
+        $this->enableModuleWithDependencies('test_support_mutual_dependency_one');
+
+        $this->assertModulesEnabled([
+            'test_support_dependencies',
+            'test_support_mutual_dependency_one',
+            'test_support_mutual_dependency_two',
+        ]);
+    }
+
     private function assertModulesEnabled($modules): self
     {
-        foreach ((array) $modules as $module) {
+        foreach ((array)$modules as $module) {
             $this->assertTrue(
-                $this->container->get('module_handler')->moduleExists($module)
+                $this->container->get('module_handler')->moduleExists($module),
+                $module . ' is not enabled'
             );
         }
 
@@ -38,9 +57,10 @@ class InstallsModulesTest extends KernelTestBase
 
     private function assertModulesDisabled($modules): self
     {
-        foreach ((array) $modules as $module) {
+        foreach ((array)$modules as $module) {
             $this->assertFalse(
-                $this->container->get('module_handler')->moduleExists($module)
+                $this->container->get('module_handler')->moduleExists($module),
+                $module . ' is not disabled'
             );
         }
 

@@ -6,28 +6,49 @@ use Drupal\Core\Serialization\Yaml;
 
 trait InstallsModules
 {
+    /** @var array */
+    private $modulesToInstall = [];
+
     public function enableModuleWithDependencies($modules): self
     {
+        $this->modulesToInstall = collect($modules);
+
         foreach ((array) $modules as $module) {
-            $infoYaml = $this->getModuleInfoFileContents($module);
+            $dependencies = $this->getModuleDependencies($module);
 
-            if (isset($infoYaml['dependencies']) === false) {
-                $this->enableModules((array) $module);
+            do {
+                foreach($dependencies as $dependency) {
+                    $this->modulesToInstall->add($dependency);
 
-                continue;
-            }
+                    $dependencies = $this->getModuleDependencies($dependency);
 
-            $cleanedDependencies = array_map(function ($dependency) {
-                return str_replace('drupal:', '', $dependency);
-            }, $infoYaml['dependencies']);
-
-            $this->enableModules(array_merge((array) $module, $cleanedDependencies));
+                    $this->modulesToInstall->merge($dependencies);
+                }
+            } while ($dependencies !== []);
         }
+
+        $this->enableModules($this->modulesToInstall->toArray());
+
+        $this->modulesToInstall = [];
 
         return $this;
     }
 
-    private function getModuleInfoFileContents(string $module): array
+    private function getModuleDependencies(string $moduleName): array
+    {
+        $infoYaml = $this->getModuleInfo($moduleName);
+
+        if (isset($infoYaml['dependencies']) === false) {
+            return [];
+        }
+
+        return collect($infoYaml['dependencies'])->map(function(string $dependency): string {
+            return $this->handlePrefixes($dependency);
+        })->diff($this->modulesToInstall)->toArray();
+    }
+
+    /** @return mixed */
+    private function getModuleInfo(string $module)
     {
         if ($this->container->has('extension.path.resolver')) {
             $path = $this->container->get('extension.path.resolver')->getPath('module', $module);
@@ -38,5 +59,14 @@ trait InstallsModules
         $fileLocation = $path . '/' . $module . '.info.yml';
 
         return Yaml::decode(file_get_contents($fileLocation));
+    }
+
+    private function handlePrefixes(string $moduleName): string
+    {
+        if (str_contains($moduleName, ':') === false) {
+            return $moduleName;
+        }
+
+        return collect(explode(':', $moduleName))->last();
     }
 }
