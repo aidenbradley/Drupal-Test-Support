@@ -37,7 +37,7 @@ trait InstallsModules
     private function getModuleDependencies(string $moduleName): array
     {
         $infoYaml = $this->getModuleInfo($moduleName);
-//        dump($moduleName, $infoYaml);
+
         if (isset($infoYaml['dependencies']) === false) {
             return [];
         }
