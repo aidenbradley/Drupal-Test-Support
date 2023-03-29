@@ -6,28 +6,69 @@ use Drupal\Core\Serialization\Yaml;
 
 trait InstallsModules
 {
+    /** @var array */
+    private $modulesToInstall = [];
+
     public function enableModuleWithDependencies($modules): self
     {
-        $pathResolver = $this->container->get('extension.path.resolver');
+        $this->modulesToInstall = collect($modules);
 
         foreach ((array) $modules as $module) {
-            $fileLocation = $pathResolver->getPath('module', $module) . '/' . $module . '.info.yml';
+            $dependencies = $this->getModuleDependencies($module);
 
-            $infoYaml = Yaml::decode(file_get_contents($fileLocation));
+            do {
+                foreach($dependencies as $dependency) {
+                    $this->modulesToInstall->add($dependency);
 
-            if (isset($infoYaml['dependencies']) === false) {
-                $this->enableModules((array) $module);
+                    $dependencies = $this->getModuleDependencies($dependency);
 
-                continue;
-            }
-
-            $cleanedDependencies = array_map(function ($dependency) {
-                return str_replace('drupal:', '', $dependency);
-            }, $infoYaml['dependencies']);
-
-            $this->enableModules(array_merge((array) $module, $cleanedDependencies));
+                    $this->modulesToInstall->merge($dependencies);
+                }
+            } while ($dependencies !== []);
         }
 
+        $this->enableModules($this->modulesToInstall->toArray());
+
+        $this->modulesToInstall = [];
+
         return $this;
+    }
+
+    private function getModuleDependencies(string $moduleName): array
+    {
+        $infoYaml = $this->getModuleInfo($moduleName);
+//        dump($moduleName, $infoYaml);
+        if (isset($infoYaml['dependencies']) === false) {
+            return [];
+        }
+
+        return collect($infoYaml['dependencies'])->map(function(string $dependency): string {
+            return $this->handlePrefixes($dependency);
+        })->diff($this->modulesToInstall)->toArray();
+    }
+
+    /** @return mixed */
+    private function getModuleInfo(string $module)
+    {
+        if (str_starts_with(\Drupal::VERSION, '10.')) {
+            $pathResolver = $this->container->get('extension.path.resolver');
+
+            $fileLocation = $pathResolver->getPath('module', $module);
+        } else {
+            $fileLocation = drupal_get_path('module', $module);
+        }
+
+        return Yaml::decode(
+            file_get_contents($fileLocation . '/' . $module . '.info.yml')
+        );
+    }
+
+    private function handlePrefixes(string $moduleName): string
+    {
+        if (str_contains($moduleName, ':') === false) {
+            return $moduleName;
+        }
+
+        return collect(explode(':', $moduleName))->last();
     }
 }
