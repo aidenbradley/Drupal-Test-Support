@@ -11,27 +11,28 @@ trait InstallsModules
 
     public function enableModuleWithDependencies($modules): self
     {
-        $this->modulesToInstall = collect($modules);
+        $this->modulesToInstall = (array) $modules;
 
         foreach ((array) $modules as $module) {
-            $dependencies = $this->getModuleDependencies($module);
-
-            do {
-                foreach($dependencies as $dependency) {
-                    $this->modulesToInstall->add($dependency);
-
-                    $dependencies = $this->getModuleDependencies($dependency);
-
-                    $this->modulesToInstall->merge($dependencies);
-                }
-            } while ($dependencies !== []);
+            $this->recursivelyResolveDependencies($module);
         }
 
-        $this->enableModules($this->modulesToInstall->toArray());
+        $this->enableModules($this->modulesToInstall);
 
         $this->modulesToInstall = [];
 
         return $this;
+    }
+
+    private function recursivelyResolveDependencies(string $module): void
+    {
+        $dependencies = $this->getModuleDependencies($module);
+
+        $this->modulesToInstall = array_merge($this->modulesToInstall, $dependencies);
+
+        array_walk_recursive($dependencies, function(string $module): void {
+            $this->recursivelyResolveDependencies($module);
+        });
     }
 
     private function getModuleDependencies(string $moduleName): array
@@ -42,9 +43,11 @@ trait InstallsModules
             return [];
         }
 
-        return collect($infoYaml['dependencies'])->map(function(string $dependency): string {
+        $dependencies = array_map(function(string $dependency): string {
             return $this->handlePrefixes($dependency);
-        })->diff($this->modulesToInstall)->toArray();
+        }, $infoYaml['dependencies']);
+
+        return array_diff($dependencies, $this->modulesToInstall);
     }
 
     /** @return mixed */
