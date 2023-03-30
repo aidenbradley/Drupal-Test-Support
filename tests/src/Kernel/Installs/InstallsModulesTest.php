@@ -28,19 +28,24 @@ class InstallsModulesTest extends KernelTestBase
     /** @test */
     public function handles_nested_mutual_dependencies(): void
     {
-        $this->assertModulesDisabled([
+        $expectedDependencies = [
+            'system',
+            'link',
+            'text',
+            'file',
+            'image',
             'test_support_dependencies',
             'test_support_mutual_dependency_one',
             'test_support_mutual_dependency_two',
-        ]);
+            'field',
+            'filter',
+        ];
+
+        $this->assertModulesDisabled($expectedDependencies);
 
         $this->enableModuleWithDependencies('test_support_mutual_dependency_one');
 
-        $this->assertModulesEnabled([
-            'test_support_dependencies',
-            'test_support_mutual_dependency_one',
-            'test_support_mutual_dependency_two',
-        ]);
+        $this->assertModulesEnabled($expectedDependencies);
     }
 
     private function assertModulesEnabled($modules): self
