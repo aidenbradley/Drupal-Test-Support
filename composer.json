@@ -25,12 +25,13 @@
         "stan": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon"
     },
     "require-dev": {
-        "drupal/core-dev": "9.0.0",
+        "drupal/core-dev": ">=9.0.0",
         "phpunit/phpunit": "^8.5",
         "phpspec/prophecy-phpunit": "^1.1",
         "illuminate/collections": "^10.1",
         "opis/closure": "^3.6",
         "nesbot/carbon": "^2.66",
-        "mglaman/phpstan-drupal": "^1.1"
+        "mglaman/phpstan-drupal": "^1.1",
+        "sempro/phpunit-pretty-print": "^1.4"
     }
 }
