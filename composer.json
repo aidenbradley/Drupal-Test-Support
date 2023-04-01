@@ -35,6 +35,7 @@
         "nesbot/carbon": "^2.66",
         "mglaman/phpstan-drupal": "^1.1",
         "sempro/phpunit-pretty-print": "^1.4",
-        "illuminate/collections": "^8.83"
+        "illuminate/collections": "^8.83",
+        "brianium/paratest": "^4.0"
     }
 }
