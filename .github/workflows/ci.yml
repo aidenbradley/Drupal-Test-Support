@@ -102,4 +102,7 @@ jobs:
 
             -   name: Run PHPUnit tests
                 run: |
-                    modules/test_support/vendor/bin/phpunit modules/test_support/tests --testsuite unit,kernel
+                    modules/test_support/vendor/bin/phpunit \
+                    modules/test_support/tests \
+                    -c modules/test_support/phpunit.xml \
+                    --testsuite unit,kernel
