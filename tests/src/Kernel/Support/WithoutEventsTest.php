@@ -17,7 +17,7 @@ class WithoutEventsTest extends KernelTestBase
 
         $event = $this->createEvent();
 
-        $this->container->get('event_dispatcher')->dispatch('test_event', $event);
+        $this->container->get('event_dispatcher')->dispatch($event, 'test_event');
 
         $this->assertDispatched('test_event');
         $this->assertDispatched(get_class($event));
@@ -30,7 +30,7 @@ class WithoutEventsTest extends KernelTestBase
 
         $this->expectsEvents(get_class($event));
 
-        $this->container->get('event_dispatcher')->dispatch('test_event', $event);
+        $this->container->get('event_dispatcher')->dispatch($event, 'test_event');
     }
 
     /** @test */
@@ -38,7 +38,7 @@ class WithoutEventsTest extends KernelTestBase
     {
         $this->expectsEvents('test_event');
 
-        $this->container->get('event_dispatcher')->dispatch('test_event', $this->createEvent());
+        $this->container->get('event_dispatcher')->dispatch($this->createEvent(), 'test_event');
     }
 
     /** @test */
@@ -46,7 +46,7 @@ class WithoutEventsTest extends KernelTestBase
     {
         $this->doesntExpectEvents(get_class($this->createEvent()));
 
-        $this->container->get('event_dispatcher')->dispatch('second_event', new LocaleEvent([]));
+        $this->container->get('event_dispatcher')->dispatch(new LocaleEvent([]), 'second_event');
     }
 
     /** @test */
@@ -54,7 +54,7 @@ class WithoutEventsTest extends KernelTestBase
     {
         $this->doesntExpectEvents('first_event');
 
-        $this->container->get('event_dispatcher')->dispatch('second_event', new LocaleEvent([]));
+        $this->container->get('event_dispatcher')->dispatch(new LocaleEvent([]), 'second_event');
     }
 
     /** @test */
@@ -65,7 +65,7 @@ class WithoutEventsTest extends KernelTestBase
         $event = $this->createEvent();
         $event->title = 'hello';
 
-        $this->container->get('event_dispatcher')->dispatch('test_event', $event);
+        $this->container->get('event_dispatcher')->dispatch($event, 'test_event');
 
         /** @param object $firedEvent */
         $this->assertDispatched('test_event', function ($firedEvent) use ($event) {
