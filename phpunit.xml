@@ -44,7 +44,6 @@
             <directory>./tests/src/Kernel</directory>
         </testsuite>
     </testsuites>
-
     <!-- Filter for coverage reports. -->
     <filter>
         <whitelist>
