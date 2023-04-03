@@ -12,7 +12,7 @@
          beStrictAboutOutputDuringTests="true"
          beStrictAboutChangesToGlobalState="true"
          cacheResult="false"
-         printerClass="Sempro\PHPUnitPrettyPrinter\PrettyPrinter"
+         printerClass="\Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
     <php>
         <!-- Set error reporting to E_ALL. -->
