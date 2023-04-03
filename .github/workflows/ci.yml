@@ -50,8 +50,7 @@ jobs:
                 run: |
                     modules/test_support/vendor/bin/paratest \
                     --path modules/test_support/tests \
-                    -c modules/test_support/phpunit.xml \
-                    --testsuite unit,kernel
+                    -c modules/test_support/phpunit.xml
 
     drupal-9-matrix:
         name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
@@ -102,5 +101,4 @@ jobs:
                 run: |
                     modules/test_support/vendor/bin/paratest \
                     modules/test_support/tests \
-                    -c modules/test_support/phpunit.xml \
-                    --testsuite unit,kernel
+                    -c modules/test_support/phpunit.xml
