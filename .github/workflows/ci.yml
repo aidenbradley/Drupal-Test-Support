@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        drupal-core: [ '10.0.x' ]
+        drupal-core: [ '10.0.0' ]
         php-versions: [ '8.2' ]
     steps:
       - name: Checkout Drupal core
@@ -49,8 +49,7 @@ jobs:
       - name: Install drupal/core-dev
         run: |
           composer --no-interaction --no-progress require \
-          drupal/core-dev \
-          phpspec/prophecy-phpunit:^2
+          drupal/core-dev:${{ matrix.drupal-core }}
 
       - name: Tests
         run: |
@@ -64,7 +63,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        drupal-core: [ '9.5.x', '9.1.x' ]
+        drupal-core: [ '9.5.0', '9.1.0' ]
         php-versions: [ '7.3' ]
     steps:
       - name: Checkout Drupal core v${{ matrix.drupal-core }}
@@ -106,8 +105,7 @@ jobs:
       - name: Install drupal/core-dev
         run: |
           composer --no-interaction --no-progress require \
-          drupal/core-dev \
-          phpspec/prophecy-phpunit:^2
+          drupal/core-dev:${{ matrix.drupal-core }}
 
       - name: Tests
         run: |
