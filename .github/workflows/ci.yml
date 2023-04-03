@@ -46,6 +46,9 @@ jobs:
             -   name: Install Drupal core dependencies
                 run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
+            -   name: Install drupal/core-dev
+                run: composer --no-interaction --no-progress require drupal/core-dev
+
             -   name: Tests
                 run: |
                     modules/test_support/vendor/bin/paratest \
@@ -96,6 +99,9 @@ jobs:
 
             -   name: Install Drupal core dependencies
                 run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+            -   name: Install drupal/core-dev
+                run: composer --no-interaction --no-progress require drupal/core-dev
 
             -   name: Tests
                 run: |
