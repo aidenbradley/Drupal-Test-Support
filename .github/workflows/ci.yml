@@ -50,7 +50,7 @@ jobs:
         run: |
           composer --no-interaction --no-progress require --dev \
           drupal/core-dev:${{ matrix.drupal-core }} \
-          phpspec/prophecy-phpunit:^2
+          phpspec/prophecy-phpunit:^2 --with-all-dependencies
 
       - name: Tests
         run: |
@@ -107,7 +107,7 @@ jobs:
         run: |
           composer --no-interaction --no-progress require --dev \
           drupal/core-dev:${{ matrix.drupal-core }} \
-          phpspec/prophecy-phpunit:^2
+          phpspec/prophecy-phpunit:^2 --with-all-dependencies
 
       - name: Tests
         run: |
