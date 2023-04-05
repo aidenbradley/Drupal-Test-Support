@@ -11,7 +11,7 @@ trait InstallsBlocks
     /** @var bool */
     private $setupBlockDependencies = false;
 
-    /** @param string|array $blocks */
+    /** @param  string|array  $blocks */
     public function installBlocks($blocks): void
     {
         $this->setupBlockDependencies();

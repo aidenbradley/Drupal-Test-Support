@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\Tests\test_support\Traits\Support\Decorators\EventDispatcher;
+
 use Drupal\Tests\test_support\Traits\Support\Contracts\TestEventDispatcher;
 use Illuminate\Support\Collection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -68,8 +69,8 @@ class Drupal10EventDispatcher implements TestEventDispatcher
 
   public function getFiredEvents(?string $event = null): Collection
   {
-    return collect($this->firedEvents)->when($event, function(Collection $events, $event) {
-      return $events->filter(function($object, string $name) use ($event) {
+    return collect($this->firedEvents)->when($event, function (Collection $events, $event) {
+      return $events->filter(function ($object, string $name) use ($event) {
         return get_class($object) === $event || $name === $event;
       });
     });

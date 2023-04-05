@@ -31,7 +31,7 @@ trait WithoutEventSubscribers
      *
      * @endcode
      *
-     * @param  string|array  $listeners
+     * @param string|array $listeners
      */
     public function withoutSubscribers($listeners = []): self
     {
@@ -62,7 +62,7 @@ trait WithoutEventSubscribers
      *
      * @endcode
      *
-     * @param  string|array  $eventNames
+     * @param string|array $eventNames
      */
     public function withoutSubscribersForEvents($eventNames): self
     {

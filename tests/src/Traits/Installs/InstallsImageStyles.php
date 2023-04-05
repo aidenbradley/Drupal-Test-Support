@@ -11,7 +11,7 @@ trait InstallsImageStyles
     /** @var bool */
     private $setupImageStyleDependencies = false;
 
-    /** @param string|array $imageStyles */
+    /** @param  string|array  $imageStyles */
     public function installImageStyles($imageStyles): self
     {
         $this->prepareImageStyleDependencies();

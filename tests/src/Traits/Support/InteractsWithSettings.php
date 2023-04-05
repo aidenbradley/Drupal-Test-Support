@@ -21,7 +21,7 @@ trait InteractsWithSettings
     {
         $directory = $this->getSettings()->get('config_sync_directory');
 
-        return $this->appRoot().'/'.ltrim($directory, '/');
+        return $this->appRoot() . '/' . ltrim($directory, '/');
     }
 
     protected function getSettings(): Settings

@@ -11,7 +11,7 @@ trait InstallsRoles
     /** @var bool */
     private $setupRoleDependencies = false;
 
-    /** @param string|array $roles */
+    /** @param  string|array  $roles */
     public function installRoles($roles): self
     {
         $this->setupRoleDependencies();

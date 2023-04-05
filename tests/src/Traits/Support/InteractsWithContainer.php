@@ -15,13 +15,13 @@ trait InteractsWithContainer
      *
      * $this->service('node.route_subscriber');
      *
-     * @param  string  $id              The service identifier or class string
-     * @param  int  $invalidBehavior The behavior when the service does not exist
+     * @param string $id The service identifier or class string
+     * @param int $invalidBehavior The behavior when the service does not exist
      * @return object|null The associated service
      *
-     * @throws InvalidArgumentException          when no definitions are available
+     * @throws InvalidArgumentException when no definitions are available
      * @throws ServiceCircularReferenceException When a circular reference is detected
-     * @throws ServiceNotFoundException          When the service is not defined
+     * @throws ServiceNotFoundException When the service is not defined
      * @throws \Exception
      *
      * @see Reference

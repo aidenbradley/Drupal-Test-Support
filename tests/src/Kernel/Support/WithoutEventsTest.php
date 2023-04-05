@@ -63,9 +63,9 @@ class WithoutEventsTest extends KernelTestBase
         $this->expectsEvents('test_event');
 
         $langcodes = [
-          'en',
-          'de',
-          'fr'
+            'en',
+            'de',
+            'fr',
         ];
 
         $event = new LocaleEvent($langcodes);
@@ -76,7 +76,7 @@ class WithoutEventsTest extends KernelTestBase
             return $firedEvent->getLangcodes() === $langcodes;
         });
 
-        /** @param object $firedEvent */
+        /** @param  object  $firedEvent */
         $this->assertDispatched(get_class($event), function (LocaleEvent $firedEvent) use ($langcodes) {
           return $firedEvent->getLangcodes() === $langcodes;
         });
@@ -87,7 +87,7 @@ class WithoutEventsTest extends KernelTestBase
     {
         $eventClasses = [
             '\Symfony\Component\EventDispatcher\Event', // Drupal 9
-            '\Symfony\Contracts\EventDispatcher\Event' // Drupal 10
+            '\Symfony\Contracts\EventDispatcher\Event', // Drupal 10
         ];
 
         foreach ($eventClasses as $class) {

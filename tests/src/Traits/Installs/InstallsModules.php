@@ -30,7 +30,7 @@ trait InstallsModules
 
         $this->modulesToInstall = array_merge($this->modulesToInstall, $dependencies);
 
-        array_walk_recursive($dependencies, function(string $module): void {
+        array_walk_recursive($dependencies, function (string $module): void {
             $this->recursivelyResolveDependencies($module);
         });
     }
@@ -43,7 +43,7 @@ trait InstallsModules
             return [];
         }
 
-        $dependencies = array_map(function(string $dependency): string {
+        $dependencies = array_map(function (string $dependency): string {
             return $this->handlePrefixes($dependency);
         }, $infoYaml['dependencies']);
 
