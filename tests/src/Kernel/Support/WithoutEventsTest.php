@@ -62,19 +62,23 @@ class WithoutEventsTest extends KernelTestBase
     {
         $this->expectsEvents('test_event');
 
-        $event = $this->createEvent();
-        $event->title = 'hello';
+        $langcodes = [
+          'en',
+          'de',
+          'fr'
+        ];
+
+        $event = new LocaleEvent($langcodes);
 
         $this->container->get('event_dispatcher')->dispatch($event, 'test_event');
 
-        /** @param object $firedEvent */
-        $this->assertDispatched('test_event', function ($firedEvent) use ($event) {
-            return $firedEvent->title === $event->title;
+        $this->assertDispatched('test_event', function (LocaleEvent $firedEvent) use ($langcodes) {
+            return $firedEvent->getLangcodes() === $langcodes;
         });
 
         /** @param object $firedEvent */
-        $this->assertDispatched(get_class($event), function ($firedEvent) use ($event) {
-            return $firedEvent->title === $event->title;
+        $this->assertDispatched(get_class($event), function (LocaleEvent $firedEvent) use ($langcodes) {
+          return $firedEvent->getLangcodes() === $langcodes;
         });
     }
 
