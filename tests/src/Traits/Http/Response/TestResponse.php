@@ -402,7 +402,7 @@ class TestResponse extends Response
     /** @return static */
     public function assertJsonContent(array $json)
     {
-        Assert::assertEquals($json, (array)json_decode($this->getContent()));
+        Assert::assertEquals($json, (array) json_decode($this->getContent()));
 
         return $this;
     }
@@ -410,7 +410,7 @@ class TestResponse extends Response
     /** @return static */
     public function assertJsonContentContains(array $json)
     {
-        $decodedResponse = (array)json_decode($this->getContent());
+        $decodedResponse = (array) json_decode($this->getContent());
 
         foreach ($json as $key => $value) {
             Assert::assertEquals($value, $decodedResponse[$key]);

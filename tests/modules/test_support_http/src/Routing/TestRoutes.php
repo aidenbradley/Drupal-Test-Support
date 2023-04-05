@@ -21,17 +21,17 @@ class TestRoutes
             'route.options' => $this->createRoute('route.options', 'OPTIONS'),
             'route.delete' => $this->createRoute('route.delete', 'DELETE'),
             'route.json.delete' => $this->createJsonRoute('route.json.delete', 'DELETE'),
-            'route.xml_http_only' => $this->createRoute('route.xml_http_only', 'GET', 'xmlHttpOnly')
+            'route.xml_http_only' => $this->createRoute('route.xml_http_only', 'GET', 'xmlHttpOnly'),
         ];
     }
 
-    /** @param string|array $methods */
+    /** @param  string|array  $methods */
     private function createJsonRoute(string $routeName, $methods): Route
     {
         return $this->createRoute($routeName, $methods, 'json');
     }
 
-    /** @param string|array $methods */
+    /** @param  string|array  $methods */
     private function createRoute(string $routeName, $methods, ?string $controllerMethod = null): Route
     {
         $controllerCallable = $controllerMethod ? ResolveRequest::class . '::' . $controllerMethod : ResolveRequest::class;

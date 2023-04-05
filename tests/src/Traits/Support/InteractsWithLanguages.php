@@ -28,7 +28,7 @@ trait InteractsWithLanguages
         $this->setupLanguageDependencies();
 
         foreach ((array) $langcodes as $langcode) {
-            $this->installExportedConfig('language.entity.'.$langcode);
+            $this->installExportedConfig('language.entity.' . $langcode);
         }
     }
 

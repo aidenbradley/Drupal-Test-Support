@@ -48,7 +48,7 @@ class TestMail
         return preg_replace('/\s+/', ' ', trim($this->getValue('body')));
     }
 
-    /** @param mixed $body */
+    /** @param  mixed  $body */
     public function assertBody($body): self
     {
         Assert::assertEquals($body, $this->getBody());
@@ -67,7 +67,7 @@ class TestMail
     }
 
     /**
-     * @param  mixed  $value
+     * @param mixed $value
      *
      * The closure will pass back the value attributed to the given parameter
      */

@@ -3,7 +3,6 @@
 namespace Drupal\Tests\test_support\Traits\Support\Time;
 
 use Carbon\Carbon;
-use Drupal\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @method void seconds(?\Closure $callback = null)
@@ -21,13 +20,13 @@ class Tardis
     /** @var int|null */
     private $travel;
 
-    /** @param \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder $container */
+    /** @param  \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder  $container */
     public static function createFromTravel($container, ?int $travel = null): self
     {
         return new self($container, $travel);
     }
 
-    /** @param \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder $container */
+    /** @param  \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder  $container */
     public function __construct($container, ?int $travel = null)
     {
         $this->container = $container;

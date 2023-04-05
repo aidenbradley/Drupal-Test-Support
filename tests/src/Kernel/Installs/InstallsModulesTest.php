@@ -50,7 +50,7 @@ class InstallsModulesTest extends KernelTestBase
 
     private function assertModulesEnabled($modules): self
     {
-        foreach ((array)$modules as $module) {
+        foreach ((array) $modules as $module) {
             $this->assertTrue(
                 $this->container->get('module_handler')->moduleExists($module),
                 $module . ' is not enabled'
@@ -62,7 +62,7 @@ class InstallsModulesTest extends KernelTestBase
 
     private function assertModulesDisabled($modules): self
     {
-        foreach ((array)$modules as $module) {
+        foreach ((array) $modules as $module) {
             $this->assertFalse(
                 $this->container->get('module_handler')->moduleExists($module),
                 $module . ' is not disabled'

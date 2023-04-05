@@ -7,7 +7,7 @@ use Drupal\Core\Queue\QueueInterface;
 class ReliableCreateNodeQueue implements QueueInterface
 {
     /**
-     * @param  mixed  $data
+     * @param mixed $data
      * @return mixed
      */
     public function createItem($data)
@@ -21,7 +21,7 @@ class ReliableCreateNodeQueue implements QueueInterface
     }
 
     /**
-     * @param  int|mixed  $leaseTime
+     * @param int|mixed $leaseTime
      * @return mixed
      */
     public function claimItem($leaseTime = 3600)

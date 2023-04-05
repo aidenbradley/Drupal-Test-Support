@@ -17,7 +17,7 @@ trait InstallsEntityTypes
         return $this;
     }
 
-    /** @param string|array $bundles */
+    /** @param  string|array  $bundles */
     public function installBundles(string $module, $bundles): self
     {
         foreach ((array) $bundles as $bundle) {
