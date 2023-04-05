@@ -4,4 +4,4 @@ description: 'Provides concerns that help with testing'
 package: Custom
 version: 0.0.1
 hidden: true
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9.1 || ^10

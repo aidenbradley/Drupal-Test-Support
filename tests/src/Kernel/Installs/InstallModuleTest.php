@@ -3,9 +3,9 @@
 namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Tests\test_support\Kernel\Base\EnableModuleKernelTest;
+use Drupal\Tests\test_support\Kernel\Base\EnableModuleKernelTestBase;
 
-class InstallModuleTest extends EnableModuleKernelTest
+class InstallModuleTest extends EnableModuleKernelTestBase
 {
     public function module(): string
     {

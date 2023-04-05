@@ -53,17 +53,15 @@ trait InstallsModules
     /** @return mixed */
     private function getModuleInfo(string $module)
     {
-        if (str_starts_with(\Drupal::VERSION, '10.')) {
-            $pathResolver = $this->container->get('extension.path.resolver');
-
-            $fileLocation = $pathResolver->getPath('module', $module);
+        if ($this->container->has('extension.path.resolver')) {
+            $path = $this->container->get('extension.path.resolver')->getPath('module', $module);
         } else {
-            $fileLocation = drupal_get_path('module', $module);
+            $path = drupal_get_path('module', $module);
         }
 
-        return Yaml::decode(
-            file_get_contents($fileLocation . '/' . $module . '.info.yml')
-        );
+        $fileLocation = $path . '/' . $module . '.info.yml';
+
+        return Yaml::decode(file_get_contents($fileLocation));
     }
 
     private function handlePrefixes(string $moduleName): string

@@ -15,18 +15,20 @@ use Drupal\Component\DependencyInjection\ContainerInterface;
  */
 class Tardis
 {
-    /** @var ContainerInterface */
+    /** @var \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder @container */
     private $container;
 
     /** @var int|null */
     private $travel;
 
-    public static function createFromTravel(ContainerInterface $container, ?int $travel = null): self
+    /** @param \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder $container */
+    public static function createFromTravel($container, ?int $travel = null): self
     {
         return new self($container, $travel);
     }
 
-    public function __construct(ContainerInterface $container, ?int $travel = null)
+    /** @param \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder $container */
+    public function __construct($container, ?int $travel = null)
     {
         $this->container = $container;
         $this->travel = $travel;

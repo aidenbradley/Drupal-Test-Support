@@ -2,7 +2,8 @@
 
 namespace Drupal\Tests\test_support\Traits\Support;
 
-use Drupal\Tests\test_support\Traits\Support\Decorators\TestEventDispatcher;
+use Drupal\Tests\test_support\Traits\Support\Contracts\TestEventDispatcher;
+use Drupal\Tests\test_support\Traits\Support\Factory\EventDispatcherFactory;
 
 trait WithoutEvents
 {
@@ -18,7 +19,7 @@ trait WithoutEvents
     /** Mock the event dispatcher. All dispatched events are collected */
     public function withoutEvents(): self
     {
-        $this->container->set('event_dispatcher', TestEventDispatcher::create(
+        $this->container->set('event_dispatcher', EventDispatcherFactory::create(
             $this->container->get('event_dispatcher')
         ));
 

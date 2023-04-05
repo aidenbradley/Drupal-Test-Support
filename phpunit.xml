@@ -12,7 +12,7 @@
          beStrictAboutOutputDuringTests="true"
          beStrictAboutChangesToGlobalState="true"
          cacheResult="false"
-         printerClass="Sempro\PHPUnitPrettyPrinter\PrettyPrinter"
+         printerClass="\Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
     <php>
         <!-- Set error reporting to E_ALL. -->
@@ -45,9 +45,6 @@
         </testsuite>
     </testsuites>
     <listeners>
-        <listener class="\Drupal\Tests\Listeners\DrupalListener">
-        </listener>
-        <!-- The Symfony deprecation listener has to come after the Drupal listener -->
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
         </listener>
     </listeners>

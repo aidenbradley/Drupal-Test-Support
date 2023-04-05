@@ -571,9 +571,6 @@ display:
           entity_field: created
           plugin_id: date
           order: DESC
-          expose:
-            label: ''
-            field_identifier: created
           exposed: false
           granularity: second
       arguments: {  }

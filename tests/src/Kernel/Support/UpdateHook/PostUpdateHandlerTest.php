@@ -14,6 +14,7 @@ class PostUpdateHandlerTest extends KernelTestBase
     use InteractsWithUpdateHooks;
 
     protected static $modules = [
+        'system',
         'user',
     ];
 
@@ -22,6 +23,7 @@ class PostUpdateHandlerTest extends KernelTestBase
         parent::setUp();
 
         $this->installEntitySchema('user');
+        $this->installSchema('system', 'sequences');
     }
 
     /** @test */
