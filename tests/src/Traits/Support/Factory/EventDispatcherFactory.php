@@ -9,12 +9,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class EventDispatcherFactory
 {
-  public static function create(EventDispatcherInterface $eventDispatcher): TestEventDispatcher
-  {
-    if (str_starts_with(\Drupal::VERSION, '10.')) {
-      return Drupal10EventDispatcher::create($eventDispatcher);
-    }
+    public static function create(EventDispatcherInterface $eventDispatcher): TestEventDispatcher
+    {
+        if (str_starts_with(\Drupal::VERSION, '10.')) {
+            return Drupal10EventDispatcher::create($eventDispatcher);
+        }
 
-    return Drupal9EventDispatcher::create($eventDispatcher);
-  }
+        return Drupal9EventDispatcher::create($eventDispatcher);
+    }
 }

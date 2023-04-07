@@ -9,8 +9,8 @@ use Drupal\Tests\test_support\Traits\Support\InteractsWithBatches;
 
 class InteractsWithBatchesTest extends KernelTestBase
 {
-    use MakesHttpRequests,
-        InteractsWithBatches;
+    use InteractsWithBatches;
+    use MakesHttpRequests;
 
     protected static $modules = [
         'system',

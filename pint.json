@@ -1,11 +1,21 @@
 {
-  "preset": "laravel",
-  "rules": {
-    "concat_space": {
-      "spacing": "one"
-    },
-    "phpdoc_align": {
-      "align": "left"
+    "preset": "per",
+    "rules": {
+        "concat_space": {
+            "spacing": "one"
+        },
+        "phpdoc_align": {
+            "align": "left"
+        },
+        "ordered_traits": true,
+        "single_line_comment_spacing": true,
+        "class_definition": {
+            "space_before_parenthesis": false
+        },
+        "no_unused_imports": true,
+        "no_superfluous_elseif": true,
+        "no_useless_else": true,
+        "no_useless_return": true,
+        "whitespace_after_comma_in_array": true
     }
-  }
 }

@@ -12,10 +12,10 @@ use Drupal\user\Entity\User;
 
 class InteractsWithDrupalTimeTest extends KernelTestBase
 {
-    use InstallsExportedConfig,
-        InteractsWithDrupalTime,
-        InteractsWithAuthentication,
-        InteractsWithEntities;
+    use InstallsExportedConfig;
+    use InteractsWithAuthentication;
+    use InteractsWithDrupalTime;
+    use InteractsWithEntities;
 
     protected static $modules = [
         'system',
@@ -345,7 +345,9 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     private function formatDate(int $timestamp): string
     {
         return $this->container->get('date.formatter')->format(
-            $timestamp, 'custom', self::DATE_FORMAT
+            $timestamp,
+            'custom',
+            self::DATE_FORMAT
         );
     }
 

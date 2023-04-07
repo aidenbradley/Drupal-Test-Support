@@ -10,8 +10,8 @@ use Drupal\Tests\test_support\Traits\Support\InteractsWithSettings;
 
 trait InstallConfiguration
 {
-    use InteractsWithSettings,
-        InstallsTheme;
+    use InstallsTheme;
+    use InteractsWithSettings;
 
     /** @var string */
     private $useVfsConfigDirectory = false;

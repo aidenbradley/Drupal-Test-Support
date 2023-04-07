@@ -8,8 +8,8 @@ use Drupal\Tests\test_support\Traits\Installs\InstallsFields;
 
 class InstallsFieldsTest extends KernelTestBase
 {
-    use InstallsFields,
-        InstallsEntityTypes;
+    use InstallsEntityTypes;
+    use InstallsFields;
 
     protected static $modules = [
         'system',

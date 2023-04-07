@@ -9,8 +9,8 @@ use Drupal\Tests\test_support\Traits\Support\InteractsWithAuthentication;
 
 class InteractsWithAuthenticationTest extends KernelTestBase
 {
-    use InteractsWithAuthentication,
-        MakesHttpRequests;
+    use InteractsWithAuthentication;
+    use MakesHttpRequests;
 
     protected static $modules = [
         'system',
