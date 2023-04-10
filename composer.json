@@ -25,6 +25,7 @@
     "scripts": {
         "lint": "vendor/bin/pint --test -v",
         "lint-cbf": "vendor/bin/pint",
+        "phpcs": "vendor/bin/phpcs --standard=phpcs.xml --extensions=php --tab-width=4 -sp",
         "stan": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon"
     },
     "require-dev": {
@@ -33,6 +34,8 @@
         "mglaman/phpstan-drupal": "^1.1",
         "sempro/phpunit-pretty-print": "^1.4",
         "illuminate/collections": "^8.83",
-        "brianium/paratest": "^6.9"
+        "brianium/paratest": "^6.9",
+        "slevomat/coding-standard": "^8.9",
+        "php-parallel-lint/php-parallel-lint": "^1.3"
     }
 }
