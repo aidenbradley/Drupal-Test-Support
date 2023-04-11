@@ -48,6 +48,39 @@ class InteractsWithAuthenticationTest extends KernelTestBase
         )->assertForbidden();
     }
 
+    /** @test */
+    public function acting_as_role(): void
+    {
+        $this->enableModules([
+            'system',
+            'user',
+        ]);
+        $this->installSchema('system', 'sequences');
+        $this->installEntitySchema('user_role');
+
+        $adminRole = $this->container->get('entity_type.manager')->getStorage('user_role')->create([
+            'id' => 'administrator',
+            'label' => 'Administrator',
+        ]);
+        $adminRole->save();
+
+        $this->actingAsRole($adminRole);
+        $this->assertTrue(
+            in_array($adminRole->id(), $this->container->get('current_user')->getRoles())
+        );
+
+        $editorRole = $this->container->get('entity_type.manager')->getStorage('user_role')->create([
+            'id' => 'editor',
+            'label' => 'Editor',
+        ]);
+        $editorRole->save();
+
+        $this->actingAs($editorRole);
+        $this->assertTrue(
+            in_array($editorRole->id(), $this->container->get('current_user')->getRoles())
+        );
+    }
+
     private function route(string $route, array $parameters = [], array $options = []): string
     {
         return Url::fromRoute(...func_get_args())->toString(true)->getGeneratedUrl();
