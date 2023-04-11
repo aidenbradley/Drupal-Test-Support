@@ -5,12 +5,16 @@ jobs:
     name: Lint code
     runs-on: ubuntu-latest
     steps:
+      - name: "Lint (Syntax)"
+        run: composer lint
+
       - uses: actions/checkout@v1
-      - name: "Lint code"
+      - name: "Lint (Code Style)"
         uses: aglipanci/laravel-pint-action@2.0.0
         with:
-          preset: laravel
           verboseMode: true
           testMode: true
           pintVersion: 1.8.0
-          onlyDirty: true
+
+      - name: "Lint (Static Analysis)"
+        run: composer stan

@@ -14,3 +14,4 @@ parameters:
                    - '#^Parameter \#2 \$length of method Drupal\\Core\\Entity\\Query\\QueryInterface\:\:range\(\) expects null, int given\.$#'
 includes:
     - vendor/mglaman/phpstan-drupal/extension.neon
+    - phar://phpstan.phar/conf/bleedingEdge.neon

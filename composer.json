@@ -23,9 +23,10 @@
         }
     },
     "scripts": {
-        "lint": "vendor/bin/pint --test -v",
-        "lint-cbf": "vendor/bin/pint",
-        "stan": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon"
+        "lint": "vendor/bin/parallel-lint ./tests",
+        "codestyle": "vendor/bin/pint ./tests --test -v",
+        "stan": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon",
+        "lint-cbf": "vendor/bin/pint ./tests"
     },
     "require-dev": {
         "opis/closure": "^3.6",
@@ -33,6 +34,7 @@
         "mglaman/phpstan-drupal": "^1.1",
         "sempro/phpunit-pretty-print": "^1.4",
         "illuminate/collections": "^8.83",
-        "brianium/paratest": "^6.9"
+        "brianium/paratest": "^6.9",
+        "php-parallel-lint/php-parallel-lint": "^1.3"
     }
 }
