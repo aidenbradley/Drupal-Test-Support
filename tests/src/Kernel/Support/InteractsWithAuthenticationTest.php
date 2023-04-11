@@ -85,7 +85,7 @@ class InteractsWithAuthenticationTest extends KernelTestBase
 
         $this->actingAsRoles([
             $adminRole,
-            $editorRole
+            $editorRole,
         ]);
         $this->assertTrue(
             in_array($adminRole->id(), $this->container->get('current_user')->getRoles())
