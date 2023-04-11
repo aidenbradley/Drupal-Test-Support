@@ -10,8 +10,12 @@
         "no_superfluous_elseif": true,
         "no_useless_else": true,
         "no_useless_return": true,
+        "no_useless_concat_operator": true,
+        "no_useless_sprintf": true,
         "whitespace_after_comma_in_array": true,
+        "align_multiline_comment": true,
         "array_indentation": true,
+        "array_push": true,
         "array_syntax": {
             "syntax": "short"
         },
@@ -250,6 +254,8 @@
         "trim_array_spaces": true,
         "types_spaces": true,
         "unary_operator_spaces": true,
+        "ordered_interfaces": true,
+        "ternary_to_null_coalescing": true,
         "visibility_required": {
             "elements": [
                 "const",
@@ -261,12 +267,12 @@
             "order": [
                 "case",
 
+                "use_trait",
+
                 "constant",
                 "constant_public",
                 "constant_protected",
                 "constant_private",
-
-                "use_trait",
 
                 "property_static",
                 "property",
