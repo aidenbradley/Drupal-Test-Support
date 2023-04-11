@@ -6,7 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Lint (Syntax)"
-        run: composer lint
+        uses: php-actions/composer@v6
+        with:
+            command: lint
 
       - uses: actions/checkout@v1
       - name: "Lint (Code Style)"
@@ -17,4 +19,6 @@ jobs:
           pintVersion: 1.8.0
 
       - name: "Lint (Static Analysis)"
-        run: composer stan
+        uses: php-actions/composer@v6
+        with:
+            command: stan
