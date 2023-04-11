@@ -252,8 +252,62 @@
         "unary_operator_spaces": true,
         "visibility_required": {
             "elements": [
+                "const",
                 "method",
                 "property"
+            ]
+        },
+        "ordered_class_elements": {
+            "order": [
+                "case",
+
+                "constant",
+                "constant_public",
+                "constant_protected",
+                "constant_private",
+
+                "use_trait",
+
+                "property_static",
+                "property",
+
+                "property_public_readonly",
+                "property_public_static",
+                "property_public",
+
+                "property_protected_readonly",
+                "property_protected_static",
+                "property_protected",
+
+                "property_private_readonly",
+                "property_private_static",
+                "property_private",
+
+                "construct",
+                "destruct",
+                "magic",
+
+                "method_abstract",
+                "method_static",
+                "method",
+
+                "method_public_abstract_static",
+                "method_public_abstract",
+                "method_public_static",
+                "method_public",
+                "public",
+
+                "method_protected_abstract_static",
+                "method_protected_abstract",
+                "method_protected_static",
+                "method_protected",
+                "protected",
+
+                "method_private_abstract_static",
+                "method_private_abstract",
+                "method_private_static",
+                "method_private",
+                "private"
             ]
         }
     }
