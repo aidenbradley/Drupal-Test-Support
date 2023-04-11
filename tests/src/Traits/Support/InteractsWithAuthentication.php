@@ -2,7 +2,8 @@
 
 namespace Drupal\Tests\test_support\Traits\Support;
 
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Component\Utility\Random;
+use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 
 trait InteractsWithAuthentication
@@ -10,9 +11,13 @@ trait InteractsWithAuthentication
     /** @var UserInterface */
     private $anonymousUser;
 
-    /** Set the current user */
-    public function actingAs(AccountInterface $user): self
+    /** @param UserInterface|RoleInterface */
+    public function actingAs($user): self
     {
+        if ($user instanceof RoleInterface) {
+            return $this->actingAsRole($user);
+        }
+
         $this->container->get('current_user')->setAccount($user);
 
         return $this;
@@ -35,5 +40,36 @@ trait InteractsWithAuthentication
         $this->container->get('current_user')->setAccount($this->anonymousUser);
 
         return $this;
+    }
+
+    public function actingAsRole(RoleInterface $role): self
+    {
+        $userStorage = $this->container->get('entity_type.manager')->getStorage('user');
+
+        $user = $userStorage->create([
+            'name' => (new Random())->string(),
+        ]);
+        $user->addRole($role);
+        $user->save();
+
+        return $this->actingAs($user);
+    }
+
+    /** @param RoleInterface[] $roles */
+    public function actingAsRoles(array $roles): self
+    {
+        $userStorage = $this->container->get('entity_type.manager')->getStorage('user');
+
+        $user = $userStorage->create([
+            'name' => (new Random())->string(),
+        ]);
+
+        foreach ($roles as $role) {
+            $user->addRole($role->id());
+        }
+
+        $user->save();
+
+        return $this->actingAs($user);
     }
 }
