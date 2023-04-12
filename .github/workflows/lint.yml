@@ -6,7 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Lint (Syntax)"
-        uses: php-actions/composer@v6
         run: composer lint
 
       - uses: actions/checkout@v1
