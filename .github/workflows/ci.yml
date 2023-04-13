@@ -2,7 +2,7 @@ name: Test
 on: [ push ]
 jobs:
   build_module:
-      name: Build Module
+      name: Checkout and Build Module
       runs-on: ubuntu-latest
       steps:
         -  name: Checkout module
