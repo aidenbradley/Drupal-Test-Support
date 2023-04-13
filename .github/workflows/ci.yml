@@ -12,12 +12,12 @@ jobs:
 
         -  name: Get composer cache directory
            id: composercache
-           run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+           run: echo "dir=modules/test_support/$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
         -  name: Cache module build
            uses: actions/cache@v2
            with:
-             path: ${{ steps.composercache.outputs.dir }}
+             path: modules/test_support/${{ steps.composercache.outputs.dir }}
              key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
              restore-keys: ${{ runner.os }}-composer-
 
