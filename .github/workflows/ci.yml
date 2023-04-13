@@ -1,0 +1,141 @@
+name: Test
+on: [ push ]
+jobs:
+  build_module:
+      name: Build Module
+      runs-on: ubuntu-latest
+      steps:
+        -  name: Checkout module
+           uses: actions/checkout@v2
+           with:
+             path: modules/test_support
+
+        -  name: Get composer cache directory
+           id: composercache
+           run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+        -  name: Cache module build
+           uses: actions/cache@v2
+           with:
+             path: ${{ steps.composercache.outputs.dir }}
+             key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+             restore-keys: ${{ runner.os }}-composer-
+
+        -  name: Build module including dependencies dependencies
+           run: |
+             cd modules/test_support
+             composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+#  drupal-10-matrix:
+#    name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        drupal-core: [ '10.0.0' ]
+#        php-versions: [ '8.2' ]
+#    steps:
+#      - name: Checkout Drupal core
+#        uses: actions/checkout@v2
+#        with:
+#          repository: drupal/drupal
+#          ref: ${{ matrix.drupal-core }}
+#
+#      - name: Checkout module
+#        uses: actions/checkout@v2
+#        with:
+#          path: modules/test_support
+#
+#      - name: Build module including dependencies dependencies
+#        run: |
+#          cd modules/test_support
+#          composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+#
+#      - name: Setup PHP, with composer and extensions
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: ${{ matrix.php-versions }}
+#          coverage: none
+#
+#      - name: Get composer cache directory
+#        id: composercache
+#        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+#
+#      - name: Cache composer dependencies
+#        uses: actions/cache@v2
+#        with:
+#          path: ${{ steps.composercache.outputs.dir }}
+#          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+#          restore-keys: ${{ runner.os }}-composer-
+#
+#      - name: Install Drupal core dependencies
+#        run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+#
+#      - name: Install drupal/core-dev with dependencies
+#        run: |
+#          composer --no-interaction --no-progress require --dev \
+#          drupal/core-dev:${{ matrix.drupal-core }} \
+#          phpspec/prophecy-phpunit:^2 --with-all-dependencies
+#
+#      - name: Tests
+#        run: |
+#          modules/test_support/vendor/bin/paratest \
+#          --path modules/test_support/tests \
+#          -c modules/test_support/phpunit.xml
+#
+#  drupal-9-matrix:
+#    name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        drupal-core: [ '9.5.0', '9.1.0' ]
+#        php-versions: [ '7.3' ]
+#    steps:
+#      - name: Checkout Drupal core v${{ matrix.drupal-core }}
+#        uses: actions/checkout@v2
+#        with:
+#          repository: drupal/drupal
+#          ref: ${{ matrix.drupal-core }}
+#
+#      - name: Checkout module
+#        uses: actions/checkout@v2
+#        with:
+#          path: modules/test_support
+#
+#      - name: Build module including dependencies dependencies
+#        run: |
+#          cd modules/test_support
+#          composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+#
+#      - name: Setup PHP v${{ matrix.php-versions }}, with composer and extensions
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: ${{ matrix.php-versions }}
+#          coverage: none
+#
+#      - name: Get composer cache directory
+#        id: composercache
+#        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+#
+#      - name: Cache composer dependencies
+#        uses: actions/cache@v2
+#        with:
+#          path: ${{ steps.composercache.outputs.dir }}
+#          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+#          restore-keys: ${{ runner.os }}-composer-
+#
+#      - name: Install Drupal core dependencies
+#        run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+#
+#      - name: Install drupal/core-dev with dependencies
+#        run: |
+#          composer --no-interaction --no-progress require --dev \
+#          drupal/core-dev:${{ matrix.drupal-core }} \
+#          phpspec/prophecy-phpunit:^2 --with-all-dependencies
+#
+#      - name: Tests
+#        run: |
+#          modules/test_support/vendor/bin/paratest \
+#          modules/test_support/tests \
+#          -c modules/test_support/phpunit.xml
