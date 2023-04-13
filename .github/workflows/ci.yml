@@ -19,7 +19,8 @@ jobs:
              key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
              restore-keys: ${{ runner.os }}-composer-
 
-        -  name: Build module including dependencies dependencies
+        -  if: steps.composercache.outputs.cache-hit != 'true'
+           name: Build module including dependencies dependencies
            run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
 #  drupal-10-matrix:
