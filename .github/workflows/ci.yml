@@ -49,7 +49,7 @@ jobs:
 
       - name: Install Drupal core dependencies
         with:
-            path: vendor
+          path: vendor
         run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
       - name: Checkout module
