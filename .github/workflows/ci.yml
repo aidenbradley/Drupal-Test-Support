@@ -48,8 +48,6 @@ jobs:
           ref: ${{ matrix.drupal-core }}
 
       - name: Install Drupal core dependencies
-        with:
-          path: vendor
         run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
       - name: Checkout module
