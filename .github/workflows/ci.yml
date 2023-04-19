@@ -35,10 +35,6 @@ jobs:
         drupal-core: [ '10.0.0' ]
         php-versions: [ '8.2', '8.1.6' ]
     steps:
-      - env:
-          module_vendor_dir: ${{ needs.build_module.outputs.module_vendor_dir }}
-        run: echo "$module_vendor_dir"
-
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
         with:
@@ -63,7 +59,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: $module_vendor_dir
+          key: ${{ needs.build_module.outputs.module_vendor_dir }}
 
       - name: Install drupal/core-dev with dependencies
         run: |
