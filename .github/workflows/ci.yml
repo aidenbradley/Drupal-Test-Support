@@ -10,7 +10,7 @@ jobs:
 
         -  name: Get composer cache directory
            id: composercache
-           run: echo "CACHED_MODULE_VENDOR=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+           run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
         -  name: Cache module build
            uses: actions/cache@v2
@@ -56,7 +56,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ steps.build_module.outputs.CACHED_MODULE_VENDOR }}
+          key: ${{ steps.build_module.outputs.dir }}
 
       - name: Install drupal/core-dev with dependencies
         run: |
