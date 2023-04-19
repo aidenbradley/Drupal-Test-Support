@@ -57,7 +57,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('modules/test_support/vendor/composer.lock') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('modules/test_support/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install drupal/core-dev with dependencies
