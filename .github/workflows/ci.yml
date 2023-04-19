@@ -56,7 +56,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ steps.build_module.outputs.dir }}
+          key: ${{ steps.composercache.outputs.dir }}
 
       - name: Install drupal/core-dev with dependencies
         run: |
