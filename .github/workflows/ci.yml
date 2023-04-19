@@ -4,8 +4,6 @@ jobs:
   build_module:
       name: Build Module
       runs-on: ubuntu-latest
-      outputs:
-          module_vendor_dir: ${{ steps.composercache.outputs.dir }}
       steps:
         -  name: Checkout module
            uses: actions/checkout@v2
@@ -59,7 +57,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ needs.build_module.outputs.module_vendor_dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('modules/test_support/vendor/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
 
       - name: Install drupal/core-dev with dependencies
         run: |
