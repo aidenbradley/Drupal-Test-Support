@@ -10,7 +10,7 @@ jobs:
 
         -  name: Get composer cache directory
            id: composercache
-           run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+           run: echo "CACHED_MODULE_VENDOR=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
         -  name: Cache module build
            uses: actions/cache@v2
