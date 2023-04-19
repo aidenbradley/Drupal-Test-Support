@@ -4,13 +4,15 @@ jobs:
   build_module:
       name: Build Module
       runs-on: ubuntu-latest
+      outputs:
+          module_vendor_dir: ${{ steps.composercache.outputs.dir }}
       steps:
         -  name: Checkout module
            uses: actions/checkout@v2
 
         -  name: Get composer cache directory
            id: composercache
-           run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+           run: echo "module_vendor_dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
         -  name: Cache module build
            uses: actions/cache@v2
@@ -33,6 +35,10 @@ jobs:
         drupal-core: [ '10.0.0' ]
         php-versions: [ '8.2', '8.1.6' ]
     steps:
+      - env:
+          module_vendor_dir: ${{ needs.build_module.outputs.module_vendor_dir }}
+        run: echo "$module_vendor_dir"
+
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
         with:
@@ -57,7 +63,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ steps.composercache.outputs.dir }}
+          key: $module_vendor_dir
 
       - name: Install drupal/core-dev with dependencies
         run: |
