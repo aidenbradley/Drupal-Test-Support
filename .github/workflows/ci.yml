@@ -20,7 +20,9 @@ jobs:
 
         -  if: steps.build_module_cache.outputs.cache-hit != 'true'
            name: Build module including dependencies dependencies
-           run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+           run: |
+             cd modules/test_support;
+             composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
   retreive_build:
       name: Retreive build
