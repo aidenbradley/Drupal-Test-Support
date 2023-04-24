@@ -46,16 +46,7 @@ jobs:
           repository: drupal/drupal
           ref: ${{ matrix.drupal-core }}
 
-      -  name: Cache Drupal v${{ matrix.drupal-core }}
-         id: build_drupal_cache
-         uses: actions/cache@v3
-         with:
-           path: vendor
-           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-           restore-keys: ${{ runner.os }}-composer-
-
-      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
-        name: Install Drupal core dependencies
+      - name: Install Drupal core dependencies
         run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
       - name: Checkout module
