@@ -46,9 +46,6 @@ jobs:
           repository: drupal/drupal
           ref: ${{ matrix.drupal-core }}
 
-      - name: List Drupal checkout
-        run: ls
-
       -  name: Cache Drupal v${{ matrix.drupal-core }}
          id: build_drupal_cache
          uses: actions/cache@v3
