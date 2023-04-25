@@ -24,11 +24,40 @@ jobs:
              cd modules/test_support;
              composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
-  static_analysis:
+  static_analysis_matrix:
     name: PHPStan - Static Analysis
     runs-on: ubuntu-latest
     needs: build_module
+    strategy:
+      fail-fast: false
+      matrix:
+        drupal-core: [ '9.2.0', '10.0.0' ]
     steps:
+        -   name: Checkout Drupal core v${{ matrix.drupal-core }}
+            uses: actions/checkout@v2
+            with:
+                repository: drupal/drupal
+                ref: ${{ matrix.drupal-core }}
+
+        -   name: Cache Drupal v${{ matrix.drupal-core }}
+            id: build_drupal_cache
+            uses: actions/cache@v3
+            with:
+                path: vendor
+                key: ${{ runner.os }}-drupal-build-composer-v${{ matrix.drupal-core }}-${{ hashFiles('./composer.lock') }}
+                restore-keys: ${{ runner.os }}-drupal-build-composer-v
+
+        -   if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+            name: Install Drupal core dependencies
+            run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+        -   if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+            name: Install drupal/core-dev with dependencies
+            run: |
+                composer --no-interaction --no-progress require --dev \
+                drupal/core-dev:${{ matrix.drupal-core }} \
+                phpspec/prophecy-phpunit:^2 --with-all-dependencies
+
         - name: Checkout module
           uses: actions/checkout@v2
           with:
