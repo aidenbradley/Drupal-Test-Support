@@ -15,8 +15,8 @@ jobs:
            uses: actions/cache@v3
            with:
              path: modules/test_support/vendor
-             key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-             restore-keys: ${{ runner.os }}-composer-
+             key: ${{ runner.os }}-module-build-composer-${{ hashFiles('**/composer.lock') }}
+             restore-keys: ${{ runner.os }}-module-build-composer-
 
         -  if: steps.build_module_cache.outputs.cache-hit != 'true'
            name: Build module including dependencies dependencies
@@ -49,17 +49,24 @@ jobs:
       - name: List Drupal checkout
         run: ls
 
-#      -  name: Cache Drupal v${{ matrix.drupal-core }}
-#         id: build_drupal_cache
-#         uses: actions/cache@v3
-#         with:
-#           path: vendor
-#           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-#           restore-keys: ${{ runner.os }}-composer-
+      -  name: Cache Drupal v${{ matrix.drupal-core }}
+         id: build_drupal_cache
+         uses: actions/cache@v3
+         with:
+           path: vendor
+           key: ${{ runner.os }}-drupal-build-composer-${{ hashFiles('./composer.lock') }}
+           restore-keys: ${{ runner.os }}-drupal-build-composer-
 
-#      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
-      - name: Install Drupal core dependencies
+      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+        name: Install Drupal core dependencies
         run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+        name: Install drupal/core-dev with dependencies
+        run: |
+          composer --no-interaction --no-progress require --dev \
+          drupal/core-dev:${{ matrix.drupal-core }} \
+          phpspec/prophecy-phpunit:^2 --with-all-dependencies
 
       - name: Checkout module
         uses: actions/checkout@v2
@@ -73,12 +80,6 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('modules/test_support/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
           fail-on-cache-miss: true
-
-      - name: Install drupal/core-dev with dependencies
-        run: |
-          composer --no-interaction --no-progress require --dev \
-          drupal/core-dev:${{ matrix.drupal-core }} \
-          phpspec/prophecy-phpunit:^2 --with-all-dependencies
 
       - name: Tests
         run: |
