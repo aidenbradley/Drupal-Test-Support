@@ -34,7 +34,7 @@ jobs:
         drupal-core: [ '10.0.0' ]
         php-versions: [ '8.2', '8.1.6' ]
     steps:
-      - name: Setup PHP, with composer and extensions
+      - name: Setup PHP v${{ matrix.php-versions }}, with composer and extensions
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
