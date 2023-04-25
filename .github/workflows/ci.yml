@@ -1,0 +1,145 @@
+name: Test
+on: [ push ]
+jobs:
+  build_module:
+      name: Build Module
+      runs-on: ubuntu-latest
+      steps:
+        -  name: Checkout module
+           uses: actions/checkout@v2
+           with:
+             path: modules/test_support
+
+        -  name: Cache module build
+           id: build_module_cache
+           uses: actions/cache@v3
+           with:
+             path: modules/test_support/vendor
+             key: ${{ runner.os }}-module-build-composer-${{ hashFiles('**/composer.lock') }}
+             restore-keys: ${{ runner.os }}-module-build-composer-
+
+        -  if: steps.build_module_cache.outputs.cache-hit != 'true'
+           name: Build module including dependencies dependencies
+           run: |
+             cd modules/test_support;
+             composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+  drupal-10-matrix:
+    name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
+    runs-on: ubuntu-latest
+    needs: build_module
+    strategy:
+      fail-fast: false
+      matrix:
+        drupal-core: [ '10.0.0' ]
+        php-versions: [ '8.2', '8.1.6' ]
+    steps:
+      - name: Setup PHP v${{ matrix.php-versions }}, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: none
+
+      - name: Checkout Drupal core v${{ matrix.drupal-core }}
+        uses: actions/checkout@v2
+        with:
+          repository: drupal/drupal
+          ref: ${{ matrix.drupal-core }}
+
+      -  name: Cache Drupal v${{ matrix.drupal-core }}
+         id: build_drupal_cache
+         uses: actions/cache@v3
+         with:
+           path: vendor
+           key: ${{ runner.os }}-drupal-build-composer-v${{ matrix.drupal-core }}-${{ hashFiles('./composer.lock') }}
+           restore-keys: ${{ runner.os }}-drupal-build-composer-v
+
+      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+        name: Install Drupal core dependencies
+        run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+        name: Install drupal/core-dev with dependencies
+        run: |
+          composer --no-interaction --no-progress require --dev \
+          drupal/core-dev:${{ matrix.drupal-core }} \
+          phpspec/prophecy-phpunit:^2 --with-all-dependencies
+
+      - name: Checkout module
+        uses: actions/checkout@v2
+        with:
+          path: modules/test_support
+
+      - name: Retreive module build cache
+        uses: actions/cache@v3
+        with:
+          path: modules/test_support/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+          fail-on-cache-miss: true
+
+      - name: Tests
+        run: |
+          modules/test_support/vendor/bin/paratest \
+          --path modules/test_support/tests \
+          -c modules/test_support/phpunit.xml
+
+  drupal-9-matrix:
+    name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
+    runs-on: ubuntu-latest
+    needs: build_module
+    strategy:
+      fail-fast: false
+      matrix:
+        drupal-core: [ '9.5.0', '9.1.0' ]
+        php-versions: [ '7.3' ]
+    steps:
+      - name: Setup PHP v${{ matrix.php-versions }}, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: none
+
+      - name: Checkout Drupal core v${{ matrix.drupal-core }}
+        uses: actions/checkout@v2
+        with:
+          repository: drupal/drupal
+          ref: ${{ matrix.drupal-core }}
+
+      - name: Cache Drupal v${{ matrix.drupal-core }}
+        id: build_drupal_cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-drupal-build-composer-v${{ matrix.drupal-core }}-${{ hashFiles('./composer.lock') }}
+          restore-keys: ${{ runner.os }}-drupal-build-composer-v
+
+      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+        name: Install Drupal core dependencies
+        run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+        name: Install drupal/core-dev with dependencies
+        run: |
+            composer --no-interaction --no-progress require --dev \
+            drupal/core-dev:${{ matrix.drupal-core }} \
+            phpspec/prophecy-phpunit:^2 --with-all-dependencies
+
+      - name: Checkout module
+        uses: actions/checkout@v2
+        with:
+          path: modules/test_support
+
+      - name: Retreive module build cache
+        uses: actions/cache@v3
+        with:
+          path: modules/test_support/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+          fail-on-cache-miss: true
+
+      - name: Tests
+        run: |
+          modules/test_support/vendor/bin/paratest \
+          modules/test_support/tests \
+          -c modules/test_support/phpunit.xml
