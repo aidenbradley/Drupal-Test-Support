@@ -15,7 +15,7 @@ jobs:
            uses: actions/cache@v3
            with:
              path: modules/test_support/vendor
-             key: ${{ runner.os }}-module-build-composer-${{ hashFiles('**/composer.lock') }}
+             key: ${{ runner.os }}-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
              restore-keys: ${{ runner.os }}-module-build-composer-
 
         -  if: steps.build_module_cache.outputs.cache-hit != 'true'
@@ -74,7 +74,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ runner.os }}-module-build-composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
           restore-keys: ${{ runner.os }}-module-build-composer-
           fail-on-cache-miss: true
 
@@ -134,7 +134,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ runner.os }}-module-build-composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
           restore-keys: ${{ runner.os }}-module-build-composer-
           fail-on-cache-miss: true
 
