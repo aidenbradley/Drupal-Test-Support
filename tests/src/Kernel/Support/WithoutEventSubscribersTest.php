@@ -15,7 +15,7 @@ class WithoutEventSubscribersTest extends KernelTestBase
 {
     use WithoutEventSubscribers;
 
-    /** @var ContainerAwareEventDispatcher */
+    /** @var ContainerAwareEventDispatcher|null */
     private $eventDispatcher;
 
     /** @test */
@@ -171,7 +171,7 @@ class WithoutEventSubscribersTest extends KernelTestBase
 
     private function eventDispatcher(): ContainerAwareEventDispatcher
     {
-        if (isset($this->eventDispatcher) === false) {
+        if ($this->eventDispatcher instanceof ContainerAwareEventDispatcher === false) {
             $this->eventDispatcher = $this->container->get('event_dispatcher');
         }
 

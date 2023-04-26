@@ -43,10 +43,10 @@ class InteractsWithSettingsTest extends KernelTestBase
                 $this->getConfigurationDirectory()
             );
         } else {
-            $this->assertEquals(
-                $this->container->get('app.root') . '/test/config/directory',
-                $this->getConfigurationDirectory()
-            );
+            /** @phpstan-ignore-next-line */
+            $expectedConfigurationDirectory = $this->container->get('app.root') . '/test/config/directory';
+
+            $this->assertEquals($expectedConfigurationDirectory, $this->getConfigurationDirectory());
         }
     }
 
@@ -57,8 +57,6 @@ class InteractsWithSettingsTest extends KernelTestBase
      */
     public function auto_discovers_settings(): void
     {
-        $this->markTestSkipped('To be ran locally against a drupal installation that has a valid settings.php');
-
         $this->assertNull($this->getSettings()->get('auto_discovered'));
 
         // force InteractsWithSettings to find settings.php again

@@ -26,7 +26,7 @@ trait WithoutEvents
         return $this;
     }
 
-    /** @param string|string[] $events */
+    /** @param string|string[]|class-string[] $events */
     public function expectsEvents($events): self
     {
         $this->expectedEvents = (array) $events;
@@ -34,7 +34,7 @@ trait WithoutEvents
         return $this->withoutEvents();
     }
 
-    /** @param string|string[] $events */
+    /** @param string|string[]|class-string[] $events */
     public function doesntExpectEvents($events): self
     {
         $this->nonExpectedEvents = (array) $events;
@@ -42,7 +42,8 @@ trait WithoutEvents
         return $this->withoutEvents();
     }
 
-    public function assertDispatched(?string $event, ?callable $callback = null): self
+    /** @param class-string|string|null $event */
+    public function assertDispatched($event, ?callable $callback = null): self
     {
         $firedEvents = $this->eventDispatcher()->getFiredEvents($event);
 

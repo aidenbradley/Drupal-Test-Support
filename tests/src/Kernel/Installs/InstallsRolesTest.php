@@ -5,7 +5,6 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Installs\InstallsRoles;
 use Drupal\user\Entity\Role;
-use Drupal\user\RoleInterface;
 
 class InstallsRolesTest extends KernelTestBase
 {
@@ -49,15 +48,12 @@ class InstallsRolesTest extends KernelTestBase
 
         $this->installRoles('editor');
 
+        /** @var \Drupal\user\RoleInterface[] $roles */
         $roles = $roleStorage->loadMultiple();
 
         $this->assertNotEmpty($roles);
 
         $editor = reset($roles);
-
-        if ($editor instanceof RoleInterface === false) {
-            $this->fail('Could not load the `editor` role');
-        }
 
         $this->assertEquals('editor', $editor->id());
     }
