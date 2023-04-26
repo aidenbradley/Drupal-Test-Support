@@ -13,7 +13,7 @@ trait InstallConfiguration
     use InstallsTheme;
     use InteractsWithSettings;
 
-    /** @var string */
+    /** @var bool */
     private $useVfsConfigDirectory = false;
 
     /** @var string */
@@ -59,14 +59,17 @@ trait InstallConfiguration
             if ($entityType) {
                 $storage = $this->container->get('entity_type.manager')->getStorage($entityType);
 
-                if (is_array($configRecord) === false) {
-                    throw ConfigInstallFailed::couldNotHandle($configName);
-                }
+//                if (is_array($configRecord) === false) {
+//                    throw ConfigInstallFailed::couldNotHandle($configName);
+//                }
 
+                /** @phpstan-ignore-next-line */
                 $storage->createFromStorageRecord($configRecord)->save();
-            } else {
-                $this->container->get('config.factory')->getEditable($configName)->setData($configRecord)->save();
+
+                continue;
             }
+
+            $this->container->get('config.factory')->getEditable($configName)->setData($configRecord)->save();
         }
 
         return $this;

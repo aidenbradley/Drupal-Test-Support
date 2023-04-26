@@ -90,7 +90,11 @@ class TestMailTest extends UnitTestCase
     public function assert_param(): void
     {
         $user = $this->prophesize(User::class);
+
+        /** @phpstan-ignore-next-line */
         $user->id()->willReturn(1);
+
+        /** @phpstan-ignore-next-line */
         $user->getEmail()->willReturn('hello@example.com');
 
         $mail = TestMail::createFromValues([

@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\test_support\Traits\Support;
 
+use Composer\EventDispatcher\EventSubscriberInterface;
+use Drupal\Tests\test_support\Traits\Support\Decorators\DecoratedListener;
 use Drupal\Tests\test_support\Traits\Support\Decorators\DecoratedListener as Listener;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert;
@@ -36,7 +38,9 @@ trait WithoutEventSubscribers
     public function withoutSubscribers($listeners = []): self
     {
         $this->getListeners()->when($listeners, function (Collection $collection, $listeners) {
-            return $collection->filter->inList($listeners);
+            return $collection->filter(function (DecoratedListener $listener) use ($listeners): bool {
+                return $listener->inList($listeners);
+            });
         })->whenEmpty(function (Collection $collection) use ($listeners) {
             $this->deferredSubscribers = collect($this->deferredSubscribers)->merge($listeners)->unique()->toArray();
 
@@ -79,7 +83,7 @@ trait WithoutEventSubscribers
     {
         Assert::assertEmpty(
             $this->getListeners($event)->filter(function (Listener $decoratedListener) use ($listener) {
-                return $decoratedListener->inList((array) $listener);
+                return $decoratedListener->inList((array)$listener);
             })
         );
     }
@@ -88,7 +92,7 @@ trait WithoutEventSubscribers
     {
         Assert::assertNotEmpty(
             $this->getListeners($event)->filter(function (Listener $decoratedListener) use ($listener) {
-                return $decoratedListener->inList((array) $listener);
+                return $decoratedListener->inList((array)$listener);
             })
         );
     }
@@ -120,7 +124,9 @@ trait WithoutEventSubscribers
 
         $this->ignoredSubscribers = collect($this->ignoredSubscribers)->put($listener->getServiceId(), $listener);
 
-        $this->container->get('event_dispatcher')->removeSubscriber($listener->getOriginal());
+        if ($listener->getOriginal() instanceof EventSubscriberInterface) {
+            $this->container->get('event_dispatcher')->removeSubscriber($listener->getOriginal());
+        }
 
         return $this;
     }
@@ -129,7 +135,7 @@ trait WithoutEventSubscribers
     {
         $listeners = $this->container->get('event_dispatcher')->getListeners($event);
 
-        return collect($listeners)->unless($event, function (Collection $listeners) {
+        return collect($listeners)->unless($event !== null, function (Collection $listeners) {
             return $listeners->values()->collapse();
         })->transform(function (array $listener) {
             $listener[2] = $this->resolveListenerServiceId($listener[0]);
@@ -144,12 +150,16 @@ trait WithoutEventSubscribers
             return $listener->_serviceId;
         }
 
+        /** @phpstan-ignore-next-line */
         if ($this->container->has('Drupal\Core\DependencyInjection\ReverseContainer')) {
+            /** @phpstan-ignore-next-line */
             return $this->container->get('Drupal\Core\DependencyInjection\ReverseContainer')->getId($listener);
         }
 
+        /** @phpstan-ignore-next-line */
         $serviceMap = $this->container->get('kernel')->getServiceIdMapping();
 
+        /** @phpstan-ignore-next-line */
         $serviceHash = $this->container->generateServiceIdHash($listener);
 
         return $serviceMap[$serviceHash] ?? null;

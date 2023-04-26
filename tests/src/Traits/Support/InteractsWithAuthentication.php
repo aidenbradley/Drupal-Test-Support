@@ -3,15 +3,16 @@
 namespace Drupal\Tests\test_support\Traits\Support;
 
 use Drupal\Component\Utility\Random;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 
 trait InteractsWithAuthentication
 {
-    /** @var UserInterface */
-    private $anonymousUser;
+    /** @var UserInterface|null */
+    private $anonymousUser = null;
 
-    /** @param UserInterface|RoleInterface */
+    /** @param UserInterface|RoleInterface $user */
     public function actingAs($user): self
     {
         if ($user instanceof RoleInterface) {
@@ -25,7 +26,7 @@ trait InteractsWithAuthentication
 
     public function actingAsAnonymous(): self
     {
-        if (isset($this->anonymousUser) === false) {
+        if ($this->anonymousUser instanceof UserInterface === false) {
             $userStorage = $this->container->get('entity_type.manager')->getStorage('user');
 
             $userStorage->create([
@@ -37,7 +38,9 @@ trait InteractsWithAuthentication
             $this->anonymousUser = $userStorage->load(0);
         }
 
-        $this->container->get('current_user')->setAccount($this->anonymousUser);
+        if ($this->anonymousUser instanceof AccountInterface) {
+            $this->container->get('current_user')->setAccount($this->anonymousUser);
+        }
 
         return $this;
     }
@@ -49,7 +52,7 @@ trait InteractsWithAuthentication
         $user = $userStorage->create([
             'name' => (new Random())->string(),
         ]);
-        $user->addRole($role);
+        $user->addRole((string) $role->id());
         $user->save();
 
         return $this->actingAs($user);
@@ -65,7 +68,7 @@ trait InteractsWithAuthentication
         ]);
 
         foreach ($roles as $role) {
-            $user->addRole($role->id());
+            $user->addRole((string) $role->id());
         }
 
         $user->save();

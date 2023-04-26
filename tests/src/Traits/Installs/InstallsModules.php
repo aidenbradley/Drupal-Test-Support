@@ -3,12 +3,14 @@
 namespace Drupal\Tests\test_support\Traits\Installs;
 
 use Drupal\Core\Serialization\Yaml;
+use PHPUnit\Framework\Assert;
 
 trait InstallsModules
 {
     /** @var array */
     private $modulesToInstall = [];
 
+    /** @param string|array $modules */
     public function enableModuleWithDependencies($modules): self
     {
         $this->modulesToInstall = (array) $modules;
@@ -53,7 +55,9 @@ trait InstallsModules
     /** @return mixed */
     private function getModuleInfo(string $module)
     {
+        /** @phpstan-ignore-next-line */
         if ($this->container->has('extension.path.resolver')) {
+            /** @phpstan-ignore-next-line */
             $path = $this->container->get('extension.path.resolver')->getPath('module', $module);
         } else {
             $path = drupal_get_path('module', $module);
@@ -61,7 +65,13 @@ trait InstallsModules
 
         $fileLocation = $path . '/' . $module . '.info.yml';
 
-        return Yaml::decode(file_get_contents($fileLocation));
+        $yaml = file_get_contents($fileLocation);
+
+        if ($yaml === false) {
+            Assert::fail('Could not decode YAML when attempting to install `' . $module . '`');
+        }
+
+        return Yaml::decode($yaml);
     }
 
     private function handlePrefixes(string $moduleName): string

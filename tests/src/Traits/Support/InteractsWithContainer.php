@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\test_support\Traits\Support;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -26,8 +27,8 @@ trait InteractsWithContainer
      *
      * @see Reference
      */
-    public function service(string $serviceId)
+    public function service($id, $invalidBehavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE)
     {
-        return $this->container->get($serviceId);
+        return $this->container->get($id, $invalidBehavior);
     }
 }

@@ -26,9 +26,9 @@ trait InteractsWithSettings
 
     protected function getSettings(): Settings
     {
-        if (isset($this->settings) === false) {
-            $this->temporarilySupressErrors(function () {
-                $this->settings = $this->loadSettings();
+        if ($this->settings instanceof Settings === false) {
+            $this->settings = $this->temporarilySupressErrors(function () {
+                return $this->loadSettings();
             });
         }
 
@@ -97,6 +97,7 @@ trait InteractsWithSettings
             return $this->container->getParameter('app.root');
         }
 
+        /** @phpstan-ignore-next-line */
         return $this->container->get('app.root');
     }
 }

@@ -422,6 +422,7 @@ class TestResponse extends Response
     /** @return static */
     public function assertLocation(string $uri)
     {
+        /** @phpstan-ignore-next-line */
         Assert::assertEquals($uri, \Drupal::service('path.current')->getPath());
 
         return $this;

@@ -11,10 +11,10 @@ trait WithoutEvents
     private $firedEvents;
 
     /** @var array */
-    private $expectedEvents;
+    private $expectedEvents = [];
 
     /** @var array */
-    private $nonExpectedEvents;
+    private $nonExpectedEvents = [];
 
     /** Mock the event dispatcher. All dispatched events are collected */
     public function withoutEvents(): self
@@ -26,6 +26,7 @@ trait WithoutEvents
         return $this;
     }
 
+    /** @param string|string[] $events */
     public function expectsEvents($events): self
     {
         $this->expectedEvents = (array) $events;
@@ -33,6 +34,7 @@ trait WithoutEvents
         return $this->withoutEvents();
     }
 
+    /** @param string|string[] $events */
     public function doesntExpectEvents($events): self
     {
         $this->nonExpectedEvents = (array) $events;
@@ -40,7 +42,7 @@ trait WithoutEvents
         return $this->withoutEvents();
     }
 
-    public function assertDispatched($event, ?callable $callback = null): self
+    public function assertDispatched(?string $event, ?callable $callback = null): self
     {
         $firedEvents = $this->eventDispatcher()->getFiredEvents($event);
 
@@ -53,27 +55,27 @@ trait WithoutEvents
         return $this;
     }
 
-    public function assertNotDispatched($event): self
+    public function assertNotDispatched(?String $event): self
     {
         $this->assertTrue($this->eventDispatcher()->getFiredEvents($event)->isEmpty(), $event . ' event was dispatched');
 
         return $this;
     }
 
-    public function registerDispatchedEvent($arguments): void
+    public function registerDispatchedEvent(array $arguments): void
     {
         $this->firedEvents[$arguments[1]] = $arguments[0];
     }
 
     protected function tearDown(): void
     {
-        if (isset($this->expectedEvents)) {
+        if ($this->expectedEvents !== []) {
             foreach ($this->expectedEvents as $event) {
                 $this->assertDispatched($event);
             }
         }
 
-        if (isset($this->nonExpectedEvents)) {
+        if ($this->nonExpectedEvents !== []) {
             foreach ($this->nonExpectedEvents as $event) {
                 $this->assertNotDispatched($event);
             }
@@ -84,6 +86,7 @@ trait WithoutEvents
 
     private function eventDispatcher(): TestEventDispatcher
     {
+        /** @phpstan-ignore-next-line */
         return $this->container->get('event_dispatcher');
     }
 }
