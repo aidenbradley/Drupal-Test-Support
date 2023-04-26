@@ -6,6 +6,7 @@ use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithBatches;
+use Drupal\user\UserInterface;
 
 class InteractsWithBatchesTest extends KernelTestBase
 {
@@ -56,31 +57,17 @@ class InteractsWithBatchesTest extends KernelTestBase
             ->createEnabledUser('enabled_user_two')
             ->createEnabledUser('enabled_user_three');
 
-        $userStorage = $this->container->get('entity_type.manager')->getStorage('user');
-
-        $disabledUserOne = $userStorage->load(1);
-        $this->assertEquals(1, $disabledUserOne->status->value);
-
-        $disabledUserTwo = $userStorage->load(2);
-        $this->assertEquals(1, $disabledUserTwo->status->value);
-
-        $disabledUserThree = $userStorage->load(3);
-        $this->assertEquals(1, $disabledUserThree->status->value);
+        $this->assertEquals('1', $this->loadUser(1)->get('status')->getString());
+        $this->assertEquals('1', $this->loadUser(2)->get('status')->getString());
+        $this->assertEquals('1', $this->loadUser(3)->get('status')->getString());
 
         $this->get($this->route('disable_all_users.prepare_and_process_batch'));
 
         $this->runLatestBatch();
 
-        $userStorage = $this->container->get('entity_type.manager')->getStorage('user');
-
-        $disabledUserOne = $userStorage->load(1);
-        $this->assertEquals(0, $disabledUserOne->status->value);
-
-        $disabledUserTwo = $userStorage->load(2);
-        $this->assertEquals(0, $disabledUserTwo->status->value);
-
-        $disabledUserThree = $userStorage->load(3);
-        $this->assertEquals(0, $disabledUserThree->status->value);
+        $this->assertEquals('0', $this->loadUser(1)->get('status')->getString());
+        $this->assertEquals('0', $this->loadUser(2)->get('status')->getString());
+        $this->assertEquals('0', $this->loadUser(3)->get('status')->getString());
     }
 
     private function createEnabledUser(string $name): self
@@ -97,5 +84,17 @@ class InteractsWithBatchesTest extends KernelTestBase
     private function route(string $route, array $parameters = [], array $options = []): string
     {
         return Url::fromRoute(...func_get_args())->toString(true)->getGeneratedUrl();
+    }
+
+    private function loadUser(int $userId): UserInterface
+    {
+        /** @phpstan-ignore-next-line */
+        $user = $this->container->get('entity_type.manager')->getStorage('user')->load($userId);
+
+        if ($user instanceof UserInterface === false) {
+            $this->fail('Could not load user ID: ' . $userId);
+        }
+
+        return $user;
     }
 }

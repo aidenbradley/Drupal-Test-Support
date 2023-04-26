@@ -54,7 +54,7 @@ class InteractsWithQueuesTest extends KernelTestBase
     }
 
     /** @test */
-    public function process_queue()
+    public function process_queue(): void
     {
         $this->enableModules([
             'node',
@@ -127,6 +127,7 @@ class InteractsWithQueuesTest extends KernelTestBase
             {
                 parent::__construct(Settings::getInstance());
 
+                /** @phpstan-ignore-next-line */
                 $this->container = \Drupal::getContainer();
             }
 

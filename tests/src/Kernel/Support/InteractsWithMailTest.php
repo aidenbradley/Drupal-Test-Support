@@ -139,8 +139,8 @@ class InteractsWithMailTest extends KernelTestBase
             $to,
             'en',
             $params,
-            static::NO_REPLY,
-            static::SEND_MAIL
+            self::NO_REPLY,
+            self::SEND_MAIL
         );
     }
 }
