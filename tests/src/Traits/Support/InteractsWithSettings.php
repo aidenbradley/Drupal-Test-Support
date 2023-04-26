@@ -94,6 +94,7 @@ trait InteractsWithSettings
     private function appRoot(): string
     {
         if (str_starts_with(\Drupal::VERSION, '10.')) {
+            /** @phpstan-ignore-next-line */
             return $this->container->getParameter('app.root');
         }
 

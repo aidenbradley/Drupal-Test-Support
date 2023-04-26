@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\test_support\Traits\Support;
 
-use Composer\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\Tests\test_support\Traits\Support\Decorators\DecoratedListener;
 use Drupal\Tests\test_support\Traits\Support\Decorators\DecoratedListener as Listener;
 use Illuminate\Support\Collection;
@@ -39,7 +39,7 @@ trait WithoutEventSubscribers
     {
         $this->getListeners()->when($listeners, function (Collection $collection, $listeners) {
             return $collection->filter(function (DecoratedListener $listener) use ($listeners): bool {
-                return $listener->inList($listeners);
+                return $listener->inList((array) $listeners);
             });
         })->whenEmpty(function (Collection $collection) use ($listeners) {
             $this->deferredSubscribers = collect($this->deferredSubscribers)->merge($listeners)->unique()->toArray();
