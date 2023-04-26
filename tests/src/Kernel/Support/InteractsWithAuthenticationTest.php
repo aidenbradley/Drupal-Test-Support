@@ -7,6 +7,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithAuthentication;
 use Drupal\user\Entity\Role;
+use Drupal\user\UserInterface;
 
 class InteractsWithAuthenticationTest extends KernelTestBase
 {
@@ -37,6 +38,10 @@ class InteractsWithAuthenticationTest extends KernelTestBase
         ])->save();
 
         $user = $userStorage->load(1);
+
+        if ($user instanceof UserInterface === false) {
+            $this->fail('Could not load user with ID: 1');
+        }
 
         $this->actingAs($user)->get(
             $this->route('entity.user.canonical', ['user' => $user->id()])
