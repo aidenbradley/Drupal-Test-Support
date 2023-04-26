@@ -55,12 +55,19 @@ trait InstallsModules
     /** @return mixed */
     private function getModuleInfo(string $module)
     {
-        /** @phpstan-ignore-next-line */
-        if ($this->container->has('extension.path.resolver')) {
+        $path = null;
+
+        if (str_starts_with(\Drupal::VERSION, '10.')) {
             /** @phpstan-ignore-next-line */
             $path = $this->container->get('extension.path.resolver')->getPath('module', $module);
-        } else {
+        }
+
+        if (str_starts_with(\Drupal::VERSION, '9.')) {
             $path = drupal_get_path('module', $module);
+        }
+
+        if ($path === null) {
+            $this->fail('Could not find path for module: ' . $module);
         }
 
         $fileLocation = $path . '/' . $module . '.info.yml';
