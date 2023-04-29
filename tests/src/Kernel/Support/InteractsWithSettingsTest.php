@@ -19,9 +19,13 @@ class InteractsWithSettingsTest extends KernelTestBase
 
         $container->set('kernel', $this->container->get('kernel'));
 
-        if (str_starts_with(\Drupal::VERSION, '10.')) {
+        /** @phpstan-ignore-next-line */
+        if (version_compare(\Drupal::VERSION, '10.0', '>=')) {
             $container->setParameter('app.root', __DIR__);
-        } else {
+        }
+
+        /** @phpstan-ignore-next-line */
+        if (version_compare(\Drupal::VERSION, '9.0', '>=')) {
             $container->set('app.root', new Reference(__DIR__));
         }
 

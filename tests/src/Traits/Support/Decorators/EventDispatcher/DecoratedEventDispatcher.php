@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-if (str_starts_with(\Drupal::VERSION, '10.')) {
+if (version_compare(\Drupal::VERSION, '10.0', '>=')) {
     class DecoratedEventDispatcher implements TestEventDispatcher
     {
         /** @var EventDispatcherInterface */
@@ -83,7 +83,9 @@ if (str_starts_with(\Drupal::VERSION, '10.')) {
             $this->firedEvents[$eventName] = $event;
         }
     }
-} else {
+}
+
+if (version_compare(\Drupal::VERSION, '9.0', '>=')) {
     class DecoratedEventDispatcher implements TestEventDispatcher
     {
         /** @var EventDispatcherInterface */

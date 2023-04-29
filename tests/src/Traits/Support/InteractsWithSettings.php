@@ -93,12 +93,18 @@ trait InteractsWithSettings
 
     private function appRoot(): string
     {
-        if (str_starts_with(\Drupal::VERSION, '10.')) {
-            /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore-next-line */
+        if (version_compare(\Drupal::VERSION, '10.0', '>=')) {
             return $this->container->getParameter('app.root');
         }
 
         /** @phpstan-ignore-next-line */
-        return $this->container->get('app.root');
+        if (version_compare(\Drupal::VERSION, '9.0', '>=')) {
+            /** @phpstan-ignore-next-line */
+            return $this->container->get('app.root');
+        }
+
+        /** @phpstan-ignore-next-line */
+        return '';
     }
 }

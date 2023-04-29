@@ -57,15 +57,18 @@ trait InstallsModules
     {
         $path = null;
 
-        if (str_starts_with(\Drupal::VERSION, '10.')) {
+        /** @phpstan-ignore-next-line */
+        if (version_compare(\Drupal::VERSION, '10.0', '>=')) {
             /** @phpstan-ignore-next-line */
             $path = $this->container->get('extension.path.resolver')->getPath('module', $module);
         }
 
-        if (str_starts_with(\Drupal::VERSION, '9.')) {
+        /** @phpstan-ignore-next-line */
+        if (version_compare(\Drupal::VERSION, '9.0', '>=')) {
             $path = drupal_get_path('module', $module);
         }
 
+        /** @phpstan-ignore-next-line */
         if ($path === null) {
             $this->fail('Could not find path for module: ' . $module);
         }
