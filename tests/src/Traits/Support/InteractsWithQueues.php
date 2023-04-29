@@ -26,6 +26,7 @@ trait InteractsWithQueues
         return $this->getQueueByName($queueName, $this->useReliableQueue);
     }
 
+    /** @param mixed $data */
     public function addToQueue(string $queueName, $data): self
     {
         $this->getQueue($queueName)->createItem($data);

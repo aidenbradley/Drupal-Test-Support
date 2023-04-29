@@ -3,6 +3,7 @@
 namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\node\NodeInterface;
 use Drupal\Tests\test_support\Traits\Installs\InstallsEntityTypes;
 use Drupal\Tests\test_support\Traits\Installs\InstallsFields;
 
@@ -50,9 +51,7 @@ class InstallsFieldsTest extends KernelTestBase
 
         $this->installField('body', 'node', 'page');
 
-        $node = $nodeStorage->load(1);
-
-        $this->assertTrue($node->hasField('body'));
+        $this->assertTrue($this->loadNode(1)->hasField('body'));
 
         $this->assertTrue($this->container->get('module_handler')->moduleExists('field'));
     }
@@ -82,9 +81,7 @@ class InstallsFieldsTest extends KernelTestBase
 
         $this->installField('body', 'node', 'page');
 
-        $node = $nodeStorage->load(1);
-
-        $this->assertTrue($node->hasField('body'));
+        $this->assertTrue($this->loadNode(1)->hasField('body'));
     }
 
     /** @test */
@@ -116,10 +113,8 @@ class InstallsFieldsTest extends KernelTestBase
             'field_boolean_field',
         ], 'node', 'page');
 
-        $node = $nodeStorage->load(1);
-
-        $this->assertTrue($node->hasField('body'));
-        $this->assertTrue($node->hasField('field_boolean_field'));
+        $this->assertTrue($this->loadNode(1)->hasField('body'));
+        $this->assertTrue($this->loadNode(1)->hasField('field_boolean_field'));
     }
 
     /** @test */
@@ -148,9 +143,18 @@ class InstallsFieldsTest extends KernelTestBase
 
         $this->installAllFieldsForEntity('node', 'page');
 
-        $node = $nodeStorage->load(1);
+        $this->assertTrue($this->loadNode(1)->hasField('body'));
+        $this->assertTrue($this->loadNode(1)->hasField('field_boolean_field'));
+    }
 
-        $this->assertTrue($node->hasField('body'));
-        $this->assertTrue($node->hasField('field_boolean_field'));
+    private function loadNode(int $nodeId): NodeInterface
+    {
+        $node = $this->container->get('entity_type.manager')->getStorage('node')->load($nodeId);
+
+        if ($node instanceof NodeInterface === false) {
+            $this->fail('Could not load node with ID: ' . $nodeId);
+        }
+
+        return $node;
     }
 }

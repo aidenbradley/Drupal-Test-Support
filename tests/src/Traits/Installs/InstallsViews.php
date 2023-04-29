@@ -11,7 +11,7 @@ trait InstallsViews
     /** @var bool */
     private $setupViewsDependencies = false;
 
-    /** @param string|array */
+    /** @param string|array $views */
     public function installViews($views): self
     {
         $this->setupViewsDependencies();

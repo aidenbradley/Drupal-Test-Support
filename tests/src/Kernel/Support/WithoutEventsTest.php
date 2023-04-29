@@ -20,7 +20,14 @@ class WithoutEventsTest extends KernelTestBase
         $this->container->get('event_dispatcher')->dispatch($event, 'test_event');
 
         $this->assertDispatched('test_event');
-        $this->assertDispatched(get_class($event));
+
+        $eventClass = get_class($event);
+
+        if ($eventClass === false) {
+            $this->fail('Could not resolve class string of event');
+        }
+
+        $this->assertDispatched($eventClass);
     }
 
     /** @test */
@@ -28,7 +35,13 @@ class WithoutEventsTest extends KernelTestBase
     {
         $event = $this->createEvent();
 
-        $this->expectsEvents(get_class($event));
+        $eventClass = get_class($event);
+
+        if ($eventClass === false) {
+            $this->fail('Could not resolve event class');
+        }
+
+        $this->expectsEvents($eventClass);
 
         $this->container->get('event_dispatcher')->dispatch($event, 'test_event');
     }
@@ -44,7 +57,13 @@ class WithoutEventsTest extends KernelTestBase
     /** @test */
     public function doesnt_expect_events_class_string(): void
     {
-        $this->doesntExpectEvents(get_class($this->createEvent()));
+        $eventClass = get_class($this->createEvent());
+
+        if ($eventClass === false) {
+            $this->fail('Could not resolve event class');
+        }
+
+        $this->doesntExpectEvents($eventClass);
 
         $this->container->get('event_dispatcher')->dispatch(new LocaleEvent([]), 'second_event');
     }

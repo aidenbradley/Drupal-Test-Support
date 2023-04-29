@@ -7,11 +7,9 @@ use Drupal\Core\Entity\EntityStorageInterface;
 
 trait InteractsWithEntities
 {
-    protected function createEntity(string $entityTypeId, $values): EntityInterface
+    protected function createEntity(string $entityTypeId, array $values = []): EntityInterface
     {
-        if (is_array($values)) {
-            $entity = $this->storage($entityTypeId)->create($values);
-        }
+        $entity = $this->storage($entityTypeId)->create($values);
 
         $entity->save();
 
@@ -20,8 +18,10 @@ trait InteractsWithEntities
 
     protected function updateEntity(EntityInterface $entity, array $values): EntityInterface
     {
-        foreach ($values as $field => $value) {
-            $entity->set($field, $value);
+        if (method_exists($entity, 'set')) {
+            foreach ($values as $field => $value) {
+                $entity->set($field, $value);
+            }
         }
 
         $entity->save();

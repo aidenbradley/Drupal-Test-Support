@@ -4,9 +4,10 @@ namespace Drupal\Tests\test_support\Traits\Installs;
 
 trait InstallsTheme
 {
+    /** @var bool */
     private $setup = false;
 
-    /** @param  string|array  $themes */
+    /** @param string|array $themes */
     public function installThemes($themes): self
     {
         $this->setupThemeDependencies();

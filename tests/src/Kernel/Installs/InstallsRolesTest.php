@@ -48,6 +48,7 @@ class InstallsRolesTest extends KernelTestBase
 
         $this->installRoles('editor');
 
+        /** @var \Drupal\user\RoleInterface[] $roles */
         $roles = $roleStorage->loadMultiple();
 
         $this->assertNotEmpty($roles);

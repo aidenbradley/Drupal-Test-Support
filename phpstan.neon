@@ -4,13 +4,13 @@ parameters:
         checkGenericClassInNonGenericObjectType: false
         checkMissingIterableValueType: false
         paths:
-            - tests/modules
-            - tests/src/Traits
+            - tests
         excludePaths:
         		- tests/src/Traits/Support/Time/Tardis.php
+        		- tests/src/Traits/Support/Decorators/EventDispatcher/DecoratedEventDispatcher.php
         ignoreErrors:
-            - messages:
-                   - '#Unsafe usage of new static\(\)#'
-                   - '#^Parameter \#2 \$length of method Drupal\\Core\\Entity\\Query\\QueryInterface\:\:range\(\) expects null, int given\.$#'
+        		- '#Unsafe usage of new static\(\)#'
+        		- '#^Parameter \#2 \$length of method Drupal\\Core\\Entity\\Query\\QueryInterface\:\:range\(\) expects null, int given\.$#'
+        		- '#^Call to an undefined method Drupal\\Core\\DependencyInjection\\ContainerBuilder\:\:generateServiceIdHash\(\)$#'
 includes:
     - vendor/mglaman/phpstan-drupal/extension.neon

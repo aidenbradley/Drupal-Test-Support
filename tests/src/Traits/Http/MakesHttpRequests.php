@@ -27,17 +27,17 @@ trait MakesHttpRequests
         return $this->json('GET', $uri, [], $headers);
     }
 
-    public function post($uri, array $data = [], array $headers = []): TestResponse
+    public function post(string $uri, array $data = [], array $headers = []): TestResponse
     {
         return $this->call('POST', $uri, $data, [], [], $headers);
     }
 
-    public function postJson($uri, array $data = [], array $headers = []): TestResponse
+    public function postJson(string $uri, array $data = [], array $headers = []): TestResponse
     {
         return $this->json('POST', $uri, $data, $headers);
     }
 
-    public function put($uri, array $data = [], array $headers = []): TestResponse
+    public function put(string $uri, array $data = [], array $headers = []): TestResponse
     {
         return $this->call('PUT', $uri, $data, [], [], $headers);
     }
@@ -73,7 +73,7 @@ trait MakesHttpRequests
         return $this->json('OPTIONS', $uri, $data, $headers);
     }
 
-    public function delete($uri, array $data = [], array $headers = []): TestResponse
+    public function delete(string $uri, array $data = [], array $headers = []): TestResponse
     {
         $server = $this->transformHeadersToServerVars($headers);
         $cookies = [];
@@ -81,7 +81,7 @@ trait MakesHttpRequests
         return $this->call('DELETE', $uri, $data, $cookies, [], $server);
     }
 
-    public function deleteJson($uri, array $data = [], array $headers = []): TestResponse
+    public function deleteJson(string $uri, array $data = [], array $headers = []): TestResponse
     {
         return $this->json('DELETE', $uri, $data, $headers);
     }
@@ -105,7 +105,8 @@ trait MakesHttpRequests
         return $this->withHeader('Content-Type', 'application/json');
     }
 
-    public function json(string $method, string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
+    /** @param null|resource|string $content */
+    public function json(string $method, string $uri, array $parameters = [], array $cookies = [], array $files = [], array $server = [], $content = null): TestResponse
     {
         $headers = array_merge([
             'CONTENT_TYPE' => 'application/json',
@@ -113,7 +114,17 @@ trait MakesHttpRequests
         ], $server);
 
         if ($content !== null) {
-            $headers['CONTENT_LENGTH'] = mb_strlen($content, '8bit');
+            $length = '';
+
+            if (is_resource($content)) {
+                $length = fstat($content)['size'] ?? '';
+            }
+
+            if (is_string($content)) {
+                $length = mb_strlen($content, '8bit');
+            }
+
+            $headers['CONTENT_LENGTH'] = $length;
         }
 
         return $this->call(
@@ -127,8 +138,8 @@ trait MakesHttpRequests
         );
     }
 
-    /** @return mixed */
-    public function call(string $method, string $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse
+    /** @param null|resource|string $content */
+    public function call(string $method, string $uri, array $parameters = [], array $cookies = [], array $files = [], array $server = [], $content = null): TestResponse
     {
         if (isset($this->fakes[$uri])) {
             return TestResponse::fromBaseResponse($this->fakes[$uri]);
@@ -158,13 +169,16 @@ trait MakesHttpRequests
 
         $kernel = $this->container->get('kernel');
 
+        /** @phpstan-ignore-next-line */
         $kernel->invalidateContainer();
+
+        /** @phpstan-ignore-next-line */
         $kernel->rebuildContainer();
 
         return TestResponse::fromBaseResponse($response);
     }
 
-    public function followingRedirects()
+    public function followingRedirects(): self
     {
         $this->followRedirects = true;
 
@@ -176,7 +190,7 @@ trait MakesHttpRequests
         return $this->withHeader('referer', $url);
     }
 
-    protected function withHeaders(array $headers)
+    protected function withHeaders(array $headers): self
     {
         $this->headers = array_merge($this->headers, $headers);
 
@@ -207,7 +221,7 @@ trait MakesHttpRequests
         })->all();
     }
 
-    protected function formatServerHeaderKey($name)
+    protected function formatServerHeaderKey(string $name): string
     {
         if (! str_starts_with($name, 'HTTP_') && $name !== 'CONTENT_TYPE' && $name !== 'REMOTE_ADDR') {
             return 'HTTP_' . $name;
@@ -216,12 +230,18 @@ trait MakesHttpRequests
         return $name;
     }
 
-    private function followRedirects(Response $response)
+    private function followRedirects(Response $response): Response
     {
         $this->followRedirects = false;
 
         while ($response->isRedirect()) {
-            $response = $this->get($response->headers->get('Location'));
+            $location = $response->headers->get('Location');
+
+            if ($location === null) {
+                break;
+            }
+
+            $response = $this->get($location);
         }
 
         return $response;

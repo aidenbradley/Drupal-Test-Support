@@ -26,9 +26,9 @@ trait InteractsWithSettings
 
     protected function getSettings(): Settings
     {
-        if (isset($this->settings) === false) {
-            $this->temporarilySupressErrors(function () {
-                $this->settings = $this->loadSettings();
+        if ($this->settings instanceof Settings === false) {
+            $this->settings = $this->temporarilySupressErrors(function () {
+                return $this->loadSettings();
             });
         }
 
@@ -93,10 +93,13 @@ trait InteractsWithSettings
 
     private function appRoot(): string
     {
-        if (str_starts_with(\Drupal::VERSION, '10.')) {
+        /** @phpstan-ignore-next-line */
+        if (version_compare(\Drupal::VERSION, '10.0', '>=')) {
+            /** @phpstan-ignore-next-line */
             return $this->container->getParameter('app.root');
+        } else {
+            /** @phpstan-ignore-next-line */
+            return $this->container->get('app.root');
         }
-
-        return $this->container->get('app.root');
     }
 }

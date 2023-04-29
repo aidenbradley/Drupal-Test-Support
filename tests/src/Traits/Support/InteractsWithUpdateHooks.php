@@ -11,12 +11,12 @@ trait InteractsWithUpdateHooks
         return $this->handleHook($function);
     }
 
-    public function runPostUpdateHook(string $function)
+    public function runPostUpdateHook(string $function): self
     {
         return $this->handleHook($function);
     }
 
-    public function runDeployHook(string $function)
+    public function runDeployHook(string $function): self
     {
         return $this->handleHook($function);
     }

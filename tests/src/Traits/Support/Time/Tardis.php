@@ -9,6 +9,7 @@ use Carbon\Carbon;
  * @method void minutes(?\Closure $callback = null)
  * @method void hours(?\Closure $callback = null)
  * @method void days(?\Closure $callback = null)
+ * @method void weeks(?\Closure $callback = null)
  * @method void months(?\Closure $callback = null)
  * @method void years(?\Closure $callback = null)
  */

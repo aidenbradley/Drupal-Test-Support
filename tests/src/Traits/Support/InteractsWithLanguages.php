@@ -3,7 +3,9 @@
 namespace Drupal\Tests\test_support\Traits\Support;
 
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\Tests\test_support\Traits\Installs\InstallsExportedConfig;
+use PHPUnit\Framework\Assert;
 
 trait InteractsWithLanguages
 {
@@ -22,7 +24,7 @@ trait InteractsWithLanguages
         return $this->container->get('language_manager');
     }
 
-    /** @param  string|array  $langcode */
+    /** @param string|array $langcodes */
     protected function installLanguage($langcodes): void
     {
         $this->setupLanguageDependencies();
@@ -32,7 +34,7 @@ trait InteractsWithLanguages
         }
     }
 
-    /** @param \Drupal\Language\Entity\ConfigurableLanguage|string */
+    /** @param ConfigurableLanguageInterface|string $language */
     protected function setCurrentLanguage($language, ?string $prefix = null): void
     {
         $this->setupLanguageDependencies();
@@ -45,6 +47,10 @@ trait InteractsWithLanguages
             $language = $this->container->get('entity_type.manager')->getStorage(
                 'configurable_language'
             )->load($language);
+        }
+
+        if ($language instanceof ConfigurableLanguageInterface === false) {
+            Assert::fail('Could not install language');
         }
 
         $this->config('system.site')
@@ -64,6 +70,7 @@ trait InteractsWithLanguages
 
         $this->container->get('language.default')->set($language);
 
+        /** @phpstan-ignore-next-line */
         $this->container->get('kernel')->rebuildContainer();
 
         $this->languageManager()->reset();

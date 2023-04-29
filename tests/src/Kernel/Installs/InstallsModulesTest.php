@@ -48,6 +48,7 @@ class InstallsModulesTest extends KernelTestBase
         $this->assertModulesEnabled($expectedDependencies);
     }
 
+    /** @param string|array $modules */
     private function assertModulesEnabled($modules): self
     {
         foreach ((array) $modules as $module) {
@@ -60,6 +61,7 @@ class InstallsModulesTest extends KernelTestBase
         return $this;
     }
 
+    /** @param string|array $modules */
     private function assertModulesDisabled($modules): self
     {
         foreach ((array) $modules as $module) {
