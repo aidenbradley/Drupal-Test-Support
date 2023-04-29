@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        drupal-core: [ '9.2.0', '10.0.0' ]
+        drupal-core: [ '9.0.0', '9.1.0', '9.2.0', '9.3.0', ''9.4.0', ''9.5.0', '10.0.0' ]
     steps:
         -   name: Checkout Drupal core v${{ matrix.drupal-core }}
             uses: actions/checkout@v2
