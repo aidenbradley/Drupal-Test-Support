@@ -83,9 +83,7 @@ if (version_compare(\Drupal::VERSION, '10.0', '>=')) {
             $this->firedEvents[$eventName] = $event;
         }
     }
-}
-
-if (version_compare(\Drupal::VERSION, '9.0', '>=')) {
+} else {
     class DecoratedEventDispatcher implements TestEventDispatcher
     {
         /** @var EventDispatcherInterface */

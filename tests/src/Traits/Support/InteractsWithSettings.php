@@ -96,15 +96,9 @@ trait InteractsWithSettings
         /** @phpstan-ignore-next-line */
         if (version_compare(\Drupal::VERSION, '10.0', '>=')) {
             return $this->container->getParameter('app.root');
-        }
-
-        /** @phpstan-ignore-next-line */
-        if (version_compare(\Drupal::VERSION, '9.0', '>=')) {
+        } else {
             /** @phpstan-ignore-next-line */
             return $this->container->get('app.root');
         }
-
-        /** @phpstan-ignore-next-line */
-        return '';
     }
 }
