@@ -9,10 +9,10 @@ use Drupal\user\UserInterface;
 
 trait InteractsWithAuthentication
 {
-    /** @var UserInterface|null */
+    /** @var UserInterface<mixed>|null */
     private $anonymousUser = null;
 
-    /** @param UserInterface|RoleInterface $user */
+    /** @param UserInterface<mixed>|RoleInterface $user */
     public function actingAs($user): self
     {
         if ($user instanceof RoleInterface) {

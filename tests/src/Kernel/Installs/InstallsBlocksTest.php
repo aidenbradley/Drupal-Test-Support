@@ -11,6 +11,7 @@ class InstallsBlocksTest extends KernelTestBase
 {
     use InstallsBlocks;
 
+    /** @var string[] */
     protected static $modules = [
         'system',
     ];
@@ -52,6 +53,7 @@ class InstallsBlocksTest extends KernelTestBase
 
         $this->installBlocks('stark_messages');
 
+        /** @var array<mixed> $blocks */
         $blocks = $blockStorage->loadMultiple();
 
         $this->assertNotEmpty($blocks);

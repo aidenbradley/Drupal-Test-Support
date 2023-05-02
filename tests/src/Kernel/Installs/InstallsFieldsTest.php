@@ -12,6 +12,7 @@ class InstallsFieldsTest extends KernelTestBase
     use InstallsEntityTypes;
     use InstallsFields;
 
+    /** @var string[] */
     protected static $modules = [
         'system',
         'node',
@@ -147,6 +148,7 @@ class InstallsFieldsTest extends KernelTestBase
         $this->assertTrue($this->loadNode(1)->hasField('field_boolean_field'));
     }
 
+    /** @return NodeInterface<mixed> */
     private function loadNode(int $nodeId): NodeInterface
     {
         $node = $this->container->get('entity_type.manager')->getStorage('node')->load($nodeId);

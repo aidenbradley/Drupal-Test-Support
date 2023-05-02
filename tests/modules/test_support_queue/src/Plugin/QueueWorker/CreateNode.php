@@ -20,6 +20,7 @@ class CreateNode extends QueueWorkerBase implements ContainerFactoryPluginInterf
     private $entityTypeManager;
 
     /**
+     * @param array<mixed> $configuration
      * @param string|mixed $pluginId
      * @param mixed $pluginDefinition
      */
@@ -34,6 +35,7 @@ class CreateNode extends QueueWorkerBase implements ContainerFactoryPluginInterf
     }
 
     /**
+     * @param array<mixed> $configuration
      * @param string|mixed $pluginId
      * @param mixed $pluginDefinition
      */

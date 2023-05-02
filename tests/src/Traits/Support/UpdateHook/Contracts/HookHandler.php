@@ -8,6 +8,7 @@ interface HookHandler
 
     public static function create(string $function): self;
 
+    /** @return string[] */
     public static function requiredModuleFiles(): array;
 
     public function getModuleName(): string;

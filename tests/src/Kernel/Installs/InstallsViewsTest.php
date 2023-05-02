@@ -51,6 +51,7 @@ class InstallsViewsTest extends KernelTestBase
 
         $this->installViews('media');
 
+        /** @var array<mixed> $views */
         $views = $viewStorage->loadMultiple();
 
         $this->assertNotEmpty($views);

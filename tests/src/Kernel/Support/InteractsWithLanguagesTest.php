@@ -10,6 +10,7 @@ class InteractsWithLanguagesTest extends KernelTestBase
 {
     use InteractsWithLanguages;
 
+    /** @var string[] */
     protected static $modules = [
         'system',
     ];

@@ -10,6 +10,7 @@ class InteractsWithContainerTest extends KernelTestBase
 {
     use InteractsWithContainer;
 
+    /** @var string[] */
     protected static $modules = [
         'node',
     ];

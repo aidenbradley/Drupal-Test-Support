@@ -12,6 +12,7 @@ class InteractsWithEntitiesTest extends KernelTestBase
 {
     use InteractsWithEntities;
 
+    /** @var string[] */
     protected static $modules = [
         'system',
         'node',

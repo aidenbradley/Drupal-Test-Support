@@ -44,6 +44,7 @@ trait InteractsWithSettings
         return new Settings($this->loadSettingsFromSitesDirectory());
     }
 
+    /** @return mixed[] */
     private function loadSettingsFromSitesDirectory(): array
     {
         $settings = [];
@@ -57,6 +58,7 @@ trait InteractsWithSettings
         return $settings;
     }
 
+    /** @return mixed[] */
     private function loadSettingsFromFinder(): array
     {
         $settings = [];

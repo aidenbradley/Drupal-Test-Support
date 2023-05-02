@@ -41,6 +41,7 @@ class InstallsImageStylesTest extends KernelTestBase
 
         $this->installImageStyles('large');
 
+        /** @var array<mixed> $imageStyles */
         $imageStyles = $imageStyleStorage->loadMultiple();
 
         $this->assertNotEmpty($imageStyles);
@@ -69,6 +70,7 @@ class InstallsImageStylesTest extends KernelTestBase
 
         $this->installImageStyles($imageStylesToInstall);
 
+        /** @var array<mixed> $imageStyles */
         $imageStyles = $imageStyleStorage->loadMultiple();
 
         $this->assertNotEmpty($imageStyles);

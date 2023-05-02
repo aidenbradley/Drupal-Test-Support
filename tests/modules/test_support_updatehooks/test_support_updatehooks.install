@@ -3,6 +3,8 @@
 /**
  * Sets the status of all users to 0, effectively blocked
  * Uses a batch to process the users
+ *
+ * @param array<mixed> $sandbox
  */
 function test_support_updatehooks_update_9001(array &$sandbox): void
 {
@@ -75,8 +77,10 @@ function test_support_updatehooks_update_9002(): void
     }
 }
 
-/*
+/**
  * Sets a batch in the update hook but doesn't progress the value of the #finished key. e.g. 0.1 -> 0.15 -> 0.2 ---> 1
+ *
+ * @param array<mixed> $sandbox
  */
 function test_support_updatehooks_update_9003(array &$sandbox): void
 {

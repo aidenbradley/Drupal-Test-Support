@@ -3,6 +3,8 @@
 /**
  * Sets the status of all users to 0, effectively blocked
  * Uses a batch to process the users
+ *
+ * @param array<mixed> $sandbox
  */
 function test_support_update_hooks_update_9001(array &$sandbox): void
 {

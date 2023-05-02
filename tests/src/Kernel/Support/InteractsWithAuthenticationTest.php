@@ -14,6 +14,7 @@ class InteractsWithAuthenticationTest extends KernelTestBase
     use InteractsWithAuthentication;
     use MakesHttpRequests;
 
+    /** @var string[] */
     protected static $modules = [
         'system',
         'user',
@@ -111,6 +112,10 @@ class InteractsWithAuthenticationTest extends KernelTestBase
         return $role;
     }
 
+    /**
+     * @param array<mixed> $parameters
+     * @param array<mixed> $options
+     */
     private function route(string $route, array $parameters = [], array $options = []): string
     {
         return Url::fromRoute(...func_get_args())->toString(true)->getGeneratedUrl();

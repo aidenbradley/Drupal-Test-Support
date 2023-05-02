@@ -11,6 +11,7 @@ class DeployHookHandler extends UpdateHookHandler
         return '(_deploy_)';
     }
 
+    /** @return string[] */
     public static function requiredModuleFiles(): array
     {
         return [

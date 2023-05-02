@@ -10,6 +10,7 @@ class MakesHttpRequestsTest extends KernelTestBase
 {
     use MakesHttpRequests;
 
+    /** @var string[] */
     protected static $modules = [
         'test_support_http',
     ];
@@ -171,6 +172,10 @@ class MakesHttpRequestsTest extends KernelTestBase
         ]);
     }
 
+    /**
+     * @param array<mixed> $parameters
+     * @param array<mixed> $options
+     */
     private function route(string $routeName, array $parameters = [], array $options = []): string
     {
         return Url::fromRoute(...func_get_args())->toString(true)->getGeneratedUrl();

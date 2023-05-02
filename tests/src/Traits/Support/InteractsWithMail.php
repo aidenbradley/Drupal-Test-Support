@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 
 trait InteractsWithMail
 {
+    /** @return TestMail[] */
     public function getSentMail(?string $fromModule = null): array
     {
         $mail = $this->container->get('state')->get('system.test_mail_collector');
@@ -44,7 +45,6 @@ trait InteractsWithMail
 
     public function getMailSentTo(string $mailTo): ?TestMail
     {
-        /** @var TestMail $mail */
         foreach ($this->getSentMail() as $mail) {
             if ($mail->getTo() !== $mailTo) {
                 continue;
@@ -73,11 +73,11 @@ trait InteractsWithMail
         return $this;
     }
 
+    /** @return TestMail[] */
     public function getMailWithSubject(string $subject): array
     {
         $sentMail = [];
 
-        /** @var TestMail $mail */
         foreach ($this->getSentMail() as $mail) {
             if ($mail->getSubject() !== $subject) {
                 continue;

@@ -14,3 +14,4 @@ parameters:
         		- '#^Call to an undefined method Drupal\\Core\\DependencyInjection\\ContainerBuilder\:\:generateServiceIdHash\(\)$#'
 includes:
     - vendor/mglaman/phpstan-drupal/extension.neon
+    - phar://phpstan.phar/conf/bleedingEdge.neon

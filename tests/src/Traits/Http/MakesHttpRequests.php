@@ -11,42 +11,61 @@ trait MakesHttpRequests
     /** @var bool */
     private $followRedirects = false;
 
-    /** @var array */
+    /** @var array<mixed> */
     private $headers = [];
 
-    /** @var array */
-    private $fakes = [];
-
+    /** @param array<mixed> $headers */
     public function get(string $uri, array $headers = []): TestResponse
     {
         return $this->call('GET', $uri, [], [], [], $headers);
     }
 
+    /** @param array<mixed> $headers */
     public function getJson(string $uri, array $headers = []): TestResponse
     {
         return $this->json('GET', $uri, [], $headers);
     }
 
+    /**
+     * @param array<mixed> $data
+     * @param array<mixed> $headers
+     */
     public function post(string $uri, array $data = [], array $headers = []): TestResponse
     {
         return $this->call('POST', $uri, $data, [], [], $headers);
     }
 
+    /**
+     * @param array<mixed> $data
+     * @param array<mixed> $headers
+     */
     public function postJson(string $uri, array $data = [], array $headers = []): TestResponse
     {
         return $this->json('POST', $uri, $data, $headers);
     }
 
+    /**
+     * @param array<mixed> $data
+     * @param array<mixed> $headers
+     */
     public function put(string $uri, array $data = [], array $headers = []): TestResponse
     {
         return $this->call('PUT', $uri, $data, [], [], $headers);
     }
 
+    /**
+     * @param array<mixed> $data
+     * @param array<mixed> $headers
+     */
     public function putJson(string $uri, array $data = [], array $headers = []): TestResponse
     {
         return $this->json('PUT', $uri, $data, $headers);
     }
 
+    /**
+     * @param array<mixed> $data
+     * @param array<mixed> $headers
+     */
     public function patch(string $uri, array $data = [], array $headers = []): TestResponse
     {
         $server = $this->transformHeadersToServerVars($headers);
@@ -55,11 +74,19 @@ trait MakesHttpRequests
         return $this->call('PATCH', $uri, $data, $cookies, [], $server);
     }
 
+    /**
+     * @param array<mixed> $data
+     * @param array<mixed> $headers
+     */
     public function patchJson(string $uri, array $data = [], array $headers = []): TestResponse
     {
         return $this->json('PATCH', $uri, $data, $headers);
     }
 
+    /**
+     * @param array<mixed> $data
+     * @param array<mixed> $headers
+     */
     public function options(string $uri, array $data = [], array $headers = []): TestResponse
     {
         $server = $this->transformHeadersToServerVars($headers);
@@ -68,11 +95,19 @@ trait MakesHttpRequests
         return $this->call('OPTIONS', $uri, $data, $cookies, [], $server);
     }
 
+    /**
+     * @param array<mixed> $data
+     * @param array<mixed> $headers
+     */
     public function optionsJson(string $uri, array $data = [], array $headers = []): TestResponse
     {
         return $this->json('OPTIONS', $uri, $data, $headers);
     }
 
+    /**
+     * @param array<mixed> $data
+     * @param array<mixed> $headers
+     */
     public function delete(string $uri, array $data = [], array $headers = []): TestResponse
     {
         $server = $this->transformHeadersToServerVars($headers);
@@ -81,6 +116,10 @@ trait MakesHttpRequests
         return $this->call('DELETE', $uri, $data, $cookies, [], $server);
     }
 
+    /**
+     * @param array<mixed> $data
+     * @param array<mixed> $headers
+     */
     public function deleteJson(string $uri, array $data = [], array $headers = []): TestResponse
     {
         return $this->json('DELETE', $uri, $data, $headers);
@@ -105,7 +144,14 @@ trait MakesHttpRequests
         return $this->withHeader('Content-Type', 'application/json');
     }
 
-    /** @param null|resource|string $content */
+    /**
+     * @param null|resource|string $content
+     * @param array<mixed> $parameters
+     * @param array<mixed> $cookies
+     * @param array<mixed> $files
+     * @param array<mixed> $server
+     * @param mixed $content
+     */
     public function json(string $method, string $uri, array $parameters = [], array $cookies = [], array $files = [], array $server = [], $content = null): TestResponse
     {
         $headers = array_merge([
@@ -138,13 +184,16 @@ trait MakesHttpRequests
         );
     }
 
-    /** @param null|resource|string $content */
+    /**
+     * @param null|resource|string $content
+     * @param array<mixed> $parameters
+     * @param array<mixed> $cookies
+     * @param array<mixed> $files
+     * @param array<mixed> $server
+     * @param mixed $content
+     */
     public function call(string $method, string $uri, array $parameters = [], array $cookies = [], array $files = [], array $server = [], $content = null): TestResponse
     {
-        if (isset($this->fakes[$uri])) {
-            return TestResponse::fromBaseResponse($this->fakes[$uri]);
-        }
-
         $request = Request::create($uri, $method, $parameters, $cookies, $files, $server, $content);
 
         $request->setSession($this->container->get('session'));
@@ -190,6 +239,7 @@ trait MakesHttpRequests
         return $this->withHeader('referer', $url);
     }
 
+    /** @param array<mixed> $headers */
     protected function withHeaders(array $headers): self
     {
         $this->headers = array_merge($this->headers, $headers);
@@ -197,7 +247,7 @@ trait MakesHttpRequests
         return $this;
     }
 
-    /** @param  mixed  $value */
+    /** @param mixed $value */
     protected function withHeader(string $header, $value): self
     {
         $this->headers = array_merge($this->headers, [
@@ -210,7 +260,8 @@ trait MakesHttpRequests
     /**
      * Transform headers array to array of $_SERVER vars with HTTP_* format.
      *
-     * @return array
+     * @param array<mixed> $headers
+     * @return array<mixed>
      */
     protected function transformHeadersToServerVars(array $headers)
     {

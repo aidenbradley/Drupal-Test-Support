@@ -13,6 +13,7 @@ class InstallsExportedConfigTest extends KernelTestBase
         configDirectory as InstallsExportedConfigDirectory;
     }
 
+    /** @var string[] */
     protected static $modules = [
         'system',
         'node',
@@ -119,7 +120,7 @@ class InstallsExportedConfigTest extends KernelTestBase
         }
     }
 
-    /** @param  string|array  $modules */
+    /** @param string|string[] $modules */
     private function assertModulesEnabled($modules): self
     {
         foreach ((array) $modules as $module) {
@@ -131,7 +132,7 @@ class InstallsExportedConfigTest extends KernelTestBase
         return $this;
     }
 
-    /** @param  string|array  $modules */
+    /** @param string|string[] $modules */
     private function assertModulesDisabled($modules): self
     {
         foreach ((array) $modules as $module) {

@@ -11,6 +11,7 @@ class UpdateHandler extends UpdateHookHandler
         return '(_update_\d{4})';
     }
 
+    /** @return string[] */
     public static function requiredModuleFiles(): array
     {
         return [

@@ -18,6 +18,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     use InteractsWithDrupalTime;
     use InteractsWithEntities;
 
+    /** @var string[] */
     protected static $modules = [
         'system',
         'node',
@@ -257,12 +258,16 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     /** @test */
     public function set_user_timezone(): void
     {
-        /** @var UserInterface $user */
+        /** @var UserInterface<mixed> $user */
         $user = $this->createEntity('user', [
             'uid' => 100,
             'name' => 'user.timezone_test',
         ]);
 
+        /**
+         * The return type on getTimeZone can return null
+         * @phpstan-ignore-next-line
+         */
         $this->assertNull($user->getTimeZone());
 
         $this->setUsersTimezone($user, 'Europe/London');
@@ -376,6 +381,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         return $user;
     }
 
+    /** @return UserInterface<mixed> */
     private function loadUser(int $userId): UserInterface
     {
         $user = $this->container->get('entity_type.manager')->getStorage('user')->load($userId);

@@ -14,7 +14,7 @@ abstract class EnableModuleKernelTestBase extends KernelTestBase
 {
     use InstallsModules;
 
-    /** @var array */
+    /** @var string[] */
     private $entityTypeDefinitionsPreInstall;
 
     protected function setUp(): void
