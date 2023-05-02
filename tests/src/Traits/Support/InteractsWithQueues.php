@@ -7,7 +7,7 @@ use Drupal\Core\Queue\QueueInterface;
 /** To be used in kernel tests */
 trait InteractsWithQueues
 {
-    /** @var array */
+    /** @var QueueInterface[] */
     private $queues = [];
 
     /** @var bool */

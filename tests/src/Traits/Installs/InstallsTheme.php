@@ -7,7 +7,7 @@ trait InstallsTheme
     /** @var bool */
     private $setup = false;
 
-    /** @param string|array $themes */
+    /** @param string|string[] $themes */
     public function installThemes($themes): self
     {
         $this->setupThemeDependencies();

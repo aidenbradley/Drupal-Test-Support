@@ -12,11 +12,7 @@ class DecoratedListener
     /** @var string|null */
     private $serviceId;
 
-    public static function createFromArray(array $listener): self
-    {
-        return new self($listener);
-    }
-
+    /** @param array{0?: \Symfony\Component\EventDispatcher\EventSubscriberInterface, 1?: string, 2?: string} $listener */
     public function __construct(array $listener)
     {
         $this->listener = $listener[0] ?? null;
@@ -37,6 +33,7 @@ class DecoratedListener
         return get_class($this->listener);
     }
 
+    /** @param string|class-string|string[]|class-string[] $listeners */
     public function inList(array $listeners): bool
     {
         return in_array($this->getClass(), $listeners) || in_array($this->getServiceId(), $listeners);

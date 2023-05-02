@@ -11,6 +11,7 @@ class PostUpdateHandler extends UpdateHookHandler
         return '(_post_update_)';
     }
 
+    /** @return string[] */
     public static function requiredModuleFiles(): array
     {
         return [

@@ -22,6 +22,7 @@ trait InstallsFields
         ]);
     }
 
+    /** @param string[] $fieldNames */
     public function installFields(array $fieldNames, string $entityType, ?string $bundle = null): self
     {
         $this->setupFieldDependencies();

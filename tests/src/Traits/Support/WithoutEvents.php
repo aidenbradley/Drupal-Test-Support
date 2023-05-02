@@ -7,13 +7,10 @@ use Drupal\Tests\test_support\Traits\Support\Decorators\EventDispatcher\Decorate
 
 trait WithoutEvents
 {
-    /** @var array */
-    private $firedEvents;
-
-    /** @var array */
+    /** @var string[]|class-string[] */
     private $expectedEvents = [];
 
-    /** @var array */
+    /** @var string[]|class-string[] */
     private $nonExpectedEvents = [];
 
     /** Mock the event dispatcher. All dispatched events are collected */
@@ -61,11 +58,6 @@ trait WithoutEvents
         $this->assertTrue($this->eventDispatcher()->getFiredEvents($event)->isEmpty(), $event . ' event was dispatched');
 
         return $this;
-    }
-
-    public function registerDispatchedEvent(array $arguments): void
-    {
-        $this->firedEvents[$arguments[1]] = $arguments[0];
     }
 
     protected function tearDown(): void

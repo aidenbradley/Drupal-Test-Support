@@ -11,7 +11,7 @@ trait InstallsVocabularies
     /** @var bool */
     private $setupVocabularyDependencies = false;
 
-    /** @param  string|array  $vocabularies */
+    /** @param string|string[] $vocabularies */
     public function installVocabularies($vocabularies): self
     {
         $this->setupVocabularyDependencies();

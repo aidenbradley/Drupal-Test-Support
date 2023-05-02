@@ -19,7 +19,7 @@ trait InstallConfiguration
     /** @var string */
     private $customConfigDirectory;
 
-    /** @var array */
+    /** @var string[] */
     private $installedConfig = [];
 
     /** @param  string|array  $config */

@@ -16,6 +16,7 @@ trait InteractsWithDrupalTime
     /** @var bool */
     private $setupDateDependencies = false;
 
+    /** @param UserInterface<mixed> $user */
     protected function setUsersTimezone(UserInterface $user, string $timezone): self
     {
         $user->set('timezone', $timezone);

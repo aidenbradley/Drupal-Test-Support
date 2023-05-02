@@ -12,5 +12,7 @@ parameters:
         		- '#Unsafe usage of new static\(\)#'
         		- '#^Parameter \#2 \$length of method Drupal\\Core\\Entity\\Query\\QueryInterface\:\:range\(\) expects null, int given\.$#'
         		- '#^Call to an undefined method Drupal\\Core\\DependencyInjection\\ContainerBuilder\:\:generateServiceIdHash\(\)$#'
+        		- '#^Method [a-zA-Z0-9\\_]+::setUsersTimezone\(\) has parameter \$user with no value type specified in iterable type Drupal\\user\\UserInterface$#'
 includes:
     - vendor/mglaman/phpstan-drupal/extension.neon
+    - phar://phpstan.phar/conf/bleedingEdge.neon

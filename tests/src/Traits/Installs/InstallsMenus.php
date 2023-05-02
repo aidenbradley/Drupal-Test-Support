@@ -11,7 +11,7 @@ trait InstallsMenus
     /** @var bool */
     private $setupMenuDependencies = false;
 
-    /** @param  string|array  $menus */
+    /** @param string|string[] $menus */
     public function installMenus($menus): self
     {
         $this->setupMenuDependencies();

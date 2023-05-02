@@ -11,7 +11,7 @@ trait InteractsWithLanguages
 {
     use InstallsExportedConfig;
 
-    /** @var array */
+    /** @var string[] */
     protected $installedLanguages = [
         'en', // EN is installed by default
     ];
@@ -24,7 +24,7 @@ trait InteractsWithLanguages
         return $this->container->get('language_manager');
     }
 
-    /** @param string|array $langcodes */
+    /** @param string|string[] $langcodes */
     protected function installLanguage($langcodes): void
     {
         $this->setupLanguageDependencies();
@@ -75,7 +75,7 @@ trait InteractsWithLanguages
 
         $this->languageManager()->reset();
 
-        $this->installedLanguages[$language->getId()] = $language;
+        $this->installedLanguages[] = $language->getId();
     }
 
     private function setupLanguageDependencies(): void

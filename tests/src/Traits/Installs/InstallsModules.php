@@ -7,10 +7,10 @@ use PHPUnit\Framework\Assert;
 
 trait InstallsModules
 {
-    /** @var array */
+    /** @var string[] */
     private $modulesToInstall = [];
 
-    /** @param string|array $modules */
+    /** @param string|string[] $modules */
     public function enableModuleWithDependencies($modules): self
     {
         $this->modulesToInstall = (array) $modules;
@@ -37,6 +37,7 @@ trait InstallsModules
         });
     }
 
+    /** @return string[] */
     private function getModuleDependencies(string $moduleName): array
     {
         $infoYaml = $this->getModuleInfo($moduleName);

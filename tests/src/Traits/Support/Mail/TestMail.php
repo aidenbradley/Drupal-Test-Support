@@ -6,14 +6,16 @@ use PHPUnit\Framework\Assert;
 
 class TestMail
 {
-    /** @var array */
+    /** @var mixed[] */
     protected $values;
 
+    /** @param mixed[] $values */
     public function __construct(array $values)
     {
         $this->values = $values;
     }
 
+    /** @param mixed[] $values */
     public static function createFromValues(array $values): self
     {
         return new static($values);
@@ -84,6 +86,7 @@ class TestMail
         return $this;
     }
 
+    /** @return mixed[] */
     public function toArray(): array
     {
         return $this->values;

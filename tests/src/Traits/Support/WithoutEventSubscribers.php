@@ -16,7 +16,7 @@ trait WithoutEventSubscribers
     /** @var Collection|null */
     private $ignoredEvents = null;
 
-    /** @var array|null */
+    /** @var string[]|class-string[] */
     private $deferredSubscribers = null;
 
     /**
@@ -33,7 +33,7 @@ trait WithoutEventSubscribers
      *
      * @endcode
      *
-     * @param string|array $listeners
+     * @param string|class-string|string[]|class-string[] $listeners
      */
     public function withoutSubscribers($listeners = []): self
     {
@@ -66,7 +66,7 @@ trait WithoutEventSubscribers
      *
      * @endcode
      *
-     * @param string|array $eventNames
+     * @param string|class-string|string[]|class-string[] $eventNames
      */
     public function withoutSubscribersForEvents($eventNames): self
     {
@@ -79,21 +79,29 @@ trait WithoutEventSubscribers
         return $this;
     }
 
+    /**
+     * @param string|class-string $listener
+     * @param string|class-string|null $event
+     */
     public function assertNotListening(string $listener, ?string $event = null): void
     {
-        Assert::assertEmpty(
+        Assert::assertTrue(
             $this->getListeners($event)->filter(function (Listener $decoratedListener) use ($listener) {
                 return $decoratedListener->inList((array)$listener);
-            })
+            })->isEmpty()
         );
     }
 
+    /**
+     * @param string|class-string $listener
+     * @param string|class-string|null $event
+     */
     public function assertListening(string $listener, ?string $event = null): void
     {
-        Assert::assertNotEmpty(
+        Assert::assertTrue(
             $this->getListeners($event)->filter(function (Listener $decoratedListener) use ($listener) {
                 return $decoratedListener->inList((array)$listener);
-            })
+            })->isNotEmpty()
         );
     }
 

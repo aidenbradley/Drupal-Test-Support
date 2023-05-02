@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 
 trait InteractsWithEntities
 {
+    /** @param mixed[] $values */
     protected function createEntity(string $entityTypeId, array $values = []): EntityInterface
     {
         $entity = $this->storage($entityTypeId)->create($values);
@@ -16,6 +17,7 @@ trait InteractsWithEntities
         return $entity;
     }
 
+    /** @param mixed[] $values */
     protected function updateEntity(EntityInterface $entity, array $values): EntityInterface
     {
         if (method_exists($entity, 'set')) {
