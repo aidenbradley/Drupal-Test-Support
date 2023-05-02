@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Installs;
+namespace AidenBradley\DrupalTestSupport\Installs;
 
-use Drupal\Tests\test_support\Traits\Installs\Configuration\InstallConfiguration;
+use AidenBradley\DrupalTestSupport\Installs\Configuration\InstallConfiguration;
 
 trait InstallsImageStyles
 {

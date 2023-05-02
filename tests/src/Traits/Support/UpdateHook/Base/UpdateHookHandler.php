@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Support\UpdateHook\Base;
+namespace AidenBradley\DrupalTestSupport\Support\UpdateHook\Base;
 
-use Drupal\Tests\test_support\Traits\Support\Exceptions\UpdateHookFailed;
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\Contracts\HookHandler;
+use AidenBradley\DrupalTestSupport\Support\Exceptions\UpdateHookFailed;
+use AidenBradley\DrupalTestSupport\Support\UpdateHook\Contracts\HookHandler;
 use ReflectionFunction;
 
 abstract class UpdateHookHandler implements HookHandler

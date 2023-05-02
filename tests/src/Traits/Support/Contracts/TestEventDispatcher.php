@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Support\Contracts;
+namespace AidenBradley\DrupalTestSupport\Support\Contracts;
 
 use Illuminate\Support\Collection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

@@ -3,8 +3,8 @@
 namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_support\Traits\Support\Exceptions\CronFailed;
-use Drupal\Tests\test_support\Traits\Support\InteractsWithCron;
+use AidenBradley\DrupalTestSupport\Support\Exceptions\CronFailed;
+use AidenBradley\DrupalTestSupport\Support\InteractsWithCron;
 
 class InteractsWithCronTest extends KernelTestBase
 {

@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\test_support\Unit\Support\UpdateHook;
 
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\PostUpdateHandler;
+use AidenBradley\DrupalTestSupport\Support\UpdateHook\PostUpdateHandler;
 use Drupal\Tests\UnitTestCase;
 
 class PostUpdateHandlerTest extends UnitTestCase

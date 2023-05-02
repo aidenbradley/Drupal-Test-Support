@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Installs;
+namespace AidenBradley\DrupalTestSupport\Installs;
 
 use Drupal\Core\Config\FileStorage;
-use Drupal\Tests\test_support\Traits\Installs\Configuration\InstallConfiguration;
+use AidenBradley\DrupalTestSupport\Installs\Configuration\InstallConfiguration;
 
 trait InstallsFields
 {

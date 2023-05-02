@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Support\Time;
+namespace AidenBradley\DrupalTestSupport\Support\Time;
 
 use Carbon\Carbon;
 

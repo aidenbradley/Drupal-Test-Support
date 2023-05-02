@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Support;
+namespace AidenBradley\DrupalTestSupport\Support;
 
 use Drupal\Core\Url;
-use Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
-use Drupal\Tests\test_support\Traits\Support\Exceptions\CronFailed;
+use AidenBradley\DrupalTestSupport\Http\MakesHttpRequests;
+use AidenBradley\DrupalTestSupport\Support\Exceptions\CronFailed;
 
 trait InteractsWithCron
 {

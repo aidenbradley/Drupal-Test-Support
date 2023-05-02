@@ -4,10 +4,10 @@ namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\Component\Utility\Random;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_support\Traits\Installs\InstallsExportedConfig;
-use Drupal\Tests\test_support\Traits\Support\InteractsWithAuthentication;
-use Drupal\Tests\test_support\Traits\Support\InteractsWithDrupalTime;
-use Drupal\Tests\test_support\Traits\Support\InteractsWithEntities;
+use AidenBradley\DrupalTestSupport\Installs\InstallsExportedConfig;
+use AidenBradley\DrupalTestSupport\Support\InteractsWithAuthentication;
+use AidenBradley\DrupalTestSupport\Support\InteractsWithDrupalTime;
+use AidenBradley\DrupalTestSupport\Support\InteractsWithEntities;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 

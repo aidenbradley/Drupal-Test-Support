@@ -4,8 +4,8 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_support\Traits\Installs\InstallsExportedConfig;
-use Drupal\Tests\test_support\Traits\Support\Exceptions\ConfigInstallFailed;
+use AidenBradley\DrupalTestSupport\Installs\InstallsExportedConfig;
+use AidenBradley\DrupalTestSupport\Support\Exceptions\ConfigInstallFailed;
 
 class InstallsExportedConfigTest extends KernelTestBase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Support\UpdateHook\Contracts;
+namespace AidenBradley\DrupalTestSupport\Support\UpdateHook\Contracts;
 
 interface HookHandler
 {

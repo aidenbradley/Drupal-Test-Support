@@ -3,8 +3,8 @@
 namespace Drupal\Tests\test_support\Kernel\Support\UpdateHook;
 
 use Drupal\Tests\test_support\Kernel\Support\UpdateHook\Base\UpdateHandlerKernelTestBase;
-use Drupal\Tests\test_support\Traits\Support\Exceptions\UpdateHookFailed;
-use Drupal\Tests\test_support\Traits\Support\InteractsWithUpdateHooks;
+use AidenBradley\DrupalTestSupport\Support\Exceptions\UpdateHookFailed;
+use AidenBradley\DrupalTestSupport\Support\InteractsWithUpdateHooks;
 
 class UpdateHandlerTest extends UpdateHandlerKernelTestBase
 {

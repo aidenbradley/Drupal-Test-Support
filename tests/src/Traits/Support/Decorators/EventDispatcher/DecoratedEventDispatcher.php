@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Support\Decorators\EventDispatcher;
+namespace AidenBradley\DrupalTestSupport\Support\Decorators\EventDispatcher;
 
-use Drupal\Tests\test_support\Traits\Support\Contracts\TestEventDispatcher;
+use AidenBradley\DrupalTestSupport\Support\Contracts\TestEventDispatcher;
 use Illuminate\Support\Collection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

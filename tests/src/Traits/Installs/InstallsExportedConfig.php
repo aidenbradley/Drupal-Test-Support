@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Installs;
+namespace AidenBradley\DrupalTestSupport\Installs;
 
 trait InstallsExportedConfig
 {

@@ -3,7 +3,7 @@
 namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_support\Traits\Installs\InstallsRoles;
+use AidenBradley\DrupalTestSupport\Installs\InstallsRoles;
 use Drupal\user\Entity\Role;
 
 class InstallsRolesTest extends KernelTestBase

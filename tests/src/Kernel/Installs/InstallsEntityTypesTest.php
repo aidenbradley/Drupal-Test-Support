@@ -4,7 +4,7 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
-use Drupal\Tests\test_support\Traits\Installs\InstallsEntityTypes;
+use AidenBradley\DrupalTestSupport\Installs\InstallsEntityTypes;
 
 class InstallsEntityTypesTest extends KernelTestBase
 {

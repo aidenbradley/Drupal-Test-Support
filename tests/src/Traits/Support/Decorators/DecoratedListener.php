@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Support\Decorators;
+namespace AidenBradley\DrupalTestSupport\Support\Decorators;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

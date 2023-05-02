@@ -3,7 +3,7 @@
 namespace Drupal\Tests\test_support\Kernel\Base;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_support\Traits\Installs\InstallsModules;
+use AidenBradley\DrupalTestSupport\Installs\InstallsModules;
 
 /**
  * This class will act as a base set of tests to test whether a module will work or not.

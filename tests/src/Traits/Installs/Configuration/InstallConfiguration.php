@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Installs\Configuration;
+namespace AidenBradley\DrupalTestSupport\Installs\Configuration;
 
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Site\Settings;
-use Drupal\Tests\test_support\Traits\Installs\InstallsTheme;
-use Drupal\Tests\test_support\Traits\Support\Exceptions\ConfigInstallFailed;
-use Drupal\Tests\test_support\Traits\Support\InteractsWithSettings;
+use AidenBradley\DrupalTestSupport\Installs\InstallsTheme;
+use AidenBradley\DrupalTestSupport\Support\Exceptions\ConfigInstallFailed;
+use AidenBradley\DrupalTestSupport\Support\InteractsWithSettings;
 
 trait InstallConfiguration
 {

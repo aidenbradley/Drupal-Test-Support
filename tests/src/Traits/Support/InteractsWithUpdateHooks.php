@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Support;
+namespace AidenBradley\DrupalTestSupport\Support;
 
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\Factory\HookHandlerFactory;
+use AidenBradley\DrupalTestSupport\Support\UpdateHook\Factory\HookHandlerFactory;
 
 trait InteractsWithUpdateHooks
 {

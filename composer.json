@@ -1,5 +1,5 @@
 {
-    "name": "aidenbradley/test-support",
+    "name": "aidenbradley/drupal-test-support",
     "description": "Provides various traits to help test setup and assertions in Drupal Kernel tests",
     "type": "drupal-module",
     "require": {
@@ -12,6 +12,11 @@
             "email": "mraidenbradley@gmail.com"
         }
     ],
+    "autoload-dev": {
+        "psr-4": {
+            "AidenBradley\\DrupalTestSupport\\": "tests/src/Traits"
+        }
+    },
     "minimum-stability": "stable",
     "config": {
         "allow-plugins": {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Support\UpdateHook;
+namespace AidenBradley\DrupalTestSupport\Support\UpdateHook;
 
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\Base\UpdateHookHandler;
+use AidenBradley\DrupalTestSupport\Support\UpdateHook\Base\UpdateHookHandler;
 
 class PostUpdateHandler extends UpdateHookHandler
 {

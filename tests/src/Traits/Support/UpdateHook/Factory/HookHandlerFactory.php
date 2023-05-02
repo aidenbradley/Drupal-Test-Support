@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Support\UpdateHook\Factory;
+namespace AidenBradley\DrupalTestSupport\Support\UpdateHook\Factory;
 
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\Contracts\HookHandler;
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\DeployHookHandler;
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\Exceptions\HookHandlerError;
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\PostUpdateHandler;
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\UpdateHandler;
+use AidenBradley\DrupalTestSupport\Support\UpdateHook\Contracts\HookHandler;
+use AidenBradley\DrupalTestSupport\Support\UpdateHook\DeployHookHandler;
+use AidenBradley\DrupalTestSupport\Support\UpdateHook\Exceptions\HookHandlerError;
+use AidenBradley\DrupalTestSupport\Support\UpdateHook\PostUpdateHandler;
+use AidenBradley\DrupalTestSupport\Support\UpdateHook\UpdateHandler;
 
 class HookHandlerFactory
 {

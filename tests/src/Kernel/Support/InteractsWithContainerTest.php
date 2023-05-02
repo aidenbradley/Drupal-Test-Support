@@ -4,7 +4,7 @@ namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Routing\RouteSubscriber;
-use Drupal\Tests\test_support\Traits\Support\InteractsWithContainer;
+use AidenBradley\DrupalTestSupport\Support\InteractsWithContainer;
 
 class InteractsWithContainerTest extends KernelTestBase
 {

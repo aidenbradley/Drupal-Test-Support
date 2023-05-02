@@ -5,7 +5,7 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_support\Traits\Installs\InstallsBlocks;
+use AidenBradley\DrupalTestSupport\Installs\InstallsBlocks;
 
 class InstallsBlocksTest extends KernelTestBase
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Support;
+namespace AidenBradley\DrupalTestSupport\Support;
 
-use Drupal\Tests\test_support\Traits\Support\Contracts\TestEventDispatcher;
-use Drupal\Tests\test_support\Traits\Support\Decorators\EventDispatcher\DecoratedEventDispatcher;
+use AidenBradley\DrupalTestSupport\Support\Contracts\TestEventDispatcher;
+use AidenBradley\DrupalTestSupport\Support\Decorators\EventDispatcher\DecoratedEventDispatcher;
 
 trait WithoutEvents
 {

@@ -4,8 +4,8 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\NodeInterface;
-use Drupal\Tests\test_support\Traits\Installs\InstallsEntityTypes;
-use Drupal\Tests\test_support\Traits\Installs\InstallsFields;
+use AidenBradley\DrupalTestSupport\Installs\InstallsEntityTypes;
+use AidenBradley\DrupalTestSupport\Installs\InstallsFields;
 
 class InstallsFieldsTest extends KernelTestBase
 {

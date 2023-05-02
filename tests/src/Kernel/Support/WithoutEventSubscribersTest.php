@@ -8,7 +8,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\EventSubscriber\ConfigSubscriber;
 use Drupal\node\Routing\RouteSubscriber;
 use Drupal\system\TimeZoneResolver;
-use Drupal\Tests\test_support\Traits\Support\WithoutEventSubscribers;
+use AidenBradley\DrupalTestSupport\Support\WithoutEventSubscribers;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class WithoutEventSubscribersTest extends KernelTestBase

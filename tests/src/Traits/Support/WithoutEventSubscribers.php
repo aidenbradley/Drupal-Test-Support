@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Support;
+namespace AidenBradley\DrupalTestSupport\Support;
 
-use Drupal\Tests\test_support\Traits\Support\Decorators\DecoratedListener;
-use Drupal\Tests\test_support\Traits\Support\Decorators\DecoratedListener as Listener;
+use AidenBradley\DrupalTestSupport\Support\Decorators\DecoratedListener;
+use AidenBradley\DrupalTestSupport\Support\Decorators\DecoratedListener as Listener;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

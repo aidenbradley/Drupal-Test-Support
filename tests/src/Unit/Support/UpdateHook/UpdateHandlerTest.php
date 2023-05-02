@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\test_support\Unit\Support\UpdateHook;
 
-use Drupal\Tests\test_support\Traits\Support\UpdateHook\UpdateHandler;
+use AidenBradley\DrupalTestSupport\Support\UpdateHook\UpdateHandler;
 use Drupal\Tests\UnitTestCase;
 
 class UpdateHandlerTest extends UnitTestCase

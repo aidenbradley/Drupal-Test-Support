@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Support\Exceptions;
+namespace AidenBradley\DrupalTestSupport\Support\Exceptions;
 
 class UpdateHookFailed extends \Exception
 {

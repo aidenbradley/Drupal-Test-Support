@@ -3,8 +3,8 @@
 namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_support\Traits\Support\InteractsWithMail;
-use Drupal\Tests\test_support\Traits\Support\Mail\TestMail;
+use AidenBradley\DrupalTestSupport\Support\InteractsWithMail;
+use AidenBradley\DrupalTestSupport\Support\Mail\TestMail;
 
 class InteractsWithMailTest extends KernelTestBase
 {

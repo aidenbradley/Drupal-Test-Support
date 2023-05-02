@@ -4,7 +4,7 @@ namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_support\Traits\Support\InteractsWithSettings;
+use AidenBradley\DrupalTestSupport\Support\InteractsWithSettings;
 use Symfony\Component\DependencyInjection\Reference;
 
 class InteractsWithSettingsTest extends KernelTestBase

@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\Tests\test_support\Traits\Support;
+namespace AidenBradley\DrupalTestSupport\Support;
 
 use Carbon\Carbon;
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Tests\test_support\Traits\Installs\InstallsExportedConfig;
-use Drupal\Tests\test_support\Traits\Support\Time\Tardis;
-use Drupal\Tests\test_support\Traits\Support\Time\Time;
+use AidenBradley\DrupalTestSupport\Installs\InstallsExportedConfig;
+use AidenBradley\DrupalTestSupport\Support\Time\Tardis;
+use AidenBradley\DrupalTestSupport\Support\Time\Time;
 use Drupal\user\UserInterface;
 
 trait InteractsWithDrupalTime
