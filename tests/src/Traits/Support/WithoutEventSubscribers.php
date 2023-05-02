@@ -2,11 +2,11 @@
 
 namespace Drupal\Tests\test_support\Traits\Support;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\Tests\test_support\Traits\Support\Decorators\DecoratedListener;
 use Drupal\Tests\test_support\Traits\Support\Decorators\DecoratedListener as Listener;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 trait WithoutEventSubscribers
 {
@@ -87,7 +87,7 @@ trait WithoutEventSubscribers
     {
         Assert::assertTrue(
             $this->getListeners($event)->filter(function (Listener $decoratedListener) use ($listener) {
-                return $decoratedListener->inList((array)$listener);
+                return $decoratedListener->inList((array) $listener);
             })->isEmpty()
         );
     }
@@ -100,7 +100,7 @@ trait WithoutEventSubscribers
     {
         Assert::assertTrue(
             $this->getListeners($event)->filter(function (Listener $decoratedListener) use ($listener) {
-                return $decoratedListener->inList((array)$listener);
+                return $decoratedListener->inList((array) $listener);
             })->isNotEmpty()
         );
     }

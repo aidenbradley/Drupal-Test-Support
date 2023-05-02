@@ -266,6 +266,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
 
         /**
          * The return type on getTimeZone can return null
+         *
          * @phpstan-ignore-next-line
          */
         $this->assertNull($user->getTimeZone());
