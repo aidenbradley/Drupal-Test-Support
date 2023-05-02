@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Route;
 
 class TestRoutes
 {
+    /** @return array<string, Route> */
     public function routes(): array
     {
         return [
@@ -25,13 +26,13 @@ class TestRoutes
         ];
     }
 
-    /** @param  string|array  $methods */
+    /** @param string|string[] $methods */
     private function createJsonRoute(string $routeName, $methods): Route
     {
         return $this->createRoute($routeName, $methods, 'json');
     }
 
-    /** @param  string|array  $methods */
+    /** @param string|string[] $methods */
     private function createRoute(string $routeName, $methods, ?string $controllerMethod = null): Route
     {
         $controllerCallable = $controllerMethod ? ResolveRequest::class . '::' . $controllerMethod : ResolveRequest::class;

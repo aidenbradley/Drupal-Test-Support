@@ -33,7 +33,7 @@ class DecoratedListener
         return get_class($this->listener);
     }
 
-    /** @param string|class-string|string[]|class-string[] $listeners */
+    /** @param array<string>|array<class-string> $listeners */
     public function inList(array $listeners): bool
     {
         return in_array($this->getClass(), $listeners) || in_array($this->getServiceId(), $listeners);

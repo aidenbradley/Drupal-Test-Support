@@ -17,6 +17,7 @@ class InteractsWithMailTest extends KernelTestBase
 
     private const NO_REPLY = null;
 
+    /** @var string[] */
     protected static $modules = [
         'test_support_mail',
     ];
@@ -126,6 +127,7 @@ class InteractsWithMailTest extends KernelTestBase
         $this->assertNoMailSent();
     }
 
+    /** @param array<mixed> $params */
     private function sendMail(string $to, string $subject, string $body, array $params = []): void
     {
         $state = $this->container->get('state');

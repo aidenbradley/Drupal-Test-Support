@@ -13,6 +13,7 @@ class PostUpdateHandlerTest extends KernelTestBase
 {
     use InteractsWithUpdateHooks;
 
+    /** @var string[] */
     protected static $modules = [
         'system',
         'user',
@@ -51,15 +52,11 @@ class PostUpdateHandlerTest extends KernelTestBase
     {
         $this->createNumberOfActiveUsers(50);
 
-        $this->assertUsersNotBlocked(
-            $this->storage('user')->loadMultiple()
-        );
+        $this->assertUsersNotBlocked($this->loadAllUsers());
 
         $this->runPostUpdateHook('test_support_postupdatehooks_post_update_no_batch_disable_users');
 
-        $this->assertUsersBlocked(
-            $this->storage('user')->loadMultiple()
-        );
+        $this->assertUsersBlocked($this->loadAllUsers());
     }
 
     /** @test */
@@ -67,15 +64,11 @@ class PostUpdateHandlerTest extends KernelTestBase
     {
         $this->createNumberOfActiveUsers(50);
 
-        $this->assertUsersNotBlocked(
-            $this->storage('user')->loadMultiple()
-        );
+        $this->assertUsersNotBlocked($this->loadAllUsers());
 
         $this->runPostUpdateHook('test_support_postupdatehooks_post_update_with_batch_disable_users');
 
-        $this->assertUsersBlocked(
-            $this->storage('user')->loadMultiple()
-        );
+        $this->assertUsersBlocked($this->loadAllUsers());
     }
 
     /** @test */
@@ -99,20 +92,20 @@ class PostUpdateHandlerTest extends KernelTestBase
         $this->assertTrue($this->container->get('module_handler')->moduleExists($module));
     }
 
-    /** @param  array|User  $users */
-    private function assertUsersBlocked($users): self
+    /** @param User[] $users */
+    private function assertUsersBlocked(array $users): self
     {
-        foreach ((array) $users as $user) {
+        foreach ($users as $user) {
             $this->assertEquals(0, $user->get('status')->value);
         }
 
         return $this;
     }
 
-    /** @param  array|User  $users */
-    private function assertUsersNotBlocked($users): self
+    /** @param User[] $users */
+    private function assertUsersNotBlocked(array $users): self
     {
-        foreach ((array) $users as $user) {
+        foreach ($users as $user) {
             $this->assertEquals(1, $user->get('status')->value);
         }
 
@@ -132,5 +125,12 @@ class PostUpdateHandlerTest extends KernelTestBase
                 'status' => 1,
             ])->save();
         }
+    }
+
+    /** @return User[] */
+    private function loadAllUsers(): array
+    {
+        /** @phpstan-ignore-next-line */
+        return $this->storage('user')->loadMultiple();
     }
 }

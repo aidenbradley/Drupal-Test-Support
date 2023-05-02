@@ -60,6 +60,7 @@ class DisableAllUsersBatch implements ContainerInjectionInterface
         return new RedirectResponse('/');
     }
 
+    /** @param UserInterface<mixed> $user */
     public function disableUser(UserInterface $user): void
     {
         $user->set('status', 0)->save();

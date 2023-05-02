@@ -10,6 +10,7 @@ class InstallsEntityTypesTest extends KernelTestBase
 {
     use InstallsEntityTypes;
 
+    /** @var string[] */
     protected static $modules = [
         'system',
         'node',
@@ -36,6 +37,7 @@ class InstallsEntityTypesTest extends KernelTestBase
 
         $this->installBundle('node', 'page');
 
+        /** @var array<mixed> $nodeTypes */
         $nodeTypes = $nodeTypeStorage->loadMultiple();
 
         $this->assertNotEmpty($nodeTypes);

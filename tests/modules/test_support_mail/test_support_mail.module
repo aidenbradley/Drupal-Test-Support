@@ -1,5 +1,6 @@
 <?php
 
+/** @param array<mixed> $message */
 function test_support_mail_mail(string $key, array &$message): void
 {
     if ($key !== 'test_support_mail') {

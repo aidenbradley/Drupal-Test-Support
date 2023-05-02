@@ -10,6 +10,7 @@ class InteractsWithCronTest extends KernelTestBase
 {
     use InteractsWithCron;
 
+    /** @var string[] */
     protected static $modules = [
         'test_support_cron',
     ];

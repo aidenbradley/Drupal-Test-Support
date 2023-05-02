@@ -22,7 +22,7 @@ trait InstallConfiguration
     /** @var string[] */
     private $installedConfig = [];
 
-    /** @param  string|array  $config */
+    /** @param string|string[] $config */
     public function installExportedConfig($config): self
     {
         $configStorage = new FileStorage($this->configDirectory());
