@@ -2,14 +2,11 @@
 
 namespace Drupal\Tests\test_support\Kernel\Support\UpdateHook;
 
-use Drupal\Component\Utility\Random;
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\test_support\Kernel\Support\UpdateHook\Base\UpdateHandlerKernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\Exceptions\UpdateHookFailed;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithUpdateHooks;
-use Drupal\user\Entity\User;
 
-class UpdateHandlerTest extends KernelTestBase
+class UpdateHandlerTest extends UpdateHandlerKernelTestBase
 {
     use InteractsWithUpdateHooks;
 
@@ -80,57 +77,5 @@ class UpdateHandlerTest extends KernelTestBase
         $this->expectExceptionCode(UpdateHookFailed::NO_BATCH_PROGRESSION);
 
         $this->runUpdateHook('test_support_updatehooks_update_9003');
-    }
-
-    private function assertModuleDisabled(string $module): void
-    {
-        $this->assertFalse($this->container->get('module_handler')->moduleExists($module));
-    }
-
-    private function assertModuleEnabled(string $module): void
-    {
-        $this->assertTrue($this->container->get('module_handler')->moduleExists($module));
-    }
-
-    /** @param User[] $users */
-    private function assertUsersBlocked(array $users): self
-    {
-        foreach ($users as $user) {
-            $this->assertEquals(0, $user->get('status')->value);
-        }
-
-        return $this;
-    }
-
-    /** @param User[] $users */
-    private function assertUsersNotBlocked(array $users): self
-    {
-        foreach ($users as $user) {
-            $this->assertEquals(1, $user->get('status')->value);
-        }
-
-        return $this;
-    }
-
-    private function storage(string $entityTypeId): EntityStorageInterface
-    {
-        return $this->container->get('entity_type.manager')->getStorage($entityTypeId);
-    }
-
-    private function createNumberOfActiveUsers(int $numberToCreate): void
-    {
-        for ($x = 0; $x <= $numberToCreate; $x++) {
-            $this->storage('user')->create([
-                'name' => (new Random())->string(),
-                'status' => 1,
-            ])->save();
-        }
-    }
-
-    /** @return User[] */
-    private function loadAllUsers(): array
-    {
-        /** @phpstan-ignore-next-line */
-        return $this->storage('user')->loadMultiple();
     }
 }
