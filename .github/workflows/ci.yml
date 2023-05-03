@@ -132,7 +132,8 @@ jobs:
         run: |
           modules/test_support/vendor/bin/paratest \
           --path modules/test_support/tests \
-          -c modules/test_support/phpunit.xml
+          -c modules/test_support/phpunit.xml \
+          --runner WrapperRunner
 
   drupal-9-matrix:
     name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
@@ -192,4 +193,5 @@ jobs:
         run: |
           modules/test_support/vendor/bin/paratest \
           modules/test_support/tests \
-          -c modules/test_support/phpunit.xml
+          -c modules/test_support/phpunit.xml \
+          --runner WrapperRunner
