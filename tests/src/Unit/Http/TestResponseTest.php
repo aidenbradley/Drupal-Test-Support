@@ -319,7 +319,10 @@ class TestResponseTest extends UnitTestCase
         $response->assertJsonContentContains(['example' => 'example']);
     }
 
-    /** @param resource|string|null $content */
+    /**
+     * @phpstan-ignore-next-line
+     * @param resource|string|null $content
+     */
     private function createMockResponse(int $statusCode, $content = ''): TestResponse
     {
         $symfonyResponse = new Response($content, $statusCode);
