@@ -126,6 +126,7 @@ trait WithoutEventSubscribers
 
     private function removeSubscriber(Listener $listener, ?string $event = null): self
     {
+        /** @phpstan-ignore-next-line */
         $this->ignoredEvents = collect($this->ignoredEvents)->when($event, function (Collection $collection, string $event) {
             return $collection->put($event, $event);
         });

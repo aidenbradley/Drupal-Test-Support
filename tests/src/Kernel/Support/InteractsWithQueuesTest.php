@@ -118,7 +118,7 @@ class InteractsWithQueuesTest extends KernelTestBase
         $this->assertEquals(0, $this->getQueueCount('create_node_worker'));
     }
 
-    /** @return mixed */
+    /** @return object */
     private function customQueueFactory()
     {
         return new class() extends QueueFactory

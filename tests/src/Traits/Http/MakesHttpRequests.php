@@ -11,7 +11,7 @@ trait MakesHttpRequests
     /** @var bool */
     private $followRedirects = false;
 
-    /** @var array<mixed> */
+    /** @var array<string>|array<array<string>> */
     private $headers = [];
 
     /** @param array<mixed> $headers */
@@ -150,7 +150,7 @@ trait MakesHttpRequests
      * @param array<mixed> $cookies
      * @param array<mixed> $files
      * @param array<mixed> $server
-     * @param mixed $content
+     * @param resource|string|null $content
      */
     public function json(string $method, string $uri, array $parameters = [], array $cookies = [], array $files = [], array $server = [], $content = null): TestResponse
     {
@@ -190,7 +190,7 @@ trait MakesHttpRequests
      * @param array<mixed> $cookies
      * @param array<mixed> $files
      * @param array<mixed> $server
-     * @param mixed $content
+     * @param resource|string|null $content
      */
     public function call(string $method, string $uri, array $parameters = [], array $cookies = [], array $files = [], array $server = [], $content = null): TestResponse
     {
@@ -239,7 +239,7 @@ trait MakesHttpRequests
         return $this->withHeader('referer', $url);
     }
 
-    /** @param array<mixed> $headers */
+    /** @param array<string>|array<array<string>> $headers */
     protected function withHeaders(array $headers): self
     {
         $this->headers = array_merge($this->headers, $headers);
@@ -247,7 +247,7 @@ trait MakesHttpRequests
         return $this;
     }
 
-    /** @param mixed $value */
+    /** @param string|array<string> $value */
     protected function withHeader(string $header, $value): self
     {
         $this->headers = array_merge($this->headers, [

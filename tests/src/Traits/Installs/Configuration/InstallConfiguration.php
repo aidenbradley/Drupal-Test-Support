@@ -7,6 +7,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Tests\test_support\Traits\Installs\InstallsTheme;
 use Drupal\Tests\test_support\Traits\Support\Exceptions\ConfigInstallFailed;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithSettings;
+use PHPUnit\Framework\Assert;
 
 trait InstallConfiguration
 {
@@ -78,7 +79,13 @@ trait InstallConfiguration
     protected function configDirectory(): string
     {
         if ($this->useVfsConfigDirectory) {
-            return Settings::get('config_sync_directory');
+            $configDirectory = Settings::get('config_sync_directory');
+
+            if (is_string($configDirectory) === false) {
+                Assert::fail('Could not resolve configuration directory. Found: ' . $configDirectory);
+            }
+
+            return $configDirectory;
         }
 
         if ($this->customConfigDirectory) {

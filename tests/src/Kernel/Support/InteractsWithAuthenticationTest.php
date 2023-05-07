@@ -118,6 +118,6 @@ class InteractsWithAuthenticationTest extends KernelTestBase
      */
     private function route(string $route, array $parameters = [], array $options = []): string
     {
-        return Url::fromRoute(...func_get_args())->toString(true)->getGeneratedUrl();
+        return Url::fromRoute($route, $parameters, $options)->toString(true)->getGeneratedUrl();
     }
 }

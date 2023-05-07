@@ -22,7 +22,13 @@ trait InteractsWithCron
 
     public function getCronKey(): ?string
     {
-        return $this->container->get('state')->get('system.cron_key');
+        $key = $this->container->get('state')->get('system.cron_key');
+
+        if (is_string($key) === false) {
+            return null;
+        }
+
+        return $key;
     }
 
     public function runSystemCron(): self

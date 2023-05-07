@@ -178,6 +178,6 @@ class MakesHttpRequestsTest extends KernelTestBase
      */
     private function route(string $routeName, array $parameters = [], array $options = []): string
     {
-        return Url::fromRoute(...func_get_args())->toString(true)->getGeneratedUrl();
+        return Url::fromRoute($routeName, $parameters, $options)->toString(true)->getGeneratedUrl();
     }
 }

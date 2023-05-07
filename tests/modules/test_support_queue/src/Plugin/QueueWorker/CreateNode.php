@@ -21,7 +21,7 @@ class CreateNode extends QueueWorkerBase implements ContainerFactoryPluginInterf
 
     /**
      * @param array<mixed> $configuration
-     * @param string|mixed $pluginId
+     * @param string $pluginId
      * @param mixed $pluginDefinition
      */
     public static function create(ContainerInterface $container, array $configuration, $pluginId, $pluginDefinition)
@@ -36,7 +36,7 @@ class CreateNode extends QueueWorkerBase implements ContainerFactoryPluginInterf
 
     /**
      * @param array<mixed> $configuration
-     * @param string|mixed $pluginId
+     * @param string $pluginId
      * @param mixed $pluginDefinition
      */
     public function __construct(array $configuration, $pluginId, $pluginDefinition, EntityTypeManager $entityTypeManager)
@@ -49,6 +49,10 @@ class CreateNode extends QueueWorkerBase implements ContainerFactoryPluginInterf
     /** @param  array|mixed  $data */
     public function processItem($data): void
     {
+        if (is_array($data) === false) {
+            return;
+        }
+
         if (isset($data['title']) === false) {
             return;
         }

@@ -1,5 +1,5 @@
 parameters:
-        level: 8
+        level: 9
         reportUnmatchedIgnoredErrors: false
         checkGenericClassInNonGenericObjectType: false
         checkMissingIterableValueType: false
@@ -11,7 +11,9 @@ parameters:
         ignoreErrors:
         		- '#Unsafe usage of new static\(\)#'
         		- '#^Parameter \#2 \$length of method Drupal\\Core\\Entity\\Query\\QueryInterface\:\:range\(\) expects null, int given\.$#'
-        		- '#^Call to an undefined method Drupal\\Core\\DependencyInjection\\ContainerBuilder\:\:generateServiceIdHash\(\)$#'
+        		- '#Cannot call method transform\(\) on mixed#'
+        		- '#Cannot call method whenEmpty\(\) on mixed#'
+        		- '#Cannot call method mapInto\(\) on mixed#'
 includes:
     - vendor/mglaman/phpstan-drupal/extension.neon
     - phar://phpstan.phar/conf/bleedingEdge.neon

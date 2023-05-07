@@ -40,6 +40,7 @@ trait InstallsModules
     /** @return string[] */
     private function getModuleDependencies(string $moduleName): array
     {
+        /** @var array<string, array<string>> $infoYaml */
         $infoYaml = $this->getModuleInfo($moduleName);
 
         if (isset($infoYaml['dependencies']) === false) {
@@ -89,6 +90,12 @@ trait InstallsModules
             return $moduleName;
         }
 
-        return collect(explode(':', $moduleName))->last();
+        $prefix = collect(explode(':', $moduleName))->last();
+
+        if (is_string($prefix) === false) {
+            Assert::fail('Could not resolve dependencies for ' . $moduleName);
+        }
+
+        return $prefix;
     }
 }

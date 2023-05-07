@@ -68,6 +68,7 @@ class InstallsEntityTypesTest extends KernelTestBase
     {
         $entityTypeManager = $this->container->get('entity_type.manager');
 
+        /** @var \Drupal\Core\Entity\EntityTypeInterface $nodeEntityTypeDefinition */
         $nodeEntityTypeDefinition = $entityTypeManager->getDefinition('node');
 
         $this->assertFalse($this->container->get('database')->schema()->tableExists(
