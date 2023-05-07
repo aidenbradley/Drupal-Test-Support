@@ -83,13 +83,12 @@ class InteractsWithBatchesTest extends KernelTestBase
      */
     private function route(string $route, array $parameters = [], array $options = []): string
     {
-        return Url::fromRoute(...func_get_args())->toString(true)->getGeneratedUrl();
+        return Url::fromRoute($route, $parameters, $options)->toString(true)->getGeneratedUrl();
     }
 
     /** @return UserInterface<mixed> */
     private function loadUser(int $userId): UserInterface
     {
-        /** @phpstan-ignore-next-line */
         $user = $this->container->get('entity_type.manager')->getStorage('user')->load($userId);
 
         if ($user instanceof UserInterface === false) {

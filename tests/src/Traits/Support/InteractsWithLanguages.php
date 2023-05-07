@@ -61,6 +61,7 @@ trait InteractsWithLanguages
         if ($prefix !== null) {
             $languageNegotiation = $this->config('language.negotiation');
 
+            /** @var array<string, string> $prefixes */
             $prefixes = $languageNegotiation->get('url.prefixes');
 
             $prefixes[$language->id()] = $prefix;

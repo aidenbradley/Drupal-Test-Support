@@ -173,7 +173,9 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
 
         $this->travel()->toTimezone('Europe/Rome');
 
+        /** @var array<string> $timezone */
         $timezone = $this->config('system.date')->get('timezone');
+
         if (isset($timezone['default']) === false) {
             $this->fail('Timezone does not have default key');
         }
@@ -182,7 +184,9 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
 
         $this->travel()->toTimezone('Europe/Athens');
 
+        /** @var array<string> $timezone */
         $timezone = $this->config('system.date')->get('timezone');
+
         $this->assertEquals('Europe/Athens', $timezone['default']);
     }
 
@@ -357,8 +361,11 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
 
     private function assertTimezoneIs(string $timezone): void
     {
+        /** @var array<string> $timezoneConfiguration */
+        $timezoneConfiguration = $this->config('system.date')->get('timezone');
+
         $this->assertEquals($timezone, date_default_timezone_get());
-        $this->assertEquals($timezone, $this->config('system.date')->get('timezone')['default']);
+        $this->assertEquals($timezone, $timezoneConfiguration['default']);
     }
 
     /** @param int|string $timestamp */

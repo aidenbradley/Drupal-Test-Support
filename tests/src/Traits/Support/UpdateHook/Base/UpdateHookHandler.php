@@ -73,7 +73,7 @@ abstract class UpdateHookHandler implements HookHandler
         do {
             call_user_func_array($this->function, [&$batch]);
 
-            /** @var mixed $batchFinished */
+            /** @var float|int|string $batchFinished */
             $batchFinished = $batch['#finished'];
 
             if (is_float($batchFinished) === false && is_int($batchFinished) === false) {

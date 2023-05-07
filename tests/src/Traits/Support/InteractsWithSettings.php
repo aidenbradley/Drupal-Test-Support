@@ -3,6 +3,7 @@
 namespace Drupal\Tests\test_support\Traits\Support;
 
 use Drupal\Core\Site\Settings;
+use PHPUnit\Framework\Assert;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -21,15 +22,22 @@ trait InteractsWithSettings
     {
         $directory = $this->getSettings()->get('config_sync_directory');
 
+        if (is_string($directory) === false) {
+            Assert::fail('Could not resolve configuration directory');
+        }
+
         return $this->appRoot() . '/' . ltrim($directory, '/');
     }
 
     protected function getSettings(): Settings
     {
         if ($this->settings instanceof Settings === false) {
-            $this->settings = $this->temporarilySupressErrors(function () {
+            /** @var Settings $settings */
+            $settings = $this->temporarilySupressErrors(function () {
                 return $this->loadSettings();
             });
+
+            $this->settings = $settings;
         }
 
         return $this->settings;

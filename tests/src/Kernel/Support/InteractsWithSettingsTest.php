@@ -39,7 +39,6 @@ class InteractsWithSettingsTest extends KernelTestBase
         $this->settingsLocation = '/__fixtures__/settings/fixture.settings.php';
 
         if (str_starts_with(\Drupal::VERSION, '10.')) {
-            /** @phpstan-ignore-next-line */
             $expectedConfigurationDirectory = $this->container->getParameter('app.root') . '/test/config/directory';
 
             $this->assertEquals($expectedConfigurationDirectory, $this->getConfigurationDirectory());
