@@ -6,7 +6,6 @@ parameters:
         paths:
             - tests
         excludePaths:
-        		- tests/src/Traits/Support/Time/Tardis.php
         		- tests/src/Traits/Support/Decorators/EventDispatcher/DecoratedEventDispatcher.php
         ignoreErrors:
         		- '#Unsafe usage of new static\(\)#'

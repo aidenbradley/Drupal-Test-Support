@@ -15,19 +15,28 @@ use Carbon\Carbon;
  */
 class Tardis
 {
-    /** @var \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder @container */
+    /**
+     * @phpstan-ignore-next-line
+     * @var \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder @container
+     */
     private $container;
 
     /** @var int|null */
     private $travel;
 
-    /** @param  \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder  $container */
+    /**
+     * @phpstan-ignore-next-line
+     * @param  \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder  $container
+     */
     public static function createFromTravel($container, ?int $travel = null): self
     {
         return new self($container, $travel);
     }
 
-    /** @param  \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder  $container */
+    /**
+     * @phpstan-ignore-next-line
+     * @param  \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder  $container
+     */
     public function __construct($container, ?int $travel = null)
     {
         $this->container = $container;
@@ -72,12 +81,14 @@ class Tardis
             Carbon::now()->setTimezone($timezone)
         );
 
+        /** @phpstan-ignore-next-line */
         $this->container->get('config.factory')
             ->getEditable('system.date')
             ->set('timezone.default', $timezone)
             ->save();
     }
 
+    /** @param array{0: ?callable} $args */
     public function __call(string $method, array $args): void
     {
         if ($this->travel === null) {
