@@ -13,7 +13,9 @@
          beStrictAboutChangesToGlobalState="true"
          cacheResult="false"
          printerClass="\Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+         executionOrder="random"
+         resolveDependencies="true">
     <php>
         <!-- Set error reporting to E_ALL. -->
         <ini name="error_reporting" value="32767"/>
@@ -34,7 +36,8 @@
         <!-- Example for changing the driver args to phantomjs tests MINK_DRIVER_ARGS_PHANTOMJS value: '["http://127.0.0.1:8510"]' -->
         <env name="MINK_DRIVER_ARGS_PHANTOMJS" value=''/>
         <!-- Example for changing the driver args to webdriver tests MINK_DRIVER_ARGS_WEBDRIVER value: '["chrome", { "chromeOptions": { "w3c": false } }, "http://localhost:4444/wd/hub"]' For using the Firefox browser, replace "chrome" with "firefox" -->
-        <env name="MINK_DRIVER_ARGS_WEBDRIVER" value='["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu", "--no-sandbox", "--headless"]}}, "http://127.0.0.1:9515"]'/>
+        <env name="MINK_DRIVER_ARGS_WEBDRIVER"
+             value='["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu", "--no-sandbox", "--headless"]}}, "http://127.0.0.1:9515"]'/>
     </php>
     <testsuites>
         <testsuite name="unit">
@@ -48,25 +51,9 @@
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
         </listener>
     </listeners>
-    <!-- Filter for coverage reports. -->
-    <filter>
-        <whitelist>
-            <directory>./web/core/includes</directory>
-            <directory>./web/core/lib</directory>
-            <!-- Extensions can have their own test directories, so exclude those. -->
-            <directory>./web/core/modules</directory>
-            <exclude>
-                <directory>./web/core/modules/*/src/Tests</directory>
-                <directory>./web/core/modules/*/tests</directory>
-            </exclude>
-            <directory>./web/modules</directory>
-            <exclude>
-                <directory>./web/modules/*/src/Tests</directory>
-                <directory>./web/modules/*/tests</directory>
-                <directory>./web/modules/*/*/src/Tests</directory>
-                <directory>./web/modules/*/*/tests</directory>
-            </exclude>
-            <directory>./web/sites</directory>
-        </whitelist>
-    </filter>
+    <coverage>
+        <include>
+            <directory>./tests/src/Traits</directory>
+        </include>
+    </coverage>
 </phpunit>
