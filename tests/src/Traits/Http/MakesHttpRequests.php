@@ -146,7 +146,6 @@ trait MakesHttpRequests
 
     /**
      * @param null|resource|string $content
-     * @param array<mixed> $parameters
      * @param array<mixed> $cookies
      * @param array<mixed> $files
      * @param array<mixed> $server

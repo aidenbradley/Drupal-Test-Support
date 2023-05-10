@@ -13,7 +13,7 @@ class ConfigInstallFailed extends \Exception
     /** @var string */
     private $failingConfigFile = '';
 
-    public function __construct(string $failingConfigFile, $message = "", $code = 0, Throwable $previous = null)
+    public function __construct(string $failingConfigFile, string $message = "", int $code = 0, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
 

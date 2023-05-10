@@ -51,8 +51,8 @@ jobs:
                 restore-keys: ${{ runner.os }}-module-build-composer-
                 fail-on-cache-miss: true
 
-        -   name: Lint
-            run: composer lint
+        -   name: Lint - Mess detection
+            run: composer test:mess
 
   static_analysis_matrix:
     name: PHPStan - Static Analysis
