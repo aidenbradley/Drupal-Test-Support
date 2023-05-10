@@ -162,7 +162,7 @@ jobs:
       - name: Tests
         run: |
             modules/test_support/vendor/bin/paratest \
-            modules/test_support/tests \
+            --path modules/test_support/tests \
             -c modules/test_support/phpunit.xml \
             --runner WrapperRunner
 
@@ -223,6 +223,6 @@ jobs:
       - name: Tests
         run: |
             modules/test_support/vendor/bin/paratest \
-            modules/test_support/tests \
+            --path modules/test_support/tests \
             -c modules/test_support/phpunit.xml \
             --runner WrapperRunner
