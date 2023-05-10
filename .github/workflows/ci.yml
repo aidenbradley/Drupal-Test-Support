@@ -160,8 +160,11 @@ jobs:
           fail-on-cache-miss: true
 
       - name: Tests
-        working-directory: modules/test_support
-        run: vendor/bin/paratest --path tests -c phpunit.xml --runner WrapperRunner
+        run: |
+            modules/test_support/vendor/bin/paratest \
+            modules/test_support/tests \
+            -c modules/test_support/phpunit.xml \
+            --runner WrapperRunner
 
   drupal-9-matrix:
     name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
@@ -218,5 +221,8 @@ jobs:
           fail-on-cache-miss: true
 
       - name: Tests
-        working-directory: modules/test_support
-        run: vendor/bin/paratest tests -c phpunit.xml --runner WrapperRunner
+        run: |
+            modules/test_support/vendor/bin/paratest \
+            modules/test_support/tests \
+            -c modules/test_support/phpunit.xml \
+            --runner WrapperRunner
