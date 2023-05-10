@@ -5,7 +5,7 @@ namespace Drupal\Tests\test_support\Traits\Installs;
 trait InstallsTheme
 {
     /** @var bool */
-    private $setup = false;
+    private $setupThemeDependencies = false;
 
     /** @param string|string[] $themes */
     public function installThemes($themes): self
@@ -31,11 +31,11 @@ trait InstallsTheme
 
     private function setupThemeDependencies(): void
     {
-        if ($this->setup) {
+        if ($this->setupThemeDependencies) {
             return;
         }
 
-        $this->setup = true;
+        $this->setupThemeDependencies = true;
 
         $this->enableModules([
             'system',

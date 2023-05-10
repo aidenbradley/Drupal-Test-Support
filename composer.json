@@ -16,7 +16,8 @@
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "infection/extension-installer": true
         },
         "platform": {
             "php": "7.3"
@@ -25,7 +26,8 @@
     "scripts": {
         "lint": "vendor/bin/pint --test -v",
         "lint-cbf": "vendor/bin/pint",
-        "stan": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon"
+        "stan": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon",
+        "test:mess": "vendor/bin/phpmd tests/src/Traits ansi phpmd.xml"
     },
     "require-dev": {
         "opis/closure": "^3.6",
@@ -33,6 +35,7 @@
         "mglaman/phpstan-drupal": "^1.1",
         "sempro/phpunit-pretty-print": "^1.4",
         "illuminate/collections": "^8.83",
-        "brianium/paratest": "^6.9"
+        "brianium/paratest": "^6.9",
+        "phpmd/phpmd": "^2.13"
     }
 }

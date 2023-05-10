@@ -152,7 +152,7 @@ trait MakesHttpRequests
      * @param array<mixed> $server
      * @param resource|string|null $content
      */
-    public function json(string $method, string $uri, array $parameters = [], array $cookies = [], array $files = [], array $server = [], $content = null): TestResponse
+    public function json(string $method, string $uri, array $cookies = [], array $files = [], array $server = [], $content = null): TestResponse
     {
         $headers = array_merge([
             'CONTENT_TYPE' => 'application/json',

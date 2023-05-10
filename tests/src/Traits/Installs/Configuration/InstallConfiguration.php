@@ -60,10 +60,6 @@ trait InstallConfiguration
             if ($entityType) {
                 $storage = $this->container->get('entity_type.manager')->getStorage($entityType);
 
-//                if (is_array($configRecord) === false) {
-//                    throw ConfigInstallFailed::couldNotHandle($configName);
-//                }
-
                 /** @phpstan-ignore-next-line */
                 $storage->createFromStorageRecord($configRecord)->save();
 
