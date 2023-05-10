@@ -52,7 +52,7 @@ jobs:
                 fail-on-cache-miss: true
 
         -   name: Lint - Mess detection
-            run: vendor/bin/phpmd tests/src/Traits ansi phpmd.xml
+            run: modules/test_support/vendor/bin/phpmd tests/src/Traits ansi phpmd.xml
 
   static_analysis_matrix:
     name: PHPStan - Static Analysis
