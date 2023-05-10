@@ -19,9 +19,10 @@ jobs:
              restore-keys: ${{ runner.os }}-module-build-composer-
 
         -  if: steps.build_module_cache.outputs.cache-hit != 'true'
-           name: Build module including dependencies dependencies
-           working-directory: modules/test_support
-           run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+           name: Build module including dependencies
+           run: |
+               cd modules/test_support;
+               composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
   sanity_check:
     name: Sanity Check - Lint
@@ -51,8 +52,7 @@ jobs:
                 fail-on-cache-miss: true
 
         -   name: Lint - Mess detection
-            working-directory: modules/test_support
-            run: composer test:mess
+            run: modules/test_support/vendor/bin/phpmd modules/test_support/tests/src/Traits ansi modules/test_support/phpmd.xml
 
   static_analysis_matrix:
     name: PHPStan - Static Analysis
@@ -102,8 +102,7 @@ jobs:
             fail-on-cache-miss: true
 
         - name: Run static analysis
-          working-directory: modules/test_support
-          run: composer stan
+          run: cd modules/test_support; composer stan
 
   drupal-10-matrix:
     name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
