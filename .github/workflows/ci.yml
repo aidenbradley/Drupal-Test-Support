@@ -24,6 +24,9 @@ jobs:
              cd modules/test_support;
              composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
+        -   name: Lint - Mess detection
+            run: modules/test_support/vendor/bin/phpmd modules/test_support/tests/src/Traits ansi modules/test_support/phpmd.xml
+
   static_analysis_matrix:
     name: PHPStan - Static Analysis
     runs-on: ubuntu-latest
