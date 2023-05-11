@@ -51,8 +51,13 @@ jobs:
                 restore-keys: ${{ runner.os }}-module-build-composer-
                 fail-on-cache-miss: true
 
-        -   name: Lint - Mess detection
-            run: modules/test_support/vendor/bin/phpmd modules/test_support/tests/src/Traits ansi modules/test_support/phpmd.xml
+        -   name: PHP Mess Detector
+            uses: php-actions/phpmd@v1
+            with:
+                php_version: ${{ matrix.php-versions }}
+                path: modules/test_support/tests
+                output: ansi
+                ruleset: modules/test_support/ruleset.xml
 
   static_analysis_matrix:
     name: PHPStan - Static Analysis
