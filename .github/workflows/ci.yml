@@ -57,7 +57,7 @@ jobs:
                 php_version: ${{ matrix.php-versions }}
                 path: modules/test_support/tests
                 output: ansi
-                ruleset: modules/test_support/ruleset.xml
+                ruleset: modules/test_support/phpmd.xml
 
   static_analysis_matrix:
     name: PHPStan - Static Analysis
