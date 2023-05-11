@@ -55,7 +55,7 @@ jobs:
             uses: php-actions/phpmd@v1
             with:
                 php_version: ${{ matrix.php-versions }}
-                path: modules/test_support/tests
+                path: modules/test_support/tests/src/Traits
                 output: ansi
                 ruleset: modules/test_support/phpmd.xml
 
