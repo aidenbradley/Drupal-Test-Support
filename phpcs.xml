@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ruleset>
-    <description>Code Sniffer, including PSR, Slevomat Coding Standard and Import Detection.</description>
-    <config name="installed_paths" value="vendor/slevomat/coding-standard,vendor/sirbrillig/phpcs-import-detection"/>
+    <description>Drupal Test Support PHPCS</description>
 
-    <file>src/</file>
-    <file>config/</file>
-    <file>database/</file>
     <file>tests/</file>
 
-    <exclude-pattern>*/cache/*</exclude-pattern>
     <exclude-pattern>*/*.js</exclude-pattern>
     <exclude-pattern>*/*.css</exclude-pattern>
     <exclude-pattern>*/*.xml</exclude-pattern>
     <exclude-pattern>*/autoload.php</exclude-pattern>
-    <exclude-pattern>*/storage/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
 
     <arg name="colors"/>
@@ -26,18 +20,11 @@
     <rule ref="Generic.Classes.DuplicateClassName"/>
 
     <rule ref="PSR12"></rule>
-    <rule ref="SlevomatCodingStandard"></rule>
-
-    <rule ref="ImportDetection">
-        <properties>
-            <property name="ignoreUnimportedSymbols" value="/^(env|value|url|optional)$/"/>
-        </properties>
-    </rule>
 
     <rule ref="Generic.Files.LineLength">
         <properties>
-            <property name="lineLimit" value="500"/>
-            <property name="absoluteLineLimit" value="0"/>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="120"/>
         </properties>
     </rule>
 </ruleset>

@@ -11,9 +11,11 @@ class UpdateHookFailed extends \Exception
     /** @param  string|int|float  $finishedValue */
     public static function noBatchProgression($finishedValue): self
     {
-        $message = PHP_EOL . PHP_EOL . 'The #finished value stayed at ' . $finishedValue . ' for two successive batch runs. It should strictly progress. Try the following:' .
-            PHP_EOL . '$sandbox[\'#finished\'] = ($sandbox[\'current\'] / $sandbox[\'total\'])
-        ';
+        $message = PHP_EOL . PHP_EOL;
+        $message = $message . 'The #finished value stayed at ' . $finishedValue . ' for two successive batch runs.';
+        $message = $message . ' It should strictly progress between each batch run. Try the following:';
+        $message = $message . PHP_EOL . '$sandbox[\'#finished\'] = ($sandbox[\'current\'] / $sandbox[\'total\'])';
+
 
         return new self($message, static::NO_BATCH_PROGRESSION);
     }
@@ -21,7 +23,9 @@ class UpdateHookFailed extends \Exception
     /** @param  string|int|float  $finishedValue */
     public static function invalidFinishedValue($finishedValue): self
     {
-        $message = PHP_EOL . PHP_EOL . 'The #finished value should be an integer or float between 0 and 1 but ' . $finishedValue . ' was returned.';
+        $message = PHP_EOL . PHP_EOL;
+        $message = $message . 'The #finished value should be an integer or float between 0 and 1';
+        $message = $message . 'but ' . $finishedValue . ' was returned.';
 
         return new self($message, static::INVALID_FINISHED_VALUE);
     }

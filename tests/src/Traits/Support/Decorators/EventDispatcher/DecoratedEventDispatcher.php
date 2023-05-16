@@ -84,6 +84,7 @@ if (version_compare(\Drupal::VERSION, '10.0', '>=')) {
         }
     }
 } else {
+    // phpcs:ignore
     class DecoratedEventDispatcher implements TestEventDispatcher
     {
         /** @var EventDispatcherInterface */

@@ -17,6 +17,7 @@ class Tardis
 {
     /**
      * @phpstan-ignore-next-line
+     * phpcs:ignore
      * @var \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder @container
      */
     private $container;
@@ -26,6 +27,7 @@ class Tardis
 
     /**
      * @phpstan-ignore-next-line
+     * phpcs:ignore
      * @param  \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder  $container
      */
     public static function createFromTravel($container, ?int $travel = null): self
@@ -35,7 +37,8 @@ class Tardis
 
     /**
      * @phpstan-ignore-next-line
-     * @param  \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder  $container
+     * phpcs:ignore
+     * @param \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder $container
      */
     public function __construct($container, ?int $travel = null)
     {

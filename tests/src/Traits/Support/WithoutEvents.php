@@ -55,7 +55,9 @@ trait WithoutEvents
 
     public function assertNotDispatched(?string $event): self
     {
-        $this->assertTrue($this->eventDispatcher()->getFiredEvents($event)->isEmpty(), $event . ' event was dispatched');
+        $message = $event . ' event was dispatched';
+
+        $this->assertTrue($this->eventDispatcher()->getFiredEvents($event)->isEmpty(), $message);
 
         return $this;
     }
