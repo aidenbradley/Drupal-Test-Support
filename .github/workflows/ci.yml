@@ -107,7 +107,7 @@ jobs:
             fail-on-cache-miss: true
 
         - name: Run static analysis
-          run: cd modules/test_support; composer stan
+          run: cd modules/test_support; composer test:types
 
   drupal-10-matrix:
     name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}

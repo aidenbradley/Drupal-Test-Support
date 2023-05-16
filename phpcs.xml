@@ -19,6 +19,10 @@
     <rule ref="Generic.PHP.ForbiddenFunctions"/>
     <rule ref="Generic.Classes.DuplicateClassName"/>
 
+    <rule ref="SlevomatCodingStandard.Arrays.AlphabeticallySortedByKeys"/>
+    <rule ref="SlevomatCodingStandard.Arrays.MultiLineArrayEndBracketPlacement"/>
+    <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
+
     <rule ref="PSR12"></rule>
 
     <rule ref="Generic.Files.LineLength">

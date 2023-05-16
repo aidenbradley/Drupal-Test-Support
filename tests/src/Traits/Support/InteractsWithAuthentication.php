@@ -30,9 +30,9 @@ trait InteractsWithAuthentication
             $userStorage = $this->container->get('entity_type.manager')->getStorage('user');
 
             $userStorage->create([
-                'uid' => 0,
                 'name' => 'anonymous',
                 'status' => 1,
+                'uid' => 0,
             ])->save();
 
             $this->anonymousUser = $userStorage->load(0);

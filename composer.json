@@ -24,11 +24,9 @@
         }
     },
     "scripts": {
-        "lint": "vendor/bin/pint --test -v",
-        "lint-cbf": "vendor/bin/pint",
-        "stan": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon",
-        "test:mess": "vendor/bin/phpmd tests/src/Traits ansi phpmd.xml",
-        "test:code-smells": "vendor/bin/phpcs --standard=phpcs.xml tests/src/Traits"
+        "test:code-smells": "vendor/bin/phpcs --standard=phpcs.xml tests/src/Traits",
+        "test:types": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon",
+        "test:mess": "vendor/bin/phpmd tests/src/Traits ansi phpmd.xml"
     },
     "require-dev": {
         "opis/closure": "^3.6",

@@ -155,8 +155,8 @@ trait MakesHttpRequests
     public function json(string $method, string $uri, array $cookies = [], array $files = [], array $server = [], $content = null): TestResponse
     {
         $headers = array_merge([
-            'CONTENT_TYPE' => 'application/json',
             'Accept' => 'application/json',
+            'CONTENT_TYPE' => 'application/json',
         ], $server);
 
         if ($content !== null) {
