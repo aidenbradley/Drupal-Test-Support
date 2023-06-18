@@ -46,7 +46,7 @@ trait WithoutEvents
 
         $this->assertTrue($firedEvents->isNotEmpty(), $event . ' event was not dispatched');
 
-        if ($callback) {
+        if (is_callable($callback)) {
             $this->assertTrue($callback($firedEvents->first()));
         }
 
@@ -74,7 +74,7 @@ trait WithoutEvents
             }
         }
 
-        parent::teardown();
+        parent::tearDown();
     }
 
     private function eventDispatcher(): TestEventDispatcher

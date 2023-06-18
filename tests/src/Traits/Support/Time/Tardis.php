@@ -97,6 +97,10 @@ class Tardis
 
         $method = 'add' . ucfirst($method);
 
+        if (method_exists(Carbon::class, $method) === false) {
+            return;
+        }
+
         Carbon::setTestNowAndTimezone(
             Carbon::now()->$method($this->travel),
             Carbon::now()->getTimezone()

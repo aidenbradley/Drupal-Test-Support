@@ -17,8 +17,7 @@ class Time implements TimeInterface
         return Carbon::now()->getTimestamp();
     }
 
-    /** @return int|float */
-    public function getRequestMicroTime()
+    public function getRequestMicroTime(): float
     {
         return Carbon::now()->getTimestampMs();
     }
@@ -28,8 +27,7 @@ class Time implements TimeInterface
         return Carbon::now()->getTimestamp();
     }
 
-    /** @return int|float */
-    public function getCurrentMicroTime()
+    public function getCurrentMicroTime(): float
     {
         return Carbon::now()->getTimestampMs();
     }

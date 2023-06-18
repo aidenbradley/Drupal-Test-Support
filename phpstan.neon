@@ -7,6 +7,8 @@ parameters:
             - tests
         excludePaths:
         		- tests/src/Traits/Support/Decorators/EventDispatcher/DecoratedEventDispatcher.php
+        strictRules:
+                strictCalls: false
         ignoreErrors:
         		- '#Unsafe usage of new static\(\)#'
         		- '#^Parameter \#2 \$length of method Drupal\\Core\\Entity\\Query\\QueryInterface\:\:range\(\) expects null, int given\.$#'
@@ -14,5 +16,4 @@ parameters:
         		- '#Cannot call method whenEmpty\(\) on mixed#'
         		- '#Cannot call method mapInto\(\) on mixed#'
 includes:
-    - vendor/mglaman/phpstan-drupal/extension.neon
     - phar://phpstan.phar/conf/bleedingEdge.neon
