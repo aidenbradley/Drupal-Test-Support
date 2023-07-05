@@ -28,7 +28,7 @@
 
         "test:code-smells": "vendor/bin/ecs",
 
-        "stan": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon",
+        "test:types": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon",
         "test:mess": "vendor/bin/phpmd tests/src/Traits ansi phpmd.xml"
     },
     "require-dev": {
