@@ -59,6 +59,9 @@ jobs:
                 output: ansi
                 ruleset: modules/test_support/phpmd.xml
 
+        -   name: PHP Code Smells
+            run: cd modules/test_support; composer test:code-smells
+
   static_analysis_matrix:
     name: PHPStan - Static Analysis
     runs-on: ubuntu-latest
