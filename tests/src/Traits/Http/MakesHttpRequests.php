@@ -273,7 +273,7 @@ trait MakesHttpRequests
 
     protected function formatServerHeaderKey(string $name): string
     {
-        if (! str_starts_with($name, 'HTTP_') && $name !== 'CONTENT_TYPE' && $name !== 'REMOTE_ADDR') {
+        if (!str_starts_with($name, 'HTTP_') && $name !== 'CONTENT_TYPE' && $name !== 'REMOTE_ADDR') {
             return 'HTTP_' . $name;
         }
 
