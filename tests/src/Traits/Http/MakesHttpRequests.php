@@ -267,7 +267,9 @@ trait MakesHttpRequests
         return collect(array_merge($this->headers, $headers))->mapWithKeys(function ($value, $name) {
             $name = strtr(strtoupper($name), '-', '_');
 
-            return [$this->formatServerHeaderKey($name) => $value];
+            return [
+                $this->formatServerHeaderKey($name) => $value,
+            ];
         })->all();
     }
 

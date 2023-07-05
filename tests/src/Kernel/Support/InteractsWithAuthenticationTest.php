@@ -45,13 +45,17 @@ class InteractsWithAuthenticationTest extends KernelTestBase
         }
 
         $this->actingAs($user)->get(
-            $this->route('entity.user.canonical', ['user' => $user->id()])
+            $this->route('entity.user.canonical', [
+                'user' => $user->id(),
+            ])
         )->assertOk();
 
         $this->assertEquals($user->id(), $this->container->get('current_user')->getAccount()->id());
 
         $this->actingAsAnonymous()->get(
-            $this->route('entity.user.canonical', ['user' => 0])
+            $this->route('entity.user.canonical', [
+                'user' => 0,
+            ])
         )->assertForbidden();
     }
 

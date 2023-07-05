@@ -3,7 +3,7 @@
     "description": "Provides various traits to help test setup and assertions in Drupal Kernel tests",
     "type": "drupal-module",
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=7.3.0"
     },
     "license": "MIT",
     "authors": [
@@ -24,9 +24,11 @@
         }
     },
     "scripts": {
-        "lint": "vendor/bin/pint --test -v",
-        "lint-cbf": "vendor/bin/pint",
-        "stan": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon",
+        "fix:code-smells": "vendor/bin/ecs --fix",
+
+        "test:code-smells": "vendor/bin/ecs",
+
+        "test:types": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon",
         "test:mess": "vendor/bin/phpmd tests/src/Traits ansi phpmd.xml"
     },
     "require-dev": {
@@ -35,6 +37,7 @@
         "mglaman/phpstan-drupal": "^1.1",
         "sempro/phpunit-pretty-print": "^1.4",
         "illuminate/collections": "^8.83",
-        "brianium/paratest": "^6.9"
+        "brianium/paratest": "^6.9",
+        "symplify/easy-coding-standard": "^11.5"
     }
 }

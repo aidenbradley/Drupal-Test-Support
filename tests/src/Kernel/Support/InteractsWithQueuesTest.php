@@ -121,8 +121,7 @@ class InteractsWithQueuesTest extends KernelTestBase
     /** @return object */
     private function customQueueFactory()
     {
-        return new class() extends QueueFactory
-        {
+        return new class() extends QueueFactory {
             public function __construct()
             {
                 parent::__construct(Settings::getInstance());
