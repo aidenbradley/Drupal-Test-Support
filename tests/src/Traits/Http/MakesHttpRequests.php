@@ -267,13 +267,15 @@ trait MakesHttpRequests
         return collect(array_merge($this->headers, $headers))->mapWithKeys(function ($value, $name) {
             $name = strtr(strtoupper($name), '-', '_');
 
-            return [$this->formatServerHeaderKey($name) => $value];
+            return [
+                $this->formatServerHeaderKey($name) => $value,
+            ];
         })->all();
     }
 
     protected function formatServerHeaderKey(string $name): string
     {
-        if (!str_starts_with($name, 'HTTP_') && $name !== 'CONTENT_TYPE' && $name !== 'REMOTE_ADDR') {
+        if (! str_starts_with($name, 'HTTP_') && $name !== 'CONTENT_TYPE' && $name !== 'REMOTE_ADDR') {
             return 'HTTP_' . $name;
         }
 

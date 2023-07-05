@@ -314,9 +314,15 @@ class TestResponseTest extends UnitTestCase
 
         $response = TestResponse::fromBaseResponse($jsonResponse);
 
-        $response->assertJsonContentContains(['key' => 'value']);
-        $response->assertJsonContentContains(['another_key' => 'another_value']);
-        $response->assertJsonContentContains(['example' => 'example']);
+        $response->assertJsonContentContains([
+            'key' => 'value',
+        ]);
+        $response->assertJsonContentContains([
+            'another_key' => 'another_value',
+        ]);
+        $response->assertJsonContentContains([
+            'example' => 'example',
+        ]);
     }
 
     /** @param resource|string|null $content */
