@@ -32,6 +32,9 @@ trait InteractsWithLanguages
         foreach ((array) $langcodes as $langcode) {
             $this->installExportedConfig('language.entity.' . $langcode);
         }
+
+        /** @phpstan-ignore-next-line */
+        $this->container->get('kernel')->rebuildContainer();
     }
 
     /** @param ConfigurableLanguageInterface|string $language */
@@ -71,9 +74,6 @@ trait InteractsWithLanguages
 
         $this->container->get('language.default')->set($language);
 
-        /** @phpstan-ignore-next-line */
-        $this->container->get('kernel')->rebuildContainer();
-
         $this->languageManager()->reset();
 
         $this->installedLanguages[] = $language->getId();
@@ -85,10 +85,11 @@ trait InteractsWithLanguages
             return;
         }
 
+        $this->installLanguageModule = true;
+
         $this->enableModules(['language']);
         $this->installConfig('language');
         $this->installEntitySchema('configurable_language');
-
-        $this->installLanguageModule = true;
+        $this->setCurrentLanguage('en');
     }
 }
