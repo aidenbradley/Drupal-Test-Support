@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\test_support\Traits\Installs;
 
+use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Serialization\Yaml;
 use PHPUnit\Framework\Assert;
 
@@ -48,7 +49,7 @@ trait InstallsModules
         }
 
         $dependencies = array_map(function (string $dependency): string {
-            return $this->handlePrefixes($dependency);
+            return Dependency::createFromString($dependency)->getName();
         }, $infoYaml['dependencies']);
 
         return array_diff($dependencies, $this->modulesToInstall);
