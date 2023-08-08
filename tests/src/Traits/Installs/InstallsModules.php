@@ -84,19 +84,4 @@ trait InstallsModules
 
         return Yaml::decode($yaml);
     }
-
-    private function handlePrefixes(string $moduleName): string
-    {
-        if (str_contains($moduleName, ':') === false) {
-            return $moduleName;
-        }
-
-        $prefix = collect(explode(':', $moduleName))->last();
-
-        if (is_string($prefix) === false) {
-            Assert::fail('Could not resolve dependencies for ' . $moduleName);
-        }
-
-        return $prefix;
-    }
 }
