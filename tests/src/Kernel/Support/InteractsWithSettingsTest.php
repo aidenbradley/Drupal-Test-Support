@@ -36,7 +36,7 @@ class InteractsWithSettingsTest extends KernelTestBase
      */
     public function supresses_errors_when_requiring_settings(): void
     {
-        $this->settingsLocation = '/__fixtures__/settings/fixture.settings.php';
+        $this->setSettingsLocation('/__fixtures__/settings/fixture.settings.php');
 
         if (str_starts_with(\Drupal::VERSION, '10.')) {
             /** @var string $appRoot */

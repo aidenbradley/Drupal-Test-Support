@@ -12,8 +12,11 @@ trait InteractsWithSettings
     /** @var bool */
     public $autoDiscoverSettings = false;
 
+    /** @var null|string */
+    private $settingsLocationOverride = null;
+
     /** @var string */
-    private $settingsLocation = '/sites/default/settings.php';
+    private $site = 'default';
 
     /** @var Settings|null */
     private $settings = null;
@@ -43,6 +46,28 @@ trait InteractsWithSettings
         return $this->settings;
     }
 
+    protected function setSettingsLocation(string $settingsLocation): self {
+        $this->settingsLocationOverride = $settingsLocation;
+
+        return $this;
+    }
+
+    protected function setSite(string $site): self {
+        $this->site = $site;
+
+        return $this;
+    }
+
+    protected function getSettingsLocation(): string {
+        $location = '/sites/' . $this->site . '/settings.php';
+
+        if ($this->settingsLocationOverride !== null) {
+            $location = $this->settingsLocationOverride;
+        }
+
+        return $this->appRoot() . '/' . ltrim($location, '/');
+    }
+
     private function loadSettings(): Settings
     {
         if ($this->autoDiscoverSettings) {
@@ -57,10 +82,8 @@ trait InteractsWithSettings
     {
         $settings = [];
 
-        $settingsFileLocation = $this->appRoot() . '/' . ltrim($this->settingsLocation, '/');
-
-        if (file_exists($settingsFileLocation)) {
-            require $settingsFileLocation;
+        if (file_exists($this->getSettingsLocation())) {
+            require $this->getSettingsLocation();
         }
 
         return $settings;
