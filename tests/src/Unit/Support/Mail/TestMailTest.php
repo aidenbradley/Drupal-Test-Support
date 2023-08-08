@@ -5,9 +5,12 @@ namespace Drupal\Tests\test_support\Unit\Support\Mail;
 use Drupal\Tests\test_support\Traits\Support\Mail\TestMail;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\User;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class TestMailTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function get_to(): void
     {
