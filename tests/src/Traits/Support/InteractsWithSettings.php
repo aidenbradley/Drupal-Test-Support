@@ -46,19 +46,22 @@ trait InteractsWithSettings
         return $this->settings;
     }
 
-    protected function setSettingsLocation(string $settingsLocation): self {
+    protected function setSettingsLocation(string $settingsLocation): self
+    {
         $this->settingsLocationOverride = $settingsLocation;
 
         return $this;
     }
 
-    protected function setSite(string $site): self {
+    protected function setSite(string $site): self
+    {
         $this->site = $site;
 
         return $this;
     }
 
-    protected function getSettingsLocation(): string {
+    protected function getSettingsLocation(): string
+    {
         $location = '/sites/' . $this->site . '/settings.php';
 
         if ($this->settingsLocationOverride !== null) {
