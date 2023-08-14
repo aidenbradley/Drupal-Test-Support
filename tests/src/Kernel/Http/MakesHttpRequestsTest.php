@@ -26,7 +26,7 @@ class MakesHttpRequestsTest extends KernelTestBase
     {
         $this->get($this->route('route.json.get'))->assertNotFound();
 
-        $this->getJson($this->route('route.json.get'))->assertOK();
+        $this->getJson($this->route('route.json.get'))->assertOk();
     }
 
     /** @test */
@@ -40,7 +40,7 @@ class MakesHttpRequestsTest extends KernelTestBase
     {
         $this->post($this->route('route.json.post'))->assertNotFound();
 
-        $this->postJson($this->route('route.json.post'))->assertOK();
+        $this->postJson($this->route('route.json.post'))->assertOk();
     }
 
     /** @test */
@@ -54,7 +54,7 @@ class MakesHttpRequestsTest extends KernelTestBase
     {
         $this->put($this->route('route.json.put'))->assertNotFound();
 
-        $this->putJson($this->route('route.json.put'))->assertOK();
+        $this->putJson($this->route('route.json.put'))->assertOk();
     }
 
     /** @test */
@@ -68,7 +68,7 @@ class MakesHttpRequestsTest extends KernelTestBase
     {
         $this->patch($this->route('route.json.patch'))->assertNotFound();
 
-        $this->patchJson($this->route('route.json.patch'))->assertOK();
+        $this->patchJson($this->route('route.json.patch'))->assertOk();
     }
 
     /** @test */
@@ -82,7 +82,7 @@ class MakesHttpRequestsTest extends KernelTestBase
     {
         $this->delete($this->route('route.json.delete'))->assertNotFound();
 
-        $this->deleteJson($this->route('route.json.delete'))->assertOK();
+        $this->deleteJson($this->route('route.json.delete'))->assertOk();
     }
 
     /** @test */
