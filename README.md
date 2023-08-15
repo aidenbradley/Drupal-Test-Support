@@ -15,7 +15,7 @@ The `HTTP` API resides inside a single trait located at <code>Drupal\Tests\test_
 
 Its purpose is to allow developers to make HTTP requests to the Drupal application under test and assert against the contents of the response and the response itself.
 
-## Installs
+## Installs [Installs API Documentation](./documentation/readme_installs.md)
 The `Installs` API resides a single trait located at `Drupal\Tests\test_support\Traits\Installs\InstallsExportedConfig`.
 
 Its purpose is to allow developers to install any exported configuration and write tests against it.
@@ -26,7 +26,7 @@ This works regardless of whether your Drupal application is a single site or a m
 
 From this API, developers can install virtually any exported configuration.
 
-There are specific traits that `InstallsExportedConfig` uses to help the setup though. These traits attempt to set up the necessary dependencies during your test run. This includes enabling required modules and installing entity schemas.
+There are specific traits that `InstallsExportedConfig` uses. These traits attempt to set up the necessary dependencies during the test run. This includes enabling required modules and installing entity schemas.
 
 Here is a list of areas this API aims to improve -
 - Installing Blocks
