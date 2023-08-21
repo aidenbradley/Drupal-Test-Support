@@ -1,8 +1,8 @@
 name: Test
 on: [ push ]
 jobs:
-  build_module:
-      name: Build Module
+  build_production_module:
+      name: Build Production Module
       runs-on: ubuntu-latest
       steps:
         -  name: Checkout module
@@ -10,19 +10,43 @@ jobs:
            with:
              path: modules/test_support
 
-        -  name: Cache module build
-           id: build_module_cache
+        -  name: Cache production module build
+           id: production_build_module_cache
            uses: actions/cache@v3
            with:
              path: modules/test_support/vendor
-             key: ${{ runner.os }}-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-             restore-keys: ${{ runner.os }}-module-build-composer-
+             key: ${{ runner.os }}-production-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+             restore-keys: ${{ runner.os }}-production-module-build-composer-
 
-        -  if: steps.build_module_cache.outputs.cache-hit != 'true'
+        -  if: steps.production_build_module_cache.outputs.cache-hit != 'true'
            name: Build module including dependencies
            run: |
                cd modules/test_support;
-               composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+               composer --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-dev install
+
+  build_development_module:
+      name: Build Development Module
+      runs-on: ubuntu-latest
+      steps:
+          -  name: Checkout module
+             uses: actions/checkout@v2
+             with:
+                 path: modules/test_support
+
+          -  name: Cache module build
+             id: development_build_module_cache
+             uses: actions/cache@v3
+             with:
+                 path: modules/test_support/vendor
+                 key: ${{ runner.os }}-development-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+                 restore-keys: ${{ runner.os }}-development-module-build-composer-
+
+          -  if: steps.development_build_module_cache.outputs.cache-hit != 'true'
+             name: Build module including dependencies
+             run: |
+                 cd modules/test_support;
+                 composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
 
   sanity_check:
     name: Sanity Check - Lint
@@ -47,8 +71,8 @@ jobs:
             uses: actions/cache@v3
             with:
                 path: modules/test_support/vendor
-                key: ${{ runner.os }}-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-                restore-keys: ${{ runner.os }}-module-build-composer-
+                key: ${{ runner.os }}-development-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+                restore-keys: ${{ runner.os }}-development-module-build-composer-
                 fail-on-cache-miss: true
 
         -   name: PHP Mess Detector
@@ -105,8 +129,8 @@ jobs:
           uses: actions/cache@v3
           with:
             path: modules/test_support/vendor
-            key: ${{ runner.os }}-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-            restore-keys: ${{ runner.os }}-module-build-composer-
+            key: ${{ runner.os }}-development-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+            restore-keys: ${{ runner.os }}-development-module-build-composer-
             fail-on-cache-miss: true
 
         - name: Run static analysis
@@ -162,8 +186,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ runner.os }}-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-          restore-keys: ${{ runner.os }}-module-build-composer-
+          key: ${{ runner.os }}-production-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+          restore-keys: ${{ runner.os }}-production-module-build-composer-
           fail-on-cache-miss: true
 
       - name: Tests
@@ -223,8 +247,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ runner.os }}-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-          restore-keys: ${{ runner.os }}-module-build-composer-
+          key: ${{ runner.os }}-production-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+          restore-keys: ${{ runner.os }}-production-module-build-composer-
           fail-on-cache-miss: true
 
       - name: Tests
