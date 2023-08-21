@@ -15,6 +15,18 @@
 [Installing Entity Types and Bundles](#installing-entity-types-and-bundles)
 - [Installing a single bundle](#installing-a-single-bundle)
 
+[Installing Entity Types and Bundles at the same time](#installing-entity-type-and-bundles-at-the-same-time)
+- [Installing Entity Type with single Bundle](#installing-entity-type-with-single-bundle)
+- [Installing Entity Type with multiple Bundles](#installing-entity-type-with-multiple-bundles)
+
+[Installing Fields](#installing-fields)
+- [Installing a single field for an entity type](#installing-a-single-field-for-an-entity-type)
+- [Installing multiple fields for an entity type](#installing-multiple-fields-for-an-entity-type)
+- [Installing a single field for a bundle of an entity type](#installing-a-single-field-for-a-bundle-of-an-entity-type)
+- [Installing multiple field for a bundle of an entity type](#installing-multiple-field-for-a-bundle-of-an-entity-type)
+- [Installing all fields for an Entity Type](#installing-all-fields-for-an-entity-type)
+- [Installing all fields for an Entity Type Bundle](#installing-all-fields-for-an-entity-type-bundle)
+
 # Introduction
 The Installs API resides inside a single trait found at <code>Drupal\Tests\test_support\Traits\Installs\InstallsExportedConfig</code>.
 
@@ -25,7 +37,7 @@ The `InstallsExportedConfig` trait can install just about any exported configura
 ## Strict Configuration
 During some test runs, you may run into schema errors when importing configuration. [Although not recommended](https://www.drupal.org/node/2391795), you can disable strict schema checks when importing configuration.
 
-Schema errors can often happen when other dependent configuration files haven't been imported. It may be the case that your test does not explicitly need them. For this reason, we provide two fluent methods to enable or disable strict schema checks.
+Schema errors can often happen when other dependent configuration files haven't been imported. It may be the case that your test does not explicitly need them, so strict config schema checks may not matter under test. For this reason, we provide two fluent methods to enable or disable strict schema checks.
 
 The methods to enable and disable the strict schema config checks are found inside the [InstallsExportedConfig](./tests/src/Traits/Installs/InstallsExportedConfig.php) trait
 ### Enabling strict schema checks
@@ -138,5 +150,103 @@ public function install_page_and_article_bundles_for_node(): void
         'page',
         'article',
     ]);
+}
+```
+
+#### Installing Entity Type and Bundles at the same time
+You can also install the entity schema for a given entity type along with a list of bundles you would also like installed.
+
+##### Installing Entity Type with single Bundle
+```php
+public function install_entity_type_with_single_bundle(): void
+{
+    $this->installEntitySchemaWithBundles('node', 'page');
+}
+```
+
+##### Installing Entity Type with multiple Bundles
+```php
+public function install_entity_type_with_multiple_bundles(): void
+{
+    $this->installEntitySchemaWithBundles('node', [
+        'page',
+        'news',
+    ]);
+}
+```
+
+### Installing Fields
+There is a specific trait called [InstallsFields](./tests/src/Traits/InstallsFields.php) that provides a few helpful methods to install field definitions for a particular entity type and an entity types bundle.
+
+The trait will install the `field` module for you so that field configurations can be installed during test runs.
+#### Installing a single field for an entity type
+To install a single field on an entity type, call the `installField` method along with the name of the field configuration you want to install and the ID of the entity type.
+
+```php
+public function install_single_field_for_entity_type(): void
+{
+    $this->installField('field_author', 'my_entity_type');
+}
+```
+
+#### Installing multiple fields for an entity type
+To install multiple fields on an entity type, call the `installFields` method along with an array of the names of the field configurations you want to install and the ID of the entity type.
+
+```php
+public function install_multiple_fields_for_entity_type(): void
+{
+    $fieldsToInstall = [
+        'field_author',
+        'field_category'
+    ];
+
+    $this->installFields($fieldsToInstall, 'my_entity_type');
+}
+```
+
+#### Installing a single field for a bundle of an entity type
+To install a single field on an entity type bundle, call the `installField` method along with the name of the field configuration you want to install, the ID of the entity type and the ID of the bundle.
+
+```php
+public function install_single_field_for_entity_type_bundle(): void
+{
+    $this->installField('body', 'node', 'page');
+}
+```
+
+#### Installing multiple field for a bundle of an entity type
+To install multiple fields on an entity type bundle, call the `installFields` method along with an array of the names of the field configurations you want to install, the ID of the entity type and the ID of the bundle.
+
+```php
+public function install_multiple_fields_for_entity_type_bundle(): void
+{
+    $fieldsToInstall = [
+        'body',
+        'field_author',
+    ];
+
+    $this->installFields($fieldsToInstall, 'node', 'page');
+}
+```
+
+#### Installing all fields for an Entity Type
+To install all fields available from configuration on an entity type, call the `installAllFieldsForEntity` method along with the entity type ID you want to target.
+
+The example below will install all field configurations available for the `custom_entity` entity type.
+```php
+public function install_all_fields_for_entity_type(): void
+{
+    $this->installAllFieldsForEntity('custom_entity');
+}
+```
+
+#### Installing all fields for an Entity Type Bundle
+To install all fields available from configuration on an entity type's bundle, call the `installAllFieldsForEntity` method along with the entity type ID and the bundle ID.
+
+The example below will install all field configurations available for the page bundle of the node entity type.
+```php
+public function install_all_fields_for_entity_type_bundle(): void
+{
+    $this->installAllFieldsForEntity('node', 'page');
 }
 ```
