@@ -47,7 +47,6 @@ jobs:
                  cd modules/test_support;
                  composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
-
   sanity_check:
     name: Sanity Check - Lint
     runs-on: ubuntu-latest
@@ -192,7 +191,7 @@ jobs:
 
       - name: Tests
         run: |
-            modules/test_support/vendor/bin/paratest \
+            modules/test_support/vendor/bin/phpunit \
             --path modules/test_support/tests \
             -c modules/test_support/phpunit.xml \
             --runner WrapperRunner
@@ -253,7 +252,7 @@ jobs:
 
       - name: Tests
         run: |
-            modules/test_support/vendor/bin/paratest \
+            modules/test_support/vendor/bin/phpunit \
             --path modules/test_support/tests \
             -c modules/test_support/phpunit.xml \
             --runner WrapperRunner
