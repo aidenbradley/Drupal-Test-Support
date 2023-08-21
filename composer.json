@@ -3,7 +3,16 @@
     "description": "Provides various traits to help test setup and assertions in Drupal Kernel tests",
     "type": "drupal-module",
     "require": {
-        "php": ">=7.3.0"
+        "php": ">=7.3.0",
+        "opis/closure": "^3.6",
+        "nesbot/carbon": "^2.69",
+        "illuminate/collections": "^8.83"
+    },
+    "require-dev": {
+        "mglaman/phpstan-drupal": "^1.1",
+        "sempro/phpunit-pretty-print": "^1.4",
+        "brianium/paratest": "^6.9",
+        "symplify/easy-coding-standard": "^11.5"
     },
     "license": "MIT",
     "authors": [
@@ -30,14 +39,5 @@
 
         "test:types": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon",
         "test:mess": "vendor/bin/phpmd tests/src/Traits ansi phpmd.xml"
-    },
-    "require-dev": {
-        "opis/closure": "^3.6",
-        "nesbot/carbon": "^2.66",
-        "mglaman/phpstan-drupal": "^1.1",
-        "sempro/phpunit-pretty-print": "^1.4",
-        "illuminate/collections": "^8.83",
-        "brianium/paratest": "^6.9",
-        "symplify/easy-coding-standard": "^11.5"
     }
 }
