@@ -10,16 +10,16 @@ jobs:
            with:
              path: modules/test_support
 
-        -  name: Cache production module build
-           id: production_build_module_cache
+        -  name: Cache module - Production Build
+           id: build_production_module_cache
            uses: actions/cache@v3
            with:
              path: modules/test_support/vendor
-             key: ${{ runner.os }}-module-development-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-             restore-keys: ${{ runner.os }}-module-development-build-composer-
+             key: ${{ runner.os }}-build-production-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+             restore-keys: ${{ runner.os }}-build-production-module-composer-
 
-        -  if: steps.production_build_module_cache.outputs.cache-hit != 'true'
-           name: Build module including dependencies
+        -  if: steps.build_production_module_cache.outputs.cache-hit != 'true'
+           name: Build production module including dependencies
            run: |
                cd modules/test_support;
                composer --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-dev install
@@ -33,7 +33,7 @@ jobs:
              with:
                  path: modules/test_support
 
-          -  name: Cache module build
+          -  name: Cache module - Development Build
              id: build_development_module_cache
              uses: actions/cache@v3
              with:
@@ -42,7 +42,7 @@ jobs:
                  restore-keys: ${{ runner.os }}-build-development-module-composer-
 
           -  if: steps.build_development_module_cache.outputs.cache-hit != 'true'
-             name: Build module including dependencies
+             name: Build development module including dependencies
              run: |
                  cd modules/test_support;
                  composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
