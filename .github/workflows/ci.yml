@@ -15,8 +15,8 @@ jobs:
            uses: actions/cache@v3
            with:
              path: modules/test_support/vendor
-             key: ${{ runner.os }}-production-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-             restore-keys: ${{ runner.os }}-production-module-build-composer-
+             key: ${{ runner.os }}-module-production-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+             restore-keys: ${{ runner.os }}-module-production-build-composer-
 
         -  if: steps.production_build_module_cache.outputs.cache-hit != 'true'
            name: Build module including dependencies
@@ -34,14 +34,14 @@ jobs:
                  path: modules/test_support
 
           -  name: Cache module build
-             id: development_build_module_cache
+             id: build_development_module_cache
              uses: actions/cache@v3
              with:
                  path: modules/test_support/vendor
-                 key: ${{ runner.os }}-development-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-                 restore-keys: ${{ runner.os }}-development-module-build-composer-
+                 key: ${{ runner.os }}-build-development-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+                 restore-keys: ${{ runner.os }}-build-development-module-composer-
 
-          -  if: steps.development_build_module_cache.outputs.cache-hit != 'true'
+          -  if: steps.build_development_module_cache.outputs.cache-hit != 'true'
              name: Build module including dependencies
              run: |
                  cd modules/test_support;
@@ -51,7 +51,7 @@ jobs:
   sanity_check:
     name: Sanity Check - Lint
     runs-on: ubuntu-latest
-    needs: build_module
+    needs: build_development_module
     strategy:
         matrix:
             php-versions: [ '7.3' ]
@@ -71,8 +71,8 @@ jobs:
             uses: actions/cache@v3
             with:
                 path: modules/test_support/vendor
-                key: ${{ runner.os }}-development-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-                restore-keys: ${{ runner.os }}-development-module-build-composer-
+                key: ${{ runner.os }}-build-development-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+                restore-keys: ${{ runner.os }}-build-development-module-composer-
                 fail-on-cache-miss: true
 
         -   name: PHP Mess Detector
@@ -89,7 +89,7 @@ jobs:
   static_analysis_matrix:
     name: PHPStan - Static Analysis
     runs-on: ubuntu-latest
-    needs: build_module
+    needs: build_development_module
     strategy:
       fail-fast: false
       matrix:
@@ -129,8 +129,8 @@ jobs:
           uses: actions/cache@v3
           with:
             path: modules/test_support/vendor
-            key: ${{ runner.os }}-development-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-            restore-keys: ${{ runner.os }}-development-module-build-composer-
+            key: ${{ runner.os }}-build-development-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+            restore-keys: ${{ runner.os }}-build-development-module-composer-
             fail-on-cache-miss: true
 
         - name: Run static analysis
@@ -186,8 +186,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ runner.os }}-production-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-          restore-keys: ${{ runner.os }}-production-module-build-composer-
+          key: ${{ runner.os }}-module-production-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+          restore-keys: ${{ runner.os }}-module-production-build-composer-
           fail-on-cache-miss: true
 
       - name: Tests
@@ -247,8 +247,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ runner.os }}-production-module-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-          restore-keys: ${{ runner.os }}-production-module-build-composer-
+          key: ${{ runner.os }}-module-production-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+          restore-keys: ${{ runner.os }}-module-production-build-composer-
           fail-on-cache-miss: true
 
       - name: Tests
