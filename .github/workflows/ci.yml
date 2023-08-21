@@ -185,8 +185,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ runner.os }}-module-development-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-          restore-keys: ${{ runner.os }}-module-development-build-composer-
+          key: ${{ runner.os }}-build-development-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+          restore-keys: ${{ runner.os }}-build-development-module-composer-
           fail-on-cache-miss: true
 
       - name: Tests
@@ -246,8 +246,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ runner.os }}-module-development-build-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-          restore-keys: ${{ runner.os }}-module-development-build-composer-
+          key: ${{ runner.os }}-build-development-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
+          restore-keys: ${{ runner.os }}-build-development-module-composer-
           fail-on-cache-miss: true
 
       - name: Tests
