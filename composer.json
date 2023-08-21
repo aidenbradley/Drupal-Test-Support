@@ -5,8 +5,8 @@
     "require": {
         "php": ">=7.3.0",
         "opis/closure": "^3.6",
-        "nesbot/carbon": "^2.66",
-        "illuminate/collections": "^8.83"
+        "nesbot/carbon": "^2.69",
+        "illuminate/collections": "^8.83",
     },
     "require-dev": {
         "mglaman/phpstan-drupal": "^1.1",
