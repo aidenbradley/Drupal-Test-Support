@@ -42,6 +42,18 @@
 - [Installing a single role](#installing-a-single-role)
 - [Installing multiple roles](#installing-multiple-roles)
 
+[Installing Themes](#installing-themes)
+- [Installing a single Theme](#installing-a-single-theme)
+- [Installing multiple Themes](#installing-multiple-themes)
+
+[Installing Views](#installing-views)
+- [Installing a single View](#installing-a-single-view)
+- [Installing multiple Views](#installing-multiple-views)
+
+[Installing Vocabularies](#installing-vocabularies)
+- [Installing a single Vocabulary](#installing-a-single-vocabulary)
+- [Installing multiple Vocabularies](#installing-multiple-vocabularies)
+
 # Introduction
 The Installs API resides inside a single trait found at <code>Drupal\Tests\test_support\Traits\Installs\InstallsExportedConfig</code>.
 
@@ -359,6 +371,86 @@ public function install_multiple_roles(): void
     $this->installRoles([
         'editor',
         'writer',
+    ]);
+}
+```
+
+### Installing themes
+There is a specific trait called [InstallsThemes](./tests/src/Traits/Installs/InstallsThemes.php) that provides a single method called `installThemes`.
+
+When installing a theme, the trait will enable the `system` module and install its schema.
+
+#### Installing a single theme
+To install a single theme, call the `installThemes` method and pass a single argument that is the theme you want to install.
+```php
+public function install_single_theme(): void
+{
+    $this->installThemes('stark');
+}
+```
+
+#### Installing multiple themes
+To install multiple themes, call the `installThemes` method and pass an array of themes you want to install.
+```php
+public function install_multiple_themes(): void
+{
+    $this->installThemes([
+        'stark',
+        'classy',
+    ]);
+}
+```
+
+### Installing views
+There is a specific trait called [InstallsViews](./tests/src/Traits/Installs/InstallsViews.php) that provides a single method called `installViews`.
+
+The trait will enable the `system`, `user`, and `views` modules along with installing the `view` entity schema.
+
+#### Installing a single View
+To install a single view, call the `installViews` method and pass a single argument of the Views ID.
+
+```php
+public function install_single_view(): void
+{
+    $this->installViews('content');
+}
+```
+
+#### Installing multiple Views
+To install multiple views, call the `installViews` method with an array of View ID's.
+```php
+public function install_multiple_views(): void
+{
+    $this->installViews([
+        'content',
+        'media',
+    ])
+}
+```
+
+### Installing Vocabularies
+There is a specific trait called [InstallingVocabularies](./tests/src/Traits/Installs/InstallingVocabularies.php) that provides a single method called `installVocabularies`.
+
+The trait will enable the `taxonomy` modules along with installing the `taxonomy_vocabulary` entity schema.
+
+#### Installing a single vocabulary
+To install a single vocabuary, call the `installVocabularies` method with an argument of the vocabulary name.
+
+```php
+public function install_single_vocabulary(): void
+{
+    $this->installVocabularies('tags');
+}
+```
+#### Installing multiple vocabularies
+To install multiple vocabularies, call the `installVocabularies` method with an argument of an array of vocabularies.
+
+```php
+public function install_multiple_vocabularies(): void
+{
+    $this->installVocabularies([
+        'tags',
+        'category',
     ]);
 }
 ```
