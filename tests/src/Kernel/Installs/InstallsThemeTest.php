@@ -26,7 +26,7 @@ class InstallsThemeTest extends KernelTestBase
 
         $this->installThemes([
             'stark',
-            'classy',
+            'claro',
         ]);
 
         $this->assertArrayHasKey('stark', $this->container->get('theme_handler')->listInfo());
