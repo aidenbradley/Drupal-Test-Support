@@ -27,6 +27,21 @@
 - [Installing all fields for an Entity Type](#installing-all-fields-for-an-entity-type)
 - [Installing all fields for an Entity Type Bundle](#installing-all-fields-for-an-entity-type-bundle)
 
+[Installing Image Styles](#installing-image-styles)
+- [Install a single image style](#installing-a-single-image-style)
+- [Install multiple image styles](#installing-multiple-image-styles)
+
+[Installing Menus](#installing-menus)
+- [Installing a single menu](#installing-a-single-menu)
+- [Installing multple menus](#installing-multiple-menus)
+
+[Installing Modules](#installing-modules)
+- [Installing a module and its dependencies (recursively)](#installing-a-module-and-its-dependencies--recursively-)
+
+[Installing Roles](#installing-roles)
+- [Installing a single role](#installing-a-single-role)
+- [Installing multiple roles](#installing-multiple-roles)
+
 # Introduction
 The Installs API resides inside a single trait found at <code>Drupal\Tests\test_support\Traits\Installs\InstallsExportedConfig</code>.
 
@@ -248,5 +263,102 @@ The example below will install all field configurations available for the page b
 public function install_all_fields_for_entity_type_bundle(): void
 {
     $this->installAllFieldsForEntity('node', 'page');
+}
+```
+
+### Installing Image Styles
+There is a specific trait called [InstallsImageStyles](./tests/src/Traits/Installs/InstallsImageStyles.php) that provides a helpful method called `installImageStyles`.
+
+The trait will install the `image` module as well as install the `image_style` entity schema whenever an image style is being installed from configuration.
+
+#### Installing a single Image Style
+To install a single image style, call the `installImageStyles` method and pass a single image style ID you want to install.
+```php
+public function install_single_image_style(): void
+{
+    $this->installImageStyles('large');
+}
+```
+
+#### Installing multiple Image Styles
+To install multiple image styles, call the `installImageStyles` method and pass an array of image style ID's you want to install.
+```php
+public function install_multiple_image_styles(): void
+{
+    $this->installImageStyles([
+        'large',
+        'medium',
+    ]);
+}
+```
+
+### Installing menus
+There is a specific trait called [InstallsMenus](./tests/src/Traits/Installs/InstallsMenus.php) that provides a helpful method called `installMenus`.
+
+The trait will install the `system` module as well as install the `menu` entity schema whenever an image style is being installed from configuration.
+#### Installing a single menu
+To install a single menu, call the `installMenus` method and pass a single menu ID you want to install
+```php
+public function install_single_menu(): void
+{
+    $this->installMenus('header');
+}
+```
+#### Installing multiple menus
+To install multiple menus, call the `installsMenus` method and pass an array of menu ID's you want to install
+```php
+public function install_multiple_menus(): void
+{
+    $this->installMenus([
+        'header',
+        'footer',
+    ])
+}
+```
+
+### Installing Modules
+There is a specific trait called [InstallsModules](./tests/src/Traits/Installs/InstallsModules.php) that provides a single method called `enableModuleWithDependencies`. The purpose of this method is to improve the developer experience of preparing a kernel test.
+
+Take `my_custom_module` for example. This may declare a dependency on the `text` module. The `text` module also declares the `field` and `filter` modules as dependencies.
+
+Using `enableModuleWithDependencies` will install `my_custom_module`, `text`, `field`, and `filter`, as it attempts to recursively enable all dependencies declared.
+
+This is useful for finding out whether your custom module is correct. E.G. If you have a custom module that uses a `text` field type via a `BaseFieldDefinition`, then your module should probably declare a dependency on the `text` module.
+
+#### Installing a module and its dependencies (recursively)
+To install a module and its depenendencies recursively, call the `enableModuleWithDependencies` method.
+```php
+public function recursively_enable_module_and_dependencies(): void
+{
+    // we expect the text, field and filter modules to
+    // be enabled because the text module declares
+    // the field and filter as dependencies.
+    $this->enableModuleWithDependencies('text');
+}
+```
+
+### Installing Roles
+There is a specific trait called [InstallsRoles](./tests/src/Traits/Installs/InstallsRoles.php) that provides a single method called `installRoles`.
+
+When installing a role, the trait will enable the `system` and `user` modules along with installing the entity schema for the `user_role` entity type.
+
+#### Installing a single role
+To install a single role, call the `installRoles` method with a single role ID.
+```php
+public function install_single_role(): void
+{
+    $this->installRoles('editor');
+}
+```
+
+#### Installing multiple roles
+To install multiple roles, call the `installRoles` method with an array of role ID's.
+```php
+public function install_multiple_roles(): void
+{
+    $this->installRoles([
+        'editor',
+        'writer',
+    ]);
 }
 ```
