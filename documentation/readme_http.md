@@ -31,18 +31,19 @@
 [Following redirects when making an HTTP Request](#following-redirects-when-making-an-http-request)
 
 # Introduction
-The HTTP API resides inside a single trait found at <code>Drupal\Tests\test_support\Traits\Http\MakesHttpRequests</code>.
+The HTTP API resides inside a single trait called [MakesHttpRequests](../tests/src/Traits/Http/MakesHttpRequests.php).
 
 Its purpose is to allow developers to make HTTP requests to the Drupal application under test and assert against the contents of the response and the response itself.
 
-Most methods that exist inside the <code>MakesHttpRequests</code> trait will return an instance of <code>TestResponse</code>. More on this later!
+Most methods that exist inside the [MakesHttpRequests](../tests/src/Traits/Http/MakesHttpRequests.php) trait will return an instance of [TestResponse](../tests/src/Traits/Http/Response/TestResponse.php).
 
-The examples below demonstrate how each method may be used inside a test that's using the <code>MakesHttpRequests</code> trait.
+The examples below demonstrate how each method may be used inside a test that's using the [MakesHttpRequests](../tests/src/Traits/Http/MakesHttpRequests.php) trait.
 
 ### GET Requests
 #### Making a GET request
 ```php
-/** @test */
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function http_get(): void
 {
     $this->get($url)->assertOk();
@@ -51,6 +52,8 @@ public function http_get(): void
 
 #### Making a GET request using JSON
 ```php
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function http_get_json(): void
 {
     $this->getJson($url)->assertOk();
@@ -59,6 +62,8 @@ public function http_get_json(): void
 ### POST Requests
 #### Making a POST request
 ```php
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function http_post(): void
 {
     $this->post($url)->assertOk();
@@ -67,6 +72,8 @@ public function http_post(): void
 
 #### Making a POST request using JSON
 ```php
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function http_post_json(): void
 {
     $this->postJson($url)->assertOk();
@@ -76,6 +83,8 @@ public function http_post_json(): void
 ### PUT Requests
 #### Making a PUT request
 ```php
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function http_put(): void
 {
     $this->put($url)->assertOk();
@@ -83,6 +92,8 @@ public function http_put(): void
 ```
 #### Making a PUT request using JSON
 ```php
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function http_put_json(): void
 {
     $this->putJson($url)->assertOk();
@@ -92,6 +103,8 @@ public function http_put_json(): void
 ### PATCH Requests
 #### Making a PATCH request
 ```php
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function http_patch(): void
 {
     $this->patch($url)->assertOk();
@@ -99,6 +112,8 @@ public function http_patch(): void
 ```
 #### Making a PATCH request using JSON
 ```php
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function http_patch_json(): void
 {
     $this->patchJson($url)->assertOk();
@@ -108,6 +123,8 @@ public function http_patch_json(): void
 ### DELETE Requests
 #### Making a DELETE request
 ```php
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function http_delete(): void
 {
     $this->delete($url)->assertOk();
@@ -115,6 +132,8 @@ public function http_delete(): void
 ```
 #### Making a DELETE request using JSON
 ```php
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function http_delete_json(): void
 {
     $this->deleteJson($url)->assertOk();
@@ -124,6 +143,8 @@ public function http_delete_json(): void
 ### OPTIONS Requests
 #### Making a OPTIONS request
 ```php
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function http_options(): void
 {
     $this->options($url)->assertOk();
@@ -137,6 +158,8 @@ To do this, simply call the `ajax` method.
 
 Calling the `ajax` method will set the `X-Requested-With` header to `XMLHttpRequest`.
 ```php
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function ajax(): void
 {
     $this->ajax()->post($url, [
@@ -153,6 +176,8 @@ To do this, simply call the `from` method.
 Calling the `from` method will set the `referer` header to whatever URL you set.
 
 ```php
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function from_referer(): void
 {
     $this->from($refererUrl)->get($url);
@@ -165,6 +190,8 @@ You may want to make your `POST` request as a form.
 To do this, simply call the `asForm` method before making your `POST` request.
 
 ```php
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function send_as_form(): void
 {
     $this->asForm()->post($url);
@@ -177,6 +204,8 @@ You may want to make your `POST` request as JSON.
 To do this, simply call the `asJson` method before making your `POST` request.
 
 ```php
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function send_as_json(): void
 {
     $this->asJson()->post($url);
@@ -190,6 +219,8 @@ Informing the test to follow redirects means the test will keep making `GET` req
 
 To do this, simply call the `followingRedirects` method before making your `GET` request.
 ```php
+use \Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+
 public function following_redirects(): void
 {
     $this->followingRedirects()->get($authenticatedUrl)->assertLocation($loginUrl);

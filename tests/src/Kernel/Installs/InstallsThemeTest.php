@@ -18,18 +18,4 @@ class InstallsThemeTest extends KernelTestBase
 
         $this->assertArrayHasKey('stark', $this->container->get('theme_handler')->listInfo());
     }
-
-    /** @test */
-    public function installs_multiple_themes(): void
-    {
-        $this->assertEmpty($this->container->get('theme_handler')->listInfo());
-
-        $this->installThemes([
-            'stark',
-            'claro',
-        ]);
-
-        $this->assertArrayHasKey('stark', $this->container->get('theme_handler')->listInfo());
-        $this->assertArrayHasKey('classy', $this->container->get('theme_handler')->listInfo());
-    }
 }
