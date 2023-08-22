@@ -32,7 +32,7 @@ Here is a list of areas the Installs API aims to improve -
 - Installing Vocabluaries
 - Installing Modules
 
-## -Support ([Support API Documentation](./documentation/readme_support.md))
+## Support ([Support API Documentation](./documentation/readme_support.md))
 The purpose of the Support API is to provide convenient methods to improve the developer experience when writing automated tests.
 
 There is no single trait for the Support API. Rather there are many traits, where each trait aims to address the developer experience when working with certain areas of Drupal and automated testing.
@@ -41,6 +41,7 @@ Here is an overview of what the Support API aims to improve when writing and run
 - Running batches
 - Running system cron
 - Time Travel (travelling to a point in time)
+  - This includes timezone support
 - Creating and updating entities
 - Installing languages and setting the current language
 - Testing any emails that are sent by Drupal
