@@ -18,6 +18,21 @@
 - [Running cron hooks](#running-cron-hooks)
 
 [Interacting with Drupal Time (Time Travel)](#interacting-with-drupal-time--time-travel-)
+- [Time Travel to a date and time](#time-travel-to-a-date-and-time)
+- [Time Travel to a date and time to a certain timezone](#time-travel-to-a-date-and-time-to-a-certain-timezone)
+- [Time Travel in seconds](#time-travel-in-seconds)
+- [Time Travel in minutes](#time-travel-in-minutes)
+- [Time Travel in hours](#time-travel-in-hours)
+- [Time Travel in days](#time-travel-in-days)
+- [Time Travel in weeks](#time-travel-in-weeks)
+- [Time Travel in months](#time-travel-in-months)
+- [Time Travel in years](#time-travel-in-years)
+- [Time Travel to date time and freeze time](#time-travel-to-date-time-and-freeze-time)
+- [Time Travel to a timezone](#time-travel-to-a-timezone)
+- [Time Travel to a date and time with a timezone](#time-travel-to-a-date-and-time-with-a-timezone)
+- [Time Travel to timezone and freeze time](#time-travel-to-timezone-and-freeze-time)
+- [Time Travel back to the present](#time-travel-back-to-the-present)
+
 # Introduction
 The purpose of the Support API is to provide convenient methods to improve the developer experience when writing automated tests.
 
@@ -207,7 +222,7 @@ public function travel_to_date_and_time(): void
 }
 ```
 
-### Travel to a date and time to a certain timezone
+### Time Travel to a date and time to a certain timezone
 To travel to a certain date and time to a certain timezone, call the `travelTo` method and pass a second argument of the timezone, such as `Europe/London`.
 
 ```php
