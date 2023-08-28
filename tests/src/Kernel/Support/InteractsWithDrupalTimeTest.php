@@ -166,7 +166,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
-    public function travelling_to_timezone_sets_sysmtes_default_timezone(): void
+    public function travelling_to_timezone_sets_systems_default_timezone(): void
     {
         $timezone = $this->config('system.date')->get('timezone');
         $this->assertNull($timezone);
