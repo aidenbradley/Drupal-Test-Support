@@ -28,8 +28,8 @@
 - [Time Travel in months](#time-travel-in-months)
 - [Time Travel in years](#time-travel-in-years)
 - [Time Travel to date time and freeze time](#time-travel-to-date-time-and-freeze-time)
+- [Time Travel to a date and time in a timezone](#time-travel-to-a-date-and-time-in-a-timezone)
 - [Time Travel to a timezone](#time-travel-to-a-timezone)
-- [Time Travel to a date and time with a timezone](#time-travel-to-a-date-and-time-with-a-timezone)
 - [Time Travel to timezone and freeze time](#time-travel-to-timezone-and-freeze-time)
 - [Time Travel back to the present](#time-travel-back-to-the-present)
 
