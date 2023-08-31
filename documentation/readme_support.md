@@ -337,9 +337,83 @@ public function years(): void
 ```
 
 ### Time Travel to date time and freeze time
+To travel and freeze time, pass a callback to the method used to travel.
+
+Once you have finished time travelling, the test will send you back to the present!
+
+Here is an example of travelling 5 years into the future, creating a node and then returning to the present.
+```php
+public function travel_five_years_freeze_time_and_create_user(): void
+{
+    $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
+
+    $this->travel(5)->years(function () {
+        $timeTraveler = $this->createEntity('user', [
+            'name' => 'time.traveler',
+        ]);
+    });
+
+    $this->assertEquals(time(), $this->getDrupalTime()->getRequestTime());
+}
+```
+
+### Time Travel to a date and time in a timezone
+To travel to a date and time in a particular timezone, call the `travelTo` method. The method accepts a second optional argument of the timezone you want to travel to.
+
+The timezone set in Drupal is also updated under the hood when you pass the timezone argument.
+
+```php
+public function travel_to_date_time_in_timezone(): void
+{
+    $this->travelTo('10th January 2020 15:00:00', 'Europe/London');
+
+    $this->assertTimezoneIs('Europe/London');
+    $this->assertTimeIs('10th January 2020 15:00:00');
+}
+```
+
 ### Time Travel to a timezone
-### Time Travel to a date and time with a timezone
+If you want to travel to a different timezone and keep the date and time the same, call the `travel` method and chain off and call the `toTimezone` method.
+
+The timezone set in Drupal is also updated under the hood when you travel to a different timezone.
+
+Here is an example of travelling to a date and time in one timezone and then traveling to a different timezone entirely.
+
+```php
+public function travel_to_timezone(): void
+{
+    $this->travelTo('10th January 2020 15:00:00', 'Europe/London');
+    $this->assertTimeIs('10th January 2020 15:00:00');
+
+    $this->travel()->toTimezone('Europe/Rome');
+    $this->assertTimeIs('10th January 2020 16:00:00');
+}
+```
+
 ### Time Travel to timezone and freeze time
+Just like travelling and freezing time, you can also travel to another timezone and freeze time there.
+
+To do this, pass a callable argument to the `toTimezone` method. Anything inside of this callable will be executed in that timezone. Once completed, you will be returned to the present!
+
+```php
+public function travel_and_freeze_timezone(): void
+{
+    $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
+    $this->assertTimezoneIs('Europe/London');
+
+    $this->travel()->toTimezone('Europe/Rome', function () {
+        User::create([
+            'name' => 'time.traveler',
+        ])->save();
+
+        $this->assertTimezoneIs('Europe/Rome');
+    });
+
+    $this->assertEquals(time(), $this->getDrupalTime()->getRequestTime());
+    $this->assertTimezoneIs('Europe/London');
+}
+```
+
 ### Time Travel back to the present
 If you are done with time travelling and want to travel back to the present, simply call the `travel` method then chain off and call the `back` method.
 
