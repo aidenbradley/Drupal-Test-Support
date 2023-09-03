@@ -497,3 +497,9 @@ public function refresh_entity(): void
     $this->assertEquals('Example Title Updated', $node->get('title')->getString());
 }
 ```
+
+## Interacting with Languages
+### Installing a language
+### Setting the current language
+### Setting the current language with a prefix
+###
