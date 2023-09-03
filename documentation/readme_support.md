@@ -429,3 +429,71 @@ public function travel_back_to_present(): void
     $this->assertEquals(time(), $this->getDrupalTime()->getRequestTime());
 }
 ```
+
+## Interacting with entities
+There is a trait called [InteractsWithEntities](.././tests/src/Traits/Support/InteractsWithEntities.php) that contains an API to improve the developer experience of interacting with entities.
+
+The API is very minor and only serves the purpose of making the tests inside this module more readable, but the trait is available to you regardless.
+
+### Creating an entity
+To create an entity, call the `createEntity` method.
+
+It accepts two arguments. The first argument is the entity type you want to create and the second argument is simply an array of values you want to store against the entity to be created.
+
+Under the hood, this will create the entitiy and save it to the database for you.
+
+```php
+public function create_entity(): void
+{
+    $node = $this->createEntity('node', [
+        'title' => 'Example node',
+        'type' => 'page',
+    ]);
+}
+```
+### Updating an entity
+To update an entity, call the `updateEntity` method.
+
+It accepts two arguments. The first argument is the entity to update and the second argument is simply an array of values you want to update.
+
+```php
+public function update_entity(): void
+{
+    $node = $this->createEntity('node', [
+        'title' => 'Example node',
+        'type' => 'page',
+    ]);
+
+    $this->updateEntity($node, [
+        'title' => 'Updated Example Title',
+    ]);
+}
+```
+
+### Refreshing an entity
+Refreshing an entity is quite useful. Often times, you may be working with an entity that's updated somewhere else in the system as part of your business logic. Loading the entity again is fine, but feels cumbersome. For this reason, the API provides a method to retreive the updated entity. We call this "refreshing".
+
+To refresh an entity, call the `refreshEntity` method.
+
+Under the hood, this will reload the entity for you and assign it back to the variable you give the `refreshEntity` method.
+
+```php
+public function refresh_entity(): void
+{
+    $node = $this->createEntity('node', [
+        'title' => 'Example Title',
+        'type' => 'page',
+    ]);
+
+    $this->assertEquals('Example Title', $node->get('title')->getString());
+
+    // Somewhere in your business logic, the title of the node is updated
+    $this->triggerBusinessLogic();
+
+    // Get all updated values for this entity, but assign
+    // it back to the variable we have already defined
+    $this->refreshEntity($node);
+
+    $this->assertEquals('Example Title Updated', $node->get('title')->getString());
+}
+```
