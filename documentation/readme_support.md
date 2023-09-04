@@ -499,7 +499,89 @@ public function refresh_entity(): void
 ```
 
 ## Interacting with Languages
+There is a trait called [InteractsWithLanguages](.././tests/src/Traits/Support/InteractsWithLanguages.php) that contains an API to improve the developer experience of installing and setting the current language when running tests.
+
+Under the hood, the trait will enable and install the config from the `language` module and install the `configurable_language` entity schema.
+
 ### Installing a language
+When performing a test, you may want to install a language so that is available to the rest of your Drupal application. This could be if you are testing creating or updating translations.
+
+To install a language, you must export the language configuration into your configuration sync directory.
+
+To install a language, call the `installLanguage` method with an argument of the language code.
+
+```php
+public function install_language(): void
+{
+    // Install the German language
+    $this->installLanguage('de');
+
+    // Install the French language
+    $this->installLanguage('fr');
+}
+```
+
+### Installing multiple languages
+To install multiple languages at once, call the `installLanguage` method and pass an array of langcodes.
+
+```php
+public function install_multiple_languages(): void
+{
+    // Install the German and French languages
+    $this->installLanguage([
+        'de',
+        'fr',
+    ]);
+}
+```
 ### Setting the current language
+During your test run, you may want to set the current language. This means that any code that's executed during your test is executed in the context of that language.
+
+For example, you can set the current language before creating an entity. Once the entity is created, the langcode of that entity will match the current language you have set.
+
+To set the current language, call the `setCurrentLanguage` method. Under the hood, it will install the language if it hasn't been installed already.
+
+```php
+public function set_current_language(): void
+{
+    $englishNode = Node::create([
+        'title' => 'EN Node',
+        'type' => 'page',
+    ]);
+    $englishNode->save();
+    $this->assertEquals('en', $englishNode->language()->getId());
+
+    $this->setCurrentLanguage('fr');
+
+    $frenchNode = Node::create([
+        'title' => 'FR Node',
+        'type' => 'page',
+    ]);
+    $frenchNode->save();
+    $this->assertEquals('fr', $frenchNode->language()->getId());
+}
+```
+
 ### Setting the current language with a prefix
+When setting the current language, you may also set the prefix. This is handy if you want to test against generated URL's, for example.
+
+To set the prefix, call the `setCurrentLanguage` method and pass a second argument of the language prefix.
+
+```php
+public function set_current_language_with_prefix(): void
+{
+    $this->setCurrentLanguage('fr', 'fr-prefix');
+
+    $frenchNode = $this->nodeStorage()->create([
+        'nid' => '3000',
+        'title' => 'FR Node',
+        'type' => 'page',
+    ]);
+    $frenchNode->save();
+
+    $url = $frenchNode->toUrl()->toString(true)->getGeneratedUrl();
+
+    $this->assertEquals('/fr-prefix/node/3000', $url);
+}
+```
 ###
