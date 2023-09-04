@@ -534,12 +534,18 @@ public function install_multiple_languages(): void
     ]);
 }
 ```
+
 ### Setting the current language
 During your test run, you may want to set the current language. This means that any code that's executed during your test is executed in the context of that language.
 
 For example, you can set the current language before creating an entity. Once the entity is created, the langcode of that entity will match the current language you have set.
 
-To set the current language, call the `setCurrentLanguage` method. Under the hood, it will install the language if it hasn't been installed already.
+There are two ways in which you can set the current language
+
+#### Set the current language using langcode
+To set the current language, call the `setCurrentLanguage` method and pass a langcode.
+
+Under the hood, it will install the language if it hasn't been installed already.
 
 ```php
 public function set_current_language(): void
@@ -559,6 +565,26 @@ public function set_current_language(): void
     ]);
     $frenchNode->save();
     $this->assertEquals('fr', $frenchNode->language()->getId());
+}
+```
+
+#### Set the current language using Language object
+To set the current language, call the `setCurrentLanguage` method and pass a Language object.
+
+Under the hood, it will install the language if it hasn't been installed already.
+
+```php
+public function set_current_language_using_language_class(): void
+{
+    $this->installLanguage('de');
+
+    $this->assertEquals('en', $this->languageManager()->getCurrentLanguage()->getId());
+
+    $germanLanguage = $this->languageManager()->getLanguage('de');
+
+    $this->setCurrentLanguage($germanLanguage);
+
+    $this->assertEquals('de', $this->languageManager()->getCurrentLanguage()->getId());
 }
 ```
 

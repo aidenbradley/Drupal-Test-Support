@@ -35,7 +35,7 @@ class InteractsWithLanguagesTest extends KernelTestBase
     }
 
     /** @test */
-    public function set_current_language(): void
+    public function set_current_language_using_langcode(): void
     {
         $this->setCurrentLanguage('en');
         $this->assertEquals('en', $this->languageManager()->getCurrentLanguage()->getId());
@@ -45,6 +45,20 @@ class InteractsWithLanguagesTest extends KernelTestBase
 
         $this->setCurrentLanguage('fr');
         $this->assertEquals('fr', $this->languageManager()->getCurrentLanguage()->getId());
+    }
+
+    /** @test */
+    public function set_current_language_using_language_class(): void
+    {
+        $this->installLanguage('de');
+
+        $this->assertEquals('en', $this->languageManager()->getCurrentLanguage()->getId());
+
+        $germanLanguage = $this->languageManager()->getLanguage('de');
+
+        $this->setCurrentLanguage($germanLanguage);
+
+        $this->assertEquals('de', $this->languageManager()->getCurrentLanguage()->getId());
     }
 
     /** @test */
