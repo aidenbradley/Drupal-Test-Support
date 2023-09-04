@@ -32,85 +32,61 @@ class InteractsWithMailTest extends KernelTestBase
     /** @test */
     public function get_sent_mail(): void
     {
-        $this->assertNoMailSent();
+        $this->sendMail('hello@example.com', 'Welcome Email', 'Welcome to Drupal!');
 
-        $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
-
-        $this->assertMailSent(1);
-
-        $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
-
-        $this->assertMailSent(2);
+        $this->assertIsArray($this->getSentMail());
     }
 
     /** @test */
-    public function get_sent_mail_from_module(): void
+    public function get_sent_mail_to_single(): void
     {
-        // this will send from the test_support_mail module
-        $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
+        $this->sendMail('hello@example.com', 'Welcome Email', 'Welcome to Drupal!');
 
-        $this->assertNotEmpty($this->getSentMail('test_support_mail'));
-        $this->assertEmpty($this->getSentMail('node'));
+        $this->assertMailSentCount(1);
+
+        $mail = $this->getMailSentTo('hello@example.com');
+
+        $this->assertInstanceOf(TestMail::class, $mail);
     }
 
     /** @test */
-    public function get_mail_sent_to(): void
+    public function get_sent_mail_to_multiple(): void
     {
-        $this->assertEmpty($this->getMailSentTo('hello@example.com'));
+        $this->sendMail('hello@example.com', 'Welcome Email', 'Welcome to Drupal!');
+        $this->sendMail('hello@example.com', 'Email Verification', 'Click here to verify');
 
-        $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
+        $this->assertMailSentCount(2);
 
-        $this->assertNotEmpty($this->getMailSentTo('hello@example.com'));
+        $mail = $this->getMailSentTo('hello@example.com');
 
-        $this->assertMailSentTo('hello@example.com', function (TestMail $mail) {
-            $mail->assertSentTo('hello@example.com');
-            $mail->assertSubject('Hello');
-        });
+        $this->assertIsArray($mail);
+        $this->assertCount(2, $mail);
     }
 
     /** @test */
-    public function get_mail_with_subject(): void
+    public function get_mail_with_subject_single(): void
     {
-        $this->assertEmpty($this->getMailWithSubject('User Registration'));
+        $this->sendMail('hello@example.com', 'Welcome Email', 'Welcome to Drupal!');
 
-        $this->sendMail('hello@example.com', 'User Registration', 'Thanks for registering!');
+        $this->assertMailSentCount(1);
 
-        $this->assertNotEmpty($this->getMailWithSubject('User Registration'));
+        $mail = $this->getMailWithSubject('Welcome Email');
 
-        $this->assertMailSentWithSubject('User Registration', function (TestMail $mail) {
-            $mail->assertSentTo('hello@example.com');
-        });
+        $this->assertInstanceOf(TestMail::class, $mail);
     }
 
     /** @test */
-    public function multiple_get_mail_with_subject(): void
+    public function get_mail_with_subject_multiple(): void
     {
-        $this->assertEmpty($this->getMailWithSubject('User Registration'));
+        $this->sendMail('hello@example.com', 'Welcome Email', 'Welcome to Drupal!');
+        $this->sendMail('welcome@example.com', 'Welcome Email', 'Welcome to Drupal!');
 
-        $this->sendMail('hello@example.com', 'User Registration', 'Thanks for registering!');
-        $this->sendMail('hello_again@example.com', 'User Registration', 'Thanks for registering again!');
+        $this->assertMailSentCount(2);
 
-        $this->assertNotEmpty($this->getMailWithSubject('User Registration'));
+        $mail = $this->getMailWithSubject('Welcome Email');
 
-        $this->assertMailSentWithSubject('User Registration', function (TestMail $mail) {
-            if ($mail->getTo() === 'hello@example.com') {
-                $mail->assertBody('Thanks for registering!');
-            }
-
-            if ($mail->getTo() === 'hello_again@example.com') {
-                $mail->assertBody('Thanks for registering again!');
-            }
-        });
-    }
-
-    /** @test */
-    public function sent_mail_contains_subject(): void
-    {
-        $this->assertEmpty($this->getMailWithSubject('User Registration'));
-
-        $this->sendMail('hello@example.com', 'User Registration', 'Thanks for registering!');
-
-        $this->assertNotEmpty($this->getMailWithSubject('User Registration'));
+        $this->assertIsArray($mail);
+        $this->assertCount(2, $mail);
     }
 
     /** @test */
@@ -125,6 +101,135 @@ class InteractsWithMailTest extends KernelTestBase
         $this->clearMail();
 
         $this->assertNoMailSent();
+    }
+
+    /** @test */
+    public function assert_no_mail_sent(): void
+    {
+        $this->clearMail();
+
+        $this->assertNoMailSent();
+    }
+
+    /** @test */
+    public function assert_mail_sent(): void
+    {
+        $this->assertNoMailSent();
+
+        $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
+
+        $this->assertMailSent();
+    }
+
+    /** @test */
+    public function assert_number_of_mail_sent(): void
+    {
+        $this->assertNoMailSent();
+
+        $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
+
+        $this->assertMailSentCount(1);
+
+        $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
+
+        $this->assertMailSentCount(2);
+    }
+
+    /** @test */
+    public function assert_no_mail_sent_from_module(): void
+    {
+        $this->clearMail();
+
+        $this->assertNoMailSentFromModule('test_support');
+    }
+
+    /** @test */
+    public function assert_mail_sent_from_module(): void
+    {
+        $this->assertNoMailSentFromModule('test_support');
+
+        $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
+
+        $this->assertMailSentFromModule('test_support');
+    }
+
+    /** @test */
+    public function assert_no_mail_sent_to(): void
+    {
+        $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
+
+        $this->clearMail();
+
+        $this->assertNoMailSentTo('hello@example.com');
+    }
+
+    /** @test */
+    public function assert_mail_sent_to(): void
+    {
+        $this->assertNoMailSentTo('hello@example.com');
+
+        $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
+
+        $this->assertMailSentTo('hello@example.com');
+
+        $this->assertMailSentTo('hello@example.com', function (TestMail $mail) {
+            $mail->assertSentTo('hello@example.com');
+            $mail->assertSubject('Hello');
+        });
+    }
+
+    /** @test */
+    public function assert_mail_sent_to_multiple(): void
+    {
+        $this->assertNoMailSentTo('hello@example.com');
+
+        $this->sendMail('hello@example.com', 'User Registration', 'Thanks for registering');
+        $this->sendMail('hello@example.com', 'Welcome Email', 'Welcome to Drupal!');
+
+        $this->assertMailSentTo('hello@example.com');
+
+        $this->assertMailSentTo('hello@example.com', function (TestMail $mail) {
+            if ($mail->getSubject() === 'User Registration') {
+                $mail->assertSentTo('hello@example.com');
+                $mail->assertSubject('User Registration');
+            }
+
+            if ($mail->getSubject() === 'Welcome Email') {
+                $mail->assertSentTo('hello@example.com');
+                $mail->assertSubject('Welcome Email');
+            }
+        });
+    }
+
+    /** @test */
+    public function assert_mail_sent_with_subject(): void
+    {
+        $this->assertNoMailSentWithSubject('User Registration');
+
+        $this->sendMail('hello@example.com', 'User Registration', 'Thanks for registering!');
+        $this->sendMail('hello_again@example.com', 'User Registration', 'Thanks for registering again!');
+
+        $this->assertMailSentWithSubject('User Registration');
+
+        $this->assertMailSentWithSubject('User Registration', function (TestMail $mail) {
+            if ($mail->getTo() === 'hello@example.com') {
+                $mail->assertBody('Thanks for registering!');
+            }
+
+            if ($mail->getTo() === 'hello_again@example.com') {
+                $mail->assertBody('Thanks for registering again!');
+            }
+        });
+    }
+
+    /** @test */
+    public function assert_no_mail_sent_with_subject(): void
+    {
+        $this->assertNoMailSentWithSubject('User Registration');
+
+        $this->sendMail('hello@example.com', 'User Account Updated', 'Thanks for updating your account!');
+
+        $this->assertNoMailSentWithSubject('User Registration');
     }
 
     /** @param array<mixed> $params */

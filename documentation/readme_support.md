@@ -611,3 +611,85 @@ public function set_current_language_with_prefix(): void
 }
 ```
 ###
+
+## Interacts with Mail
+There is a trait called [InteractsWithMail](.././tests/src/Traits/Support/InteractsWithMail.php) that contains an API to improve the developer experience of testing against emails that are sent.
+
+This API provides methods to -
+- Get any mail that has been sent
+- Assert against any mail that has been sent
+- Inspect the contents of the mail that has been sent
+
+When using this API, any mail that's found is returned to you using the [TestMail](.././tests/src/Traits/Support/Mail/TestMail.php) class.
+
+### Helper methods
+The [InteractsWithMail](.././tests/src/Traits/Support/InteractsWithMail.php) trait contains helper methods that improve the developer experience of getting certain mail that's been sent.
+
+#### Getting sent mail
+To get mail that's sent during a test run, call the `getSentMail` method.
+
+This will return an array of [TestMail](.././tests/src/Traits/Support/Mail/TestMail.php) objects.
+
+```php
+public function get_sent_mail(): void
+{
+    $this->container->get('plugin.manager.mail')->mail(
+        'my_module',
+        'my_module',
+        'to@example.com',
+        'en',
+        [], // no parameters
+        null, // no reply
+        true // send the mail
+    );
+
+    $sentMail = $this->getSentMail();
+}
+```
+
+#### Getting sent mail by module
+To get mail that's sent by a particular module, call the `getSentMail` method and pass the module name as an argument.
+
+This will filter the array down to only mail that has been sent by that module.
+
+```php
+public function get_sent_mail_by_module(): void
+{
+    $this->container->get('plugin.manager.mail')->mail(
+        'my_module',
+        'my_module',
+        'to@example.com',
+        'en',
+        [], // no parameters
+        null, // no reply
+        true // send the mail
+    );
+
+    $sentMail = $this->getSentMail('my_module');
+}
+```
+
+#### Getting mail sent to an email address
+To get mail that's sent to a particular email address, call the `getMailSentTo` method and pass an argument of the email address.
+
+If only one mail item is found, then an instance of [TestMail](.././tests/src/Traits/Support/Mail/TestMail.php) is returned. If more than one mail item is found, then an array of [TestMail](.././tests/src/Traits/Support/Mail/TestMail.php) instances are returned.
+```php
+public function get_mail_sent_to_email_address(): void
+{
+    $this->container->get('plugin.manager.mail')->mail(
+        'my_module',
+        'my_module',
+        'hello_world@example.com',
+        'en',
+        [], // no parameters
+        null, // no reply
+        true // send the mail
+    );
+
+    $sentMail = $this->getSentMail('hello_world@example.com');
+}
+```
+
+### Assertion helper methods
+
+### TestMail
