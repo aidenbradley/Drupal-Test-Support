@@ -76,6 +76,26 @@ class TestMailTest extends UnitTestCase
     }
 
     /** @test */
+    public function get_module(): void
+    {
+        $mail = TestMail::createFromValues([
+            'module' => 'test_support',
+        ]);
+
+        $this->assertEquals('test_support', $mail->getModule());
+    }
+
+    /** @test */
+    public function assert_sent_from_module(): void
+    {
+        $mail = TestMail::createFromValues([
+            'module' => 'test_support',
+        ]);
+
+        $mail->assertSentFromModule('test_support');
+    }
+
+    /** @test */
     public function get_param(): void
     {
         $mail = TestMail::createFromValues([

@@ -64,6 +64,18 @@ class TestMail
         return $this;
     }
 
+    public function getModule(): ?string
+    {
+        return $this->getValue('module');
+    }
+
+    public function assertSentFromModule(string $module): self
+    {
+        Assert::assertEquals($module, $this->getModule());
+
+        return $this;
+    }
+
     /** @return mixed */
     public function getParameter(string $param)
     {
@@ -102,14 +114,13 @@ class TestMail
         return $this->values;
     }
 
-    private function getValue(string $keyName): ?string
+    /** @return mixed|null */
+    private function getValue(string $keyName)
     {
-        $value = $this->values[$keyName];
-
-        if (is_string($value) === false) {
+        if (isset($this->values[$keyName]) === false) {
             return null;
         }
 
-        return $value;
+        return $this->values[$keyName];
     }
 }

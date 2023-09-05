@@ -94,7 +94,9 @@ trait InteractsWithMail
 
     public function assertMailSentFromModule(string $module): self
     {
-        $mail = $this->getSentMail($module);
+        $mail = $this->getSentMail(function (TestMail $mail) use ($module): bool {
+            return $mail->getModule() === $module;
+        });
 
         $this->assertNotEmpty($mail);
 
@@ -103,7 +105,9 @@ trait InteractsWithMail
 
     public function assertNoMailSentFromModule(string $module): self
     {
-        $mail = $this->getSentMail($module);
+        $mail = $this->getSentMail(function (TestMail $mail) use ($module): bool {
+            return $mail->getModule() === $module;
+        });
 
         $this->assertEmpty($mail);
 

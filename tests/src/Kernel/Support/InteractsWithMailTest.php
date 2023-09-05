@@ -140,17 +140,17 @@ class InteractsWithMailTest extends KernelTestBase
     {
         $this->clearMail();
 
-        $this->assertNoMailSentFromModule('test_support');
+        $this->assertNoMailSentFromModule('test_support_mail');
     }
 
     /** @test */
     public function assert_mail_sent_from_module(): void
     {
-        $this->assertNoMailSentFromModule('test_support');
+        $this->assertNoMailSentFromModule('test_support_mail');
 
         $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
 
-        $this->assertMailSentFromModule('test_support');
+        $this->assertMailSentFromModule('test_support_mail');
     }
 
     /** @test */
