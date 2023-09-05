@@ -79,7 +79,7 @@ class WithoutEventsTest extends KernelTestBase
             return $firedEvent->getLangcodes() === $langcodes;
         });
 
-        /** @param  object  $firedEvent */
+        /** @param object $firedEvent */
         $this->assertDispatched(get_class($event), function (LocaleEvent $firedEvent) use ($langcodes) {
             return $firedEvent->getLangcodes() === $langcodes;
         });

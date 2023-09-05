@@ -122,6 +122,35 @@ class InteractsWithMailTest extends KernelTestBase
     }
 
     /** @test */
+    public function assert_mail_sent_with_closure_assertion(): void
+    {
+        $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
+
+        $this->assertMailSent(function (TestMail $mail): void {
+            $mail->assertSentTo('hello@example.com');
+        });
+    }
+
+    /** @test */
+    public function assert_mail_sent_multiple_with_closure_assertion(): void
+    {
+        $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
+        $this->sendMail('example@example.com', 'Example', 'Example, at example.com');
+
+        $this->assertMailSent(function (TestMail $mail): void {
+            if ($mail->getTo() === 'hello@example.com') {
+                $mail->assertSubject('Hello');
+            }
+
+            if ($mail->getTo() === 'example@example.com') {
+                // Do we try catch in the assertion and re-throw our own assertion
+                // then handle that in InteractsWithMail with a more descrpitive failure message?
+                $mail->assertSentTo('Example');
+            }
+        });
+    }
+
+    /** @test */
     public function assert_number_of_mail_sent(): void
     {
         $this->assertNoMailSent();
@@ -133,6 +162,30 @@ class InteractsWithMailTest extends KernelTestBase
         $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
 
         $this->assertMailSentCount(2);
+    }
+
+    /** @test */
+    public function assert_number_of_mail_sent_with_closure_assertion(): void
+    {
+        $this->assertNoMailSent();
+
+        $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
+
+        $this->assertMailSentCount(1, function (TestMail $mail): void {
+            $mail->assertSentTo('hello@example.com');
+        });
+
+        $this->sendMail('example@example.com', 'Example', 'Hello, at example.com');
+
+        $this->assertMailSentCount(2, function (TestMail $mail): void {
+            if ($mail->getTo() === 'hello@example.com') {
+                $mail->assertSubject('Hello');
+            }
+
+            if ($mail->getTo() === 'example@example.com') {
+                $mail->assertSubject('Example');
+            }
+        });
     }
 
     /** @test */
@@ -151,6 +204,28 @@ class InteractsWithMailTest extends KernelTestBase
         $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
 
         $this->assertMailSentFromModule('test_support_mail');
+    }
+
+    /** @test */
+    public function assert_mail_sent_from_module_closure_assertion(): void
+    {
+        $this->sendMail('hello@example.com', 'Hello', 'Hello, at example.com');
+
+        $this->assertMailSentFromModule('test_support_mail', function (TestMail $mail): void {
+            $mail->assertSentTo('hello@example.com');
+        });
+
+        $this->sendMail('example@example.com', 'Example', 'Hello, at example.com');
+
+        $this->assertMailSentFromModule('test_support_mail', function (TestMail $mail): void {
+            if ($mail->getTo() === 'hello@example.com') {
+                $mail->assertSubject('Hello');
+            }
+
+            if ($mail->getTo() === 'example@example.com') {
+                $mail->assertSubject('Example');
+            }
+        });
     }
 
     /** @test */
@@ -173,7 +248,6 @@ class InteractsWithMailTest extends KernelTestBase
         $this->assertMailSentTo('hello@example.com');
 
         $this->assertMailSentTo('hello@example.com', function (TestMail $mail) {
-            $mail->assertSentTo('hello@example.com');
             $mail->assertSubject('Hello');
         });
     }

@@ -5,6 +5,7 @@ namespace Drupal\Tests\test_support\Traits\Support;
 use Drupal\Tests\test_support\Traits\Support\Mail\TestMail;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\ExpectationFailedException;
 
 trait InteractsWithMail
 {
@@ -74,31 +75,55 @@ trait InteractsWithMail
         return $this;
     }
 
-    public function assertMailSent(): self
+    public function assertMailSent(?\Closure $callback = null): self
     {
         $mail = $this->getSentMail();
 
         $this->assertNotEmpty($mail);
 
+        if ($callback) {
+            foreach ($mail as $testMail) {
+                // Do we try catch in the assertion and re-throw our own assertion
+                // then handle that in InteractsWithMail with a more descrpitive failure message?
+                try {
+                    $callback($testMail);
+                } catch (ExpectationFailedException $fail) {
+                    Assert::fail($fail->getMessage());
+                }
+            }
+        }
+
         return $this;
     }
 
-    public function assertMailSentCount(int $numberOfMailSent): self
+    public function assertMailSentCount(int $numberOfMailSent, ?\Closure $callback = null): self
     {
         $mail = $this->getSentMail();
 
         $this->assertCount($numberOfMailSent, $mail);
 
+        if ($callback) {
+            foreach ($mail as $testMail) {
+                $callback($testMail);
+            }
+        }
+
         return $this;
     }
 
-    public function assertMailSentFromModule(string $module): self
+    public function assertMailSentFromModule(string $module, ?\Closure $callback = null): self
     {
         $mail = $this->getSentMail(function (TestMail $mail) use ($module): bool {
             return $mail->getModule() === $module;
         });
 
         $this->assertNotEmpty($mail);
+
+        if ($callback) {
+            foreach ($mail as $testMail) {
+                $callback($testMail);
+            }
+        }
 
         return $this;
     }
@@ -116,7 +141,11 @@ trait InteractsWithMail
 
     public function assertMailSentTo(string $to, ?\Closure $callback = null): self
     {
-        $mail = (array) $this->getMailSentTo($to);
+        $mail = $this->getMailSentTo($to);
+
+        if ($mail instanceof TestMail) {
+            $mail = [$mail];
+        }
 
         if ($mail === []) {
             $this->fail('No email was sent to ' . $to);
@@ -143,20 +172,16 @@ trait InteractsWithMail
     /** The closure is passed to each mail item found with the given subject */
     public function assertMailSentWithSubject(string $subject, ?\Closure $callback = null): self
     {
-        $mailItems = $this->getMailWithSubject($subject);
+        $mail = $this->getMailWithSubject($subject);
 
-        if ($mailItems === []) {
+        if ($mail === []) {
             $this->fail('No email was sent with subject ' . $subject);
         }
 
-        foreach ($mailItems as $mail) {
-            $this->assertEquals($subject, $mail->getSubject());
-
-            if ($callback === null) {
-                continue;
+        if ($callback) {
+            foreach ($mail as $testMail) {
+                $callback($testMail);
             }
-
-            $callback($mail);
         }
 
         return $this;
