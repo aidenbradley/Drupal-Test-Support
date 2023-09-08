@@ -70,7 +70,7 @@ trait InteractsWithMail
 
     public function assertNoMailSent(): self
     {
-        $this->assertEmpty($this->getSentMail());
+        Assert::assertEmpty($this->getSentMail());
 
         return $this;
     }
@@ -79,17 +79,11 @@ trait InteractsWithMail
     {
         $mail = $this->getSentMail();
 
-        $this->assertNotEmpty($mail);
+        Assert::assertNotEmpty($mail);
 
         if ($callback) {
             foreach ($mail as $testMail) {
-                // Do we try catch in the assertion and re-throw our own assertion
-                // then handle that in InteractsWithMail with a more descrpitive failure message?
-                try {
-                    $callback($testMail);
-                } catch (ExpectationFailedException $fail) {
-                    Assert::fail($fail->getMessage());
-                }
+                $callback($testMail);
             }
         }
 
@@ -100,7 +94,7 @@ trait InteractsWithMail
     {
         $mail = $this->getSentMail();
 
-        $this->assertCount($numberOfMailSent, $mail);
+        Assert::assertCount($numberOfMailSent, $mail);
 
         if ($callback) {
             foreach ($mail as $testMail) {
@@ -117,7 +111,7 @@ trait InteractsWithMail
             return $mail->getModule() === $module;
         });
 
-        $this->assertNotEmpty($mail);
+        Assert::assertNotEmpty($mail);
 
         if ($callback) {
             foreach ($mail as $testMail) {
@@ -134,7 +128,7 @@ trait InteractsWithMail
             return $mail->getModule() === $module;
         });
 
-        $this->assertEmpty($mail);
+        Assert::assertEmpty($mail);
 
         return $this;
     }
@@ -164,7 +158,7 @@ trait InteractsWithMail
     {
         $mail = $this->getMailSentTo($to);
 
-        $this->assertEmpty($mail);
+        Assert::assertEmpty($mail);
 
         return $this;
     }
@@ -191,7 +185,7 @@ trait InteractsWithMail
     {
         $mail = $this->getMailWithSubject($subject);
 
-        $this->assertEmpty($mail);
+        Assert::assertEmpty($mail);
 
         return $this;
     }

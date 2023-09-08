@@ -40,7 +40,7 @@ trait WithoutEvents
     }
 
     /** @param class-string|string|null $event */
-    public function assertDispatched($event, ?callable $callback = null): self
+    public function assertDispatched($event, ?\Closure $callback = null): self
     {
         $firedEvents = $this->eventDispatcher()->getFiredEvents($event);
 

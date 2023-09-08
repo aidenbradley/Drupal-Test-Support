@@ -3,6 +3,7 @@
 namespace Drupal\Tests\test_support\Traits\Support\Mail;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\ExpectationFailedException;
 
 class TestMail
 {
@@ -28,7 +29,7 @@ class TestMail
 
     public function assertSentTo(string $to): self
     {
-        Assert::assertEquals($to, $this->getTo());
+        $this->assertEquals($to, $this->getTo());
 
         return $this;
     }
@@ -59,7 +60,7 @@ class TestMail
     /** @param  mixed  $body */
     public function assertBody($body): self
     {
-        Assert::assertEquals($body, $this->getBody());
+        $this->assertEquals($body, $this->getBody());
 
         return $this;
     }
@@ -71,7 +72,7 @@ class TestMail
 
     public function assertSentFromModule(string $module): self
     {
-        Assert::assertEquals($module, $this->getModule());
+        $this->assertEquals($module, $this->getModule());
 
         return $this;
     }
@@ -99,7 +100,7 @@ class TestMail
     {
         $paramValue = $this->getParameter($parameter);
 
-        Assert::assertEquals($value, $paramValue);
+        $this->assertEquals($value, $paramValue);
 
         if ($assertionCallback !== null) {
             $assertionCallback($paramValue);
@@ -122,5 +123,18 @@ class TestMail
         }
 
         return $this->values[$keyName];
+    }
+
+    /**
+     * @param mixed $expected
+     * @param mixed $actual
+     */
+    private function assertEquals($expected, $actual): void
+    {
+        try {
+            Assert::assertEquals($expected, $actual);
+        } catch (ExpectationFailedException $exception) {
+            Assert::fail('Failed asserting that `' . $expected . '` equals `' . $actual . '`');
+        }
     }
 }
