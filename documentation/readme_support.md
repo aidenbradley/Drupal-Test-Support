@@ -393,7 +393,7 @@ public function travel_to_timezone(): void
 ### Time Travel to timezone and freeze time
 Just like travelling and freezing time, you can also travel to another timezone and freeze time there.
 
-To do this, pass a callable argument to the `toTimezone` method. Anything inside of this callable will be executed in that timezone. Once completed, you will be returned to the present!
+To do this, pass a closure argument to the `toTimezone` method. Anything inside of this closure will be executed in that timezone. Once completed, you will be returned to the present!
 
 ```php
 public function travel_and_freeze_timezone(): void
@@ -626,70 +626,187 @@ When using this API, any mail that's found is returned to you using the [TestMai
 The [InteractsWithMail](.././tests/src/Traits/Support/InteractsWithMail.php) trait contains helper methods that improve the developer experience of getting certain mail that's been sent.
 
 #### Getting sent mail
-To get mail that's sent during a test run, call the `getSentMail` method.
+To get sent mail, call the `getSentMail` method.
 
-This will return an array of [TestMail](.././tests/src/Traits/Support/Mail/TestMail.php) objects.
+This will return an array of [TestMail](.././tests/src/Traits/Support/Mail/TestMail.php) instances.
 
 ```php
 public function get_sent_mail(): void
 {
     $this->container->get('plugin.manager.mail')->mail(
-        'my_module',
-        'my_module',
-        'to@example.com',
+        'test_support_mail',
+        'test_support_mail',
+        'hello@example.com',
         'en',
-        [], // no parameters
+        [],
         null, // no reply
-        true // send the mail
+        true // send mail
     );
 
+    // Returns an array containing one instance of TestMail
     $sentMail = $this->getSentMail();
 }
 ```
 
-#### Getting sent mail by module
-To get mail that's sent by a particular module, call the `getSentMail` method and pass the module name as an argument.
+##### Filtering the results of `getSentMail`
+The `getSentMail` accepts a single argument of `closure`. This is used to filter what is returned by the method.
 
-This will filter the array down to only mail that has been sent by that module.
+Here is an example of filtering mail to only mail that's sent with a certain subject.
 
 ```php
-public function get_sent_mail_by_module(): void
+public function get_sent_mail_with_subject(): void
 {
-    $this->container->get('plugin.manager.mail')->mail(
-        'my_module',
-        'my_module',
-        'to@example.com',
-        'en',
-        [], // no parameters
-        null, // no reply
-        true // send the mail
-    );
-
-    $sentMail = $this->getSentMail('my_module');
+    $mailWithWelcomeSubject = $this->getSentMail(function (TestMail $mail): bool {
+        return $mail->getSubject() === 'Welcome to Drupal!';
+    });
 }
 ```
 
 #### Getting mail sent to an email address
-To get mail that's sent to a particular email address, call the `getMailSentTo` method and pass an argument of the email address.
+To get mail that has been sent to a certain email address, call the `getMailSentTo` method.
 
-If only one mail item is found, then an instance of [TestMail](.././tests/src/Traits/Support/Mail/TestMail.php) is returned. If more than one mail item is found, then an array of [TestMail](.././tests/src/Traits/Support/Mail/TestMail.php) instances are returned.
+If only one mail item is found, then the method will return a single [TestMail](.././tests/src/Traits/Support/Mail/TestMail.php) instance.
+
+If multiple mail items are found, then the method will return an array of [TestMail](.././tests/src/Traits/Support/Mail/TestMail.php) instances.
+
 ```php
-public function get_mail_sent_to_email_address(): void
+public function get_mail_sent_to(): void
 {
     $this->container->get('plugin.manager.mail')->mail(
-        'my_module',
-        'my_module',
-        'hello_world@example.com',
+        'test_support_mail',
+        'test_support_mail',
+        'hello@example.com',
         'en',
-        [], // no parameters
+        [],
         null, // no reply
-        true // send the mail
+        true // send mail
     );
 
-    $sentMail = $this->getSentMail('hello_world@example.com');
+    // Returns an instance of TestMail as only one mail has been sent
+    $sentMail = $this->getSentMail();
+
+    $this->container->get('plugin.manager.mail')->mail(
+        'test_support_mail',
+        'test_support_mail',
+        'hello@example.com',
+        'en',
+        [],
+        null, // no reply
+        true // send mail
+    );
+
+    // Returns an array containing two instances of TestMail as multiple mails have been sent
+    $sentMail = $this->getSentMail();
+}
+```
+
+#### Getting mail sent with a subject
+To get sent mail that has a certain subject, call the `getSentMailWithSubject` method.
+
+If only one mail item is found, then the method will return a single [TestMail](.././tests/src/Traits/Support/Mail/TestMail.php) instance.
+
+If multiple mail items are found, then the method will return an array of [TestMail](.././tests/src/Traits/Support/Mail/TestMail.php) instances.
+
+```php
+public function get_sent_mail_with_subject(): void
+{
+    $this->container->get('plugin.manager.mail')->mail(
+        'test_support_mail',
+        'test_support_mail',
+        'hello@example.com',
+        'en',
+        [],
+        null, // no reply
+        true // send mail
+    );
+
+    $mailWithSubject = $this->getSentMailWithSubject('Welcome to Drupal!');
+}
+```
+
+#### Clearing sent mail
+If you want to clear any mail that's been sent during your test run, then call the `clearMail` method.
+
+This will clear all collected mail.
+
+
+```php
+public function clear_mail(): void
+{
+    $this->container->get('plugin.manager.mail')->mail(
+        'test_support_mail',
+        'test_support_mail',
+        'hello@example.com',
+        'en',
+        [],
+        null, // no reply
+        true // send mail
+    );
+
+    $this->assertNotEmpty(
+        $this->getSentMail()
+    );
+
+    $this->clearMail();
+
+    $this->assertEmpty(
+        $this->getSentMail()
+    );
 }
 ```
 
 ### Assertion helper methods
+There are a number of methods provided by [InteractsWithMail](.././tests/src/Traits/Support/InteractsWithMail.php) that allow you to assert against mail sent during your test.
 
+These helper methods exist to improve the readability of your tests.
+
+#### Assert no mail has been sent
+To assert no mail has been sent, call the `assertNoMailSent` method.
+
+```php
+public function assert_no_mail_sent(): void
+{
+    $this->businessLogic();
+
+    $this->assertNoMailSent();
+}
+```
+
+#### Assert mail was sent
+To assert mail was sent, call the `assertMailSent` method.
+
+This will check to see if any mail was sent at all.
+
+```php
+public function assert_mail_sent(): void
+{
+    $this->sendWelcomeEmails();
+
+    $this->assertMailSent();
+}
+```
+
+##### Assert mail was sent with further assertions
+The `assertMailSent` method allows you to pass in a closure. This closure is executed after asserting mail has been sent.
+
+This is useful for grouping further assertions!
+
+```php
+public function assert_mail_sent_with_closure(): void
+{
+    $this->container->get('plugin.manager.mail')->mail(
+        'test_support_mail',
+        'test_support_mail',
+        'hello@example.com',
+        'en',
+        [],
+        null, // no reply
+        true // send mail
+    );
+
+    $this->assertMailSent(function (TestMail $mail): void {
+        $mail->assertSentTo('hello@example.com');
+    });
+}
+```
 ### TestMail

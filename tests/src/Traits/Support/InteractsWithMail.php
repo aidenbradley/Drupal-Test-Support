@@ -47,7 +47,7 @@ trait InteractsWithMail
      *
      * @return TestMail[]|TestMail
      */
-    public function getMailWithSubject(string $subject)
+    public function getSentMailWithSubject(string $subject)
     {
         $mail = $this->getSentMail(function (TestMail $mail) use ($subject): bool {
             return $mail->getSubject() === $subject;
@@ -165,7 +165,7 @@ trait InteractsWithMail
     /** The closure is passed to each mail item found with the given subject */
     public function assertMailSentWithSubject(string $subject, ?\Closure $callback = null): self
     {
-        $mail = $this->getMailWithSubject($subject);
+        $mail = $this->getSentMailWithSubject($subject);
 
         if ($mail === []) {
             $this->fail('No email was sent with subject ' . $subject);
@@ -182,7 +182,7 @@ trait InteractsWithMail
 
     public function assertNoMailSentWithSubject(string $subject): self
     {
-        $mail = $this->getMailWithSubject($subject);
+        $mail = $this->getSentMailWithSubject($subject);
 
         Assert::assertEmpty($mail);
 

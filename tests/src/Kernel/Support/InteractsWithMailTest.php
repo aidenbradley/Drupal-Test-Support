@@ -34,7 +34,10 @@ class InteractsWithMailTest extends KernelTestBase
     {
         $this->sendMail('hello@example.com', 'Welcome Email', 'Welcome to Drupal!');
 
-        $this->assertIsArray($this->getSentMail());
+        $sentMail = $this->getSentMail();
+
+        $this->assertIsArray($sentMail);
+        $this->assertNotEmpty($sentMail);
     }
 
     /** @test */
@@ -70,7 +73,7 @@ class InteractsWithMailTest extends KernelTestBase
 
         $this->assertMailSentCount(1);
 
-        $mail = $this->getMailWithSubject('Welcome Email');
+        $mail = $this->getSentMailWithSubject('Welcome Email');
 
         $this->assertInstanceOf(TestMail::class, $mail);
     }
@@ -83,7 +86,7 @@ class InteractsWithMailTest extends KernelTestBase
 
         $this->assertMailSentCount(2);
 
-        $mail = $this->getMailWithSubject('Welcome Email');
+        $mail = $this->getSentMailWithSubject('Welcome Email');
 
         $this->assertIsArray($mail);
         $this->assertCount(2, $mail);
