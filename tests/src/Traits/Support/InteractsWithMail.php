@@ -5,7 +5,6 @@ namespace Drupal\Tests\test_support\Traits\Support;
 use Drupal\Tests\test_support\Traits\Support\Mail\TestMail;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\ExpectationFailedException;
 
 trait InteractsWithMail
 {
@@ -31,7 +30,7 @@ trait InteractsWithMail
      */
     public function getMailSentTo(string $mailTo)
     {
-        $mail = $this->getSentMail(function(TestMail $mail) use($mailTo): bool {
+        $mail = $this->getSentMail(function (TestMail $mail) use ($mailTo): bool {
             return $mail->getTo() === $mailTo;
         });
 
@@ -50,7 +49,7 @@ trait InteractsWithMail
      */
     public function getMailWithSubject(string $subject)
     {
-        $mail = $this->getSentMail(function(TestMail $mail) use($subject): bool {
+        $mail = $this->getSentMail(function (TestMail $mail) use ($subject): bool {
             return $mail->getSubject() === $subject;
         });
 
