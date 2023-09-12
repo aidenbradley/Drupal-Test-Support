@@ -488,7 +488,7 @@ public function refresh_entity(): void
     $this->assertEquals('Example Title', $node->get('title')->getString());
 
     // Somewhere in your business logic, the title of the node is updated
-    $this->triggerBusinessLogic();
+    $this->businessLogic();
 
     // Get all updated values for this entity, but assign
     // it back to the variable we have already defined
@@ -760,7 +760,7 @@ There are a number of methods provided by [InteractsWithMail](.././tests/src/Tra
 
 These helper methods exist to improve the readability of your tests.
 
-#### Assert no mail has been sent
+#### Asserting no mail has been sent
 To assert no mail has been sent, call the `assertNoMailSent` method.
 
 ```php
@@ -772,7 +772,7 @@ public function assert_no_mail_sent(): void
 }
 ```
 
-#### Assert mail was sent
+#### Asserting mail was sent
 To assert mail was sent, call the `assertMailSent` method.
 
 This will check to see if any mail was sent at all.
@@ -786,7 +786,7 @@ public function assert_mail_sent(): void
 }
 ```
 
-##### Assert mail was sent with further assertions
+##### Asserting mail was sent with further assertions
 The `assertMailSent` method allows you to pass in a closure. This closure is executed after asserting mail has been sent.
 
 This is useful for grouping further assertions!
@@ -809,4 +809,206 @@ public function assert_mail_sent_with_closure(): void
     });
 }
 ```
+
+#### Asserting the number of mail sent
+To assert the number of mail that's been sent, call the `assertMailSentCount` method.
+
+```php
+public function assert_number_of_mail_sent(): void
+{
+    $this->container->get('plugin.manager.mail')->mail(
+        'test_support_mail',
+        'test_support_mail',
+        'hello@example.com',
+        'en',
+        [],
+        null, // no reply
+        true // send mail
+    );
+
+    $this->assertMailSentCount(1);
+
+    $this->container->get('plugin.manager.mail')->mail(
+        'test_support_mail',
+        'test_support_mail',
+        'hello@example.com',
+        'en',
+        [],
+        null, // no reply
+        true // send mail
+    );
+
+    $this->assertMailSentCount(2);
+}
+```
+
+#### Asserting mail sent from a module
+To assert that mail was sent from a particular module, call the `assertMailSentFromModule` method.
+
+```php
+public function assert_mail_sent_from_module(): void
+{
+    $this->container->get('plugin.manager.mail')->mail(
+        'test_support_mail',
+        'test_support_mail',
+        'hello@example.com',
+        'en',
+        [],
+        null, // no reply
+        true // send mail
+    );
+
+    $this->assertMailSentFromModule('test_support_mail');
+}
+```
+
+##### Asserting mail sent from a module with further assertions
+The `assertMailSentFromModule` method allows you to pass in a closure. This closure is executed after asserting mail has been sent.
+
+This is useful for grouping further assertions!
+
+```php
+public function assert_mail_sent_from_module(): void
+{
+    $this->container->get('plugin.manager.mail')->mail(
+        'test_support_mail',
+        'test_support_mail',
+        'hello@example.com',
+        'en',
+        [],
+        null, // no reply
+        true // send mail
+    );
+
+    $this->assertMailSentFromModule('test_support_mail', function (TestMail $mail): void {
+        $mail->assertSentTo('hello@example.com');
+        $mail->assertSubject('Hello');
+    });
+}
+```
+
+#### Assering mail was not sent by module
+To assert that no mail was sent by a particular module, call the `assertNoMailSentFromModule`.
+
+```php
+public function assert_no_mail_sent_from_module(): void
+{
+    $this->businessLogic();
+
+    $this->assertNoMailSentFromModule('my_custom_module');
+}
+```
+
+#### Asserting mail was sent to an email address
+To assert that mail was sent to a certain email address, call the `assertMailSentTo` method.
+
+```php
+public function assert_mail_sent_to(): void
+{
+    $this->container->get('plugin.manager.mail')->mail(
+        'test_support_mail',
+        'test_support_mail',
+        'hello@example.com',
+        'en',
+        [],
+        null, // no reply
+        true // send mail
+    );
+
+    $this->assertMailSentTo('hello@example.com');
+}
+```
+
+##### Asserting mail was sent to an email address with further assertions
+The `assertMailSentTo` method allows you to pass in a closure. This closure is executed after asserting mail has been sent.
+
+This is useful for grouping further assertions!
+```php
+public function assert_mail_sent_to(): void
+{
+    $this->container->get('plugin.manager.mail')->mail(
+        'test_support_mail',
+        'test_support_mail',
+        'hello@example.com',
+        'en',
+        [],
+        null, // no reply
+        true // send mail
+    );
+
+    $this->assertMailSentTo('hello@example.com', function (TestMail $mail) {
+        $mail->assertSubject('Hello');
+    });
+}
+```
+
+#### Asserting mail no was sent to an email address
+To assert that no mail was sent to an email address, call the `assertNoMailSentTo` method.
+
+```php
+public function assert_no_mail_sent_to_address(): void
+{
+    $this->container->get('plugin.manager.mail')->mail(
+        'test_support_mail',
+        'test_support_mail',
+        'hello@example.com',
+        'en',
+        [],
+        null, // no reply
+        true // send mail
+    );
+
+    $this->assertNoMailSentTo('test@example.com');
+}
+```
+
+#### Asserting mail was sent with subject
+To assert that mail was sent with a certain subject, call the `assertMailSentWithSubject` method.
+
+```php
+public function assert_mail_sent_with_subject(); void
+{
+    $this->assertMailSentWithSubject('Welcome to Drupal!');
+}
+```
+
+##### Asserting mail was sent with subject with further assertions
+The `assertMailSentWithSubject` method allows you to pass in a closure. This closure is executed after asserting mail has been sent.
+
+This is useful for grouping further assertions!
+
+```php
+public function assert_mail_sent_with_subject(): void
+{
+    $this->container->get('plugin.manager.mail')->mail(
+        'test_support_mail',
+        'test_support_mail',
+        'hello@example.com',
+        'en',
+        [],
+        null, // no reply
+        true // send mail
+    );
+
+    $this->assertMailSentWithSubject('User Registration', function (TestMail $mail) {
+        $mail->assertSentTo('hello@example.com');
+        $mail->assertSubject('Welcome to Drupal!');
+    });
+}
+```
+
+### Asserting no mail is sent with subject
+To assert that no mail was sent with a certain subject, call the `assertNoMailSentWithSubject` method.
+
+```php
+public function assert_no_mail_sent_with_subject(): void
+{
+    $this->registerNewUser();
+
+    $this->assertMailSentWithSubject('Welcome to Drupal!');
+
+    $this->assertNoMailSentWithSubject('Thanks for updating your account!');
+}
+```
+
 ### TestMail

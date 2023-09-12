@@ -146,8 +146,6 @@ class InteractsWithMailTest extends KernelTestBase
             }
 
             if ($mail->getTo() === 'example@example.com') {
-                // Do we try catch in the assertion and re-throw our own assertion
-                // then handle that in InteractsWithMail with a more descrpitive failure message?
                 $mail->assertSubject('Example');
             }
         });
