@@ -1012,3 +1012,171 @@ public function assert_no_mail_sent_with_subject(): void
 ```
 
 ### TestMail
+When retreiving any mail that's been sent, the values are represented using a class called [TestMail](.././tests/src/Traits/Support/Mail/TestMail.php).
+
+This class provides an API to retrieve data and run assertions against data.
+
+#### Getting data helper methods
+There are methods on the [TestMail](.././tests/src/Traits/Support/Mail/TestMail.php) that help you retrieve any data that forms part of the data.
+
+Below is a list of methods made available.
+##### Get to address
+To get the email address the mail was sent to, call the `getTo` method.
+
+```php
+public function get_to_address(): void
+{
+    $this->registerNewUser('hello@example.com');
+
+    $mail = $this->getSentMailTo('hello@example.com');
+
+    $this->assertEquals('hello@example.com', $mail->getToAddress());
+}
+```
+
+##### Get subject
+To get the subject of the mail, call the `getSubject` method.
+
+```php
+public function get_subject(): void
+{
+    $this->registerNewUser('hello@example.com');
+
+    $mail = $this->getSentMailTo('hello@example.com');
+
+    $this->assertEquals('Welcome to Drupal!', $mail->getSubject());
+}
+```
+
+##### Get body
+To get the body of the mail, call the `getBody` method.
+
+```php
+public function get_body(): void
+{
+    $this->registerNewUser('hello@example.com');
+
+    $mail = $this->getSentMailTo('hello@example.com');
+
+    $expectedBody = 'Thanks for joining Drupal!';
+
+    $this->assertEquals($expectedBody, $mail->getBody());
+}
+```
+
+##### Get module
+If you want to get the module that was responsible for sending the mail, call the `getModule` method.
+
+```php
+public function get_module(): void
+{
+    $this->registerNewUser('hello@example.com');
+
+    $mail = $this->getSentMailTo('hello@example.com');
+
+    $this->assertEquals('my_custom_registration_module', $mail->getModule());
+}
+```
+
+##### Get mail parameters
+If you want to get any other parameters that form part of the mail, call the `getParameter` method.
+
+```php
+public function get_parameter(): void
+{
+    $this->registerNewUser('hello@example.com');
+
+    $mail = $this->getMailSentTo('hello@example.com');
+
+    $parameter = $mail->getParameter('my_custom_parameter');
+}
+```
+
+##### Get all values
+If you simply just want to get all the values of the mail, call the `toArray` method. This will return an array of all the values.
+
+```php
+public function get_all_mail_values(): void
+{
+    $this->registerNewUser('hello@example.com');
+
+    $mail = $this->getMailSentTo('hello@example.com');
+
+    $mailValues = $mail->toArray();
+}
+```
+
+#### Assertion helper methods
+There are methods on the [TestMail](.././tests/src/Traits/Support/Mail/TestMail.php) that help you assert against any data that forms part of the data.
+
+Below is a list of methods made available.
+
+##### Assert sent to address
+To assert that the mail item was sent to a certain email address, call the `assertSentTo` method.
+
+```php
+public function assert_sent_to(): void
+{
+    $this->registerNewUser('hello@example.com');
+
+    $mail = $this->getMailSentTo('hello@example.com');
+
+    $mail->assertSentTo('hello@example.com');
+}
+```
+
+##### Assert subject
+To assert the subject of the mail item, call the `assertSubject` method.
+
+```php
+public function assert_subject(): void
+{
+$this->registerNewUser('hello@example.com');
+
+    $mail = $this->getMailSentTo('hello@example.com');
+
+    $mail->assertSubject('Welcome to Drupal!');
+}
+```
+
+##### Asserting body contents
+To assert against the contents of the mail body, call the `assertBody` method.
+
+```php
+public function assert_body_contents(): void
+{
+    $mail = $this->getMailSentTo('hello@example.com');
+
+    $mail->assertSubject('Welcome to Drupal!');
+
+    $mail->assertBody('Welcome to Drupal! Visit the link below to get set up');
+}
+```
+
+##### Asserting mail sent from module
+To assert that the mail was sent from a particular module, call the `assertSentFromModule` method.
+
+```php
+public function assert_sent_from_module(): void
+{
+    $mail = $this->getMailSentTo('hello@example.com');
+
+    $mail->assertSubject('Welcome to Drupal!');
+
+    $mail->assertSentFromModule('my_custom_registration_module');
+}
+```
+
+##### Asserting a parameter of mail
+If you want to assert the value of a parameter used in the mail, call the `assertParameter` method.
+
+```php
+public function assert_parameter(): void
+{
+    $mail = $this->getMailSentTo('hello@example.com');
+
+    $mail->assertSubject('Welcome to Drupal!');
+
+    $mail->assertParameter('my_custom_parameter', 'Custom Parameter');
+}
+```
