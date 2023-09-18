@@ -3,6 +3,7 @@
 namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithSettings;
 use Symfony\Component\DependencyInjection\Reference;
@@ -68,5 +69,31 @@ class InteractsWithSettingsTest extends KernelTestBase
         $this->autoDiscoverSettings = true;
 
         $this->assertTrue($this->getSettings()->get('auto_discovered'));
+    }
+
+    /** @test */
+    public function set_site(): void
+    {
+        $this->assertEquals('default', $this->site);
+
+        $this->setSite('my_custom_site');
+
+        $this->assertEquals('my_custom_site', $this->site);
+    }
+
+    /** @test */
+    public function setting_site_refreshes_settings(): void
+    {
+        $this->setSettingsLocation('/__fixtures__/settings/fixture.settings.php');
+
+        $this->getSettings();
+
+        $this->assertInstanceOf(Settings::class, $this->settings);
+
+        $this->settings = null;
+
+        $this->setSite('default');
+
+        $this->assertInstanceOf(Settings::class, $this->settings);
     }
 }

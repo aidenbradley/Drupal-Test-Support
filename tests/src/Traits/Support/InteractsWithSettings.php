@@ -57,6 +57,13 @@ trait InteractsWithSettings
     {
         $this->site = $site;
 
+        /** @var Settings $settings */
+        $settings = $this->temporarilySupressErrors(function () {
+            return $this->loadSettings();
+        });
+
+        $this->settings = $settings;
+
         return $this;
     }
 
