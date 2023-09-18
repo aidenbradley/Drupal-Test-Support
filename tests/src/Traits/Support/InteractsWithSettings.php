@@ -32,15 +32,22 @@ trait InteractsWithSettings
         return $this->appRoot() . '/' . ltrim($directory, '/');
     }
 
+    protected function setSettings(): self
+    {
+        /** @var Settings $settings */
+        $settings = $this->temporarilySupressErrors(function () {
+            return $this->loadSettings();
+        });
+
+        $this->settings = $settings;
+
+        return $this;
+    }
+
     protected function getSettings(): Settings
     {
         if ($this->settings instanceof Settings === false) {
-            /** @var Settings $settings */
-            $settings = $this->temporarilySupressErrors(function () {
-                return $this->loadSettings();
-            });
-
-            $this->settings = $settings;
+            $this->setSettings();
         }
 
         return $this->settings;
@@ -57,7 +64,7 @@ trait InteractsWithSettings
     {
         $this->site = $site;
 
-        return $this;
+        return $this->setSettings();
     }
 
     protected function getSettingsLocation(): string
