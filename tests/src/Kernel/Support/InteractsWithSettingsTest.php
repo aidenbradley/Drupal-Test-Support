@@ -96,4 +96,25 @@ class InteractsWithSettingsTest extends KernelTestBase
 
         $this->assertInstanceOf(Settings::class, $this->settings);
     }
+
+    /** @test */
+    public function setting_site_updates_settings(): void
+    {
+        $fixtureSiteDirectory = __DIR__ . '/__fixtures__';
+
+        /** @phpstan-ignore-next-line */
+        if (version_compare(\Drupal::VERSION, '10.0', '>=')) {
+            $this->container->setParameter('app.root', $fixtureSiteDirectory);
+        } else {
+            $this->container->set('app.root', new Reference($fixtureSiteDirectory));
+        }
+
+        //
+
+        $this->setSite('dummy_site_one');
+        $this->assertEquals('/dummy_site_one_config', $this->getSettings()->get('config_sync_directory'));
+
+        $this->setSite('dummy_site_two');
+        $this->assertEquals('/dummy_site_two_config', $this->getSettings()->get('config_sync_directory'));
+    }
 }
