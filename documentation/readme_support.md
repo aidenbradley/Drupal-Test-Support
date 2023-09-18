@@ -1131,7 +1131,7 @@ To assert the subject of the mail item, call the `assertSubject` method.
 ```php
 public function assert_subject(): void
 {
-$this->registerNewUser('hello@example.com');
+    $this->registerNewUser('hello@example.com');
 
     $mail = $this->getMailSentTo('hello@example.com');
 
@@ -1145,9 +1145,9 @@ To assert against the contents of the mail body, call the `assertBody` method.
 ```php
 public function assert_body_contents(): void
 {
-    $mail = $this->getMailSentTo('hello@example.com');
+    $this->registerNewUser('hello@example.com');
 
-    $mail->assertSubject('Welcome to Drupal!');
+    $mail = $this->getMailSentTo('hello@example.com');
 
     $mail->assertBody('Welcome to Drupal! Visit the link below to get set up');
 }
@@ -1159,9 +1159,9 @@ To assert that the mail was sent from a particular module, call the `assertSentF
 ```php
 public function assert_sent_from_module(): void
 {
-    $mail = $this->getMailSentTo('hello@example.com');
+    $this->registerNewUser('hello@example.com');
 
-    $mail->assertSubject('Welcome to Drupal!');
+    $mail = $this->getMailSentTo('hello@example.com');
 
     $mail->assertSentFromModule('my_custom_registration_module');
 }
@@ -1173,9 +1173,9 @@ If you want to assert the value of a parameter used in the mail, call the `asser
 ```php
 public function assert_parameter(): void
 {
-    $mail = $this->getMailSentTo('hello@example.com');
+    $this->registerNewUser('hello@example.com');
 
-    $mail->assertSubject('Welcome to Drupal!');
+    $mail = $this->getMailSentTo('hello@example.com');
 
     $mail->assertParameter('my_custom_parameter', 'Custom Parameter');
 }

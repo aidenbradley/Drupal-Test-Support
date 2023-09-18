@@ -34,10 +34,9 @@ class InteractsWithMailTest extends KernelTestBase
     {
         $this->sendMail('hello@example.com', 'Welcome Email', 'Welcome to Drupal!');
 
-        $sentMail = $this->getSentMail();
-
-        $this->assertIsArray($sentMail);
-        $this->assertNotEmpty($sentMail);
+        $this->assertNotEmpty(
+            $this->getSentMail()
+        );
     }
 
     /** @test */

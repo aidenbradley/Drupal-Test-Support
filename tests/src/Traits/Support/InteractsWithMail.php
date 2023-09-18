@@ -17,6 +17,7 @@ trait InteractsWithMail
             return [];
         }
 
+        /** @phpstan-ignore-next-line */
         return collect($mail)->mapInto(TestMail::class)->when($filter, function (Collection $mail, callable $filter) {
             return $mail->filter($filter);
         })->toArray();
@@ -167,7 +168,7 @@ trait InteractsWithMail
     {
         $mail = $this->getSentMailWithSubject($subject);
 
-        if ($mail === []) {
+        if (is_array($mail) === false || $mail === []) {
             $this->fail('No email was sent with subject ' . $subject);
         }
 

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithLanguages;
 

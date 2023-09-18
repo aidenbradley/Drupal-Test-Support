@@ -24,6 +24,7 @@ class TestMail
 
     public function getTo(): ?string
     {
+        /** @phpstan-ignore-next-line */
         return $this->getValue('to');
     }
 
@@ -36,6 +37,7 @@ class TestMail
 
     public function getSubject(): ?string
     {
+        /** @phpstan-ignore-next-line */
         return $this->getValue('subject');
     }
 
@@ -50,7 +52,7 @@ class TestMail
     {
         $body = $this->getValue('body');
 
-        if ($body === null) {
+        if (is_string($body) === false) {
             return null;
         }
 
@@ -67,6 +69,7 @@ class TestMail
 
     public function getModule(): ?string
     {
+        /** @phpstan-ignore-next-line */
         return $this->getValue('module');
     }
 
