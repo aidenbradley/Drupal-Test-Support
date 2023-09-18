@@ -1180,3 +1180,13 @@ public function assert_parameter(): void
     $mail->assertParameter('my_custom_parameter', 'Custom Parameter');
 }
 ```
+
+#### Getting all mail values
+If you want to get all mail values, call the `toArray` method.
+
+```php
+public function get_all_mail_values(): void
+{
+    $mailValues = $mail->toArray();
+}
+```
