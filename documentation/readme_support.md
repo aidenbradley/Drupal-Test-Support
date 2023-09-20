@@ -610,7 +610,6 @@ public function set_current_language_with_prefix(): void
     $this->assertEquals('/fr-prefix/node/3000', $url);
 }
 ```
-###
 
 ## Interacts with Mail
 There is a trait called [InteractsWithMail](.././tests/src/Traits/Support/InteractsWithMail.php) that contains an API to improve the developer experience of testing against emails that are sent.
@@ -1188,5 +1187,99 @@ If you want to get all mail values, call the `toArray` method.
 public function get_all_mail_values(): void
 {
     $mailValues = $mail->toArray();
+}
+```
+
+## Interacts With Queues
+There is a trait called [InteractsWithQueues](.././tests/src/Traits/Support/InteractsWithQueues.php) that contains an API to improve the developer experience of testing functionality that uses Drupal queues.
+
+### Getting a queue
+To get a Drupal queue, call the `getQueue` method.
+
+```php
+public function get_queue(): void
+{
+    $queue = $this->getQueue('my_custom_queue');
+}
+```
+
+### Getting a reliable queue
+If you specifically need the "reliable" queue, then call the `getReliableQueue` method.
+
+According to Drupal documentation, you typically want a reliable queue if the ordering of items and guaranteeing every item executes at least once is important.
+
+```php
+public function get_reliable_queue(): void
+{
+    $reliableQueue = $this->getReliableQueue('my_custom_queue');
+}
+```
+
+### Adding to a queue
+If you want to add an item to a queue, call the `addToQueue` method.
+
+The method expects the first argument to be the name of the queue and the second argument to be the data that's is stored in the queue for processing later.
+
+```php
+public function add_to_queue(): void
+{
+    $nodeIdsToUnpublish = [
+        1,
+        2,
+        3,
+    ];
+
+    $this->addToQueue('unpublish_node_queue', $nodeIdsToUnpublish);
+}
+```
+
+### Processing a queue
+If you want to process all the data that's currently in a particular queue, call the `processQueue` method.
+
+```php
+public function process_queue(): void
+{
+    $nodeIdsToUnpublish = [
+        1,
+        2,
+        3,
+    ];
+    $this->addToQueue('unpublish_node_queue', $nodeIdsToUnpublish);
+
+    $this->processQueue('unpublish_node_queue');
+}
+```
+
+### Clearing a queue
+To clear a queue of all its pending items, call the `clearQueue` method.
+
+```php
+public function clear_queue(): void
+{
+    $this->clearQueue('unpublish_node_queue');
+}
+```
+
+### Getting the queue count
+To get a count of the total number of items in a particular queue, call the `getQueueCount` method.
+
+```php
+public function get_queue_count(): void
+{
+    $nodeIdsToUnpublish = [
+        1,
+        2,
+        3,
+    ];
+    $this->addToQueue('unpublish_node_queue', $nodeIdsToUnpublish);
+    $this->assertCount(1, $this->getQueueCount('unpublish_node_queue'));
+
+    $nodeIdsToUnpublish = [
+        4,
+        5,
+        6,
+    ];
+    $this->addToQueue('unpublish_node_queue', $nodeIdsToUnpublish);
+    $this->assertCount(2, $this->getQueueCount('unpublish_node_queue'));
 }
 ```
