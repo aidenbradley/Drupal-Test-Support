@@ -1283,3 +1283,71 @@ public function get_queue_count(): void
     $this->assertCount(2, $this->getQueueCount('unpublish_node_queue'));
 }
 ```
+
+## Interacts With Settings
+There is a trait called [InteractsWithSettings](.././tests/src/Traits/Support/InteractsWithSettings.php).
+
+This trait exists to support other traits, such as [InstallsExportedConfig](.././tests/src/Traits/Support/InstallsExportedConfig.php), but can be used on its own if you have a need to retrieve settings.
+
+### Getting setings
+If you want to retrieve the settings that are picked up and used during your test run, call the `getSettings` method.
+
+The settings that are returned will be the settings found inside your sites `settings.php` file. This is dependent on the site that's been set during your test run.
+
+The default site that's set at the start of a test is `default`, meaning it will look inside of `/sites/default/settings.php` to retrieve your `settings.php` file.
+
+```php
+public function get_settings(): void
+{
+    $settings = $this->getSettings();
+}
+```
+
+### Setting your site
+This trait also provides a method to set your site. This is useful if you are testing multi-site project. The default site is set to `default`
+
+When setting the site, the trait will reload the settings based on the site you have set. It does this by looking inside of that sites `settings.php` file.
+
+To set the site, call the `setSite` method.
+
+```php
+public function set_site(): void
+{
+    $this->setSite('first_multisite');
+    // this will look inside /sites/first_multisite/settings.php
+    $firstMultisiteSettings = $this->getSettings();
+
+    $this->setSite('second_multisite');
+    // this will look inside /sites/second_multisite/settings.php
+    $secondMultisiteSettings = $this->getSettings();
+}
+```
+
+### Setting the settings.php location
+If, for some reason, you need to manually tell the test the location to the `settings.php` file is, you can call the `setSettingsLocation` method.
+
+This may be useful if you want to run your test against a `settings.php` fixture.
+
+```php
+public function set_settings_location(): void
+{
+    $this->setSettingsLocation('/test_module/__fixtures__/settings.php');
+
+    $this->yourBusinessLogicUsingSettingsLocationAbove();
+}
+```
+
+
+### Getting the settings location
+If you want to check which `settings.php` file is being used during your test run, call the `getSettingsLocation` method.
+
+This will return the full path to the `settings.php` file that's being used during the test run.
+
+This method also takes into account if you have used the `setSettingsLocation` method.
+
+```php
+public function get_settings_location(): void
+{
+    $settingsLocation = $this->getSettingsLocation();
+}
+```
