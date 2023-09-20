@@ -117,4 +117,25 @@ class InteractsWithSettingsTest extends KernelTestBase
         $this->setSite('dummy_site_two');
         $this->assertEquals('/dummy_site_two_config', $this->getSettings()->get('config_sync_directory'));
     }
+
+    /** @test */
+    public function setting_settings_location_refreshes_settings(): void
+    {
+        /** @phpstan-ignore-next-line */
+        if (version_compare(\Drupal::VERSION, '10.0', '>=')) {
+            $this->container->setParameter('app.root', __DIR__);
+        } else {
+            $this->container->set('app.root', new Reference(__DIR__));
+        }
+
+        $this->assertEmpty(
+            $this->getSettings()->get('config_sync_directory')
+        );
+
+        $this->setSettingsLocation('/__fixtures__/sites/dummy_site_one/settings.php');
+        $this->assertEquals('/dummy_site_one_config', $this->getSettings()->get('config_sync_directory'));
+
+        $this->setSettingsLocation('/__fixtures__/sites/dummy_site_two/settings.php');
+        $this->assertEquals('/dummy_site_two_config', $this->getSettings()->get('config_sync_directory'));
+    }
 }
