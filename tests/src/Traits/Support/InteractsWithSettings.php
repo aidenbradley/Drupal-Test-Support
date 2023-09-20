@@ -50,6 +50,13 @@ trait InteractsWithSettings
     {
         $this->settingsLocationOverride = $settingsLocation;
 
+        /** @var Settings $settings */
+        $settings = $this->temporarilySupressErrors(function () {
+            return $this->loadSettings();
+        });
+
+        $this->settings = $settings;
+
         return $this;
     }
 
