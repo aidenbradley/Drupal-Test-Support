@@ -102,7 +102,7 @@ class WithoutEventsTest extends KernelTestBase
         }
 
         throw new \Exception(
-            'None of the following event classes exist' . implode(', ', $eventClasses),
+            'None of the following event classes exist ' . implode(', ', $eventClasses),
         );
     }
 }

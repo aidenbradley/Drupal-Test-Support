@@ -1399,3 +1399,56 @@ public function run_deploy_hook(): void
     $this->runDeployHook('my_module_deploy_hook');
 }
 ```
+
+
+## Without events
+There is a trait called [WithoutEvents](.././tests/src/Traits/Support/WithoutEvents.php) that contains an API to improve the developer experience of testing events.
+
+### Preventing events from dispatching
+To prevent all events from being dispatched, call the `withoutEvents` method.
+
+Calling this method will prevent all events from dispatching, meaning that event subscribers will not trigger as the event is not being dispatched.
+
+```php
+public function prevent_events_from_dispatching(): void
+{
+    $this->withoutEvents();
+}
+```
+
+### Expecting events
+You can also expect an event. This is like a pre-assertion, useful when you expect a particular event to be fired under some specific business logic.
+
+You have two options when expecting an event, either by the event name or the event class string.
+```php
+public function expecting_events_by_event_name(): void
+{
+    $this->expectsEvents('my_test_event');
+
+    $event = new \Drupal\locale\LocaleEvent\LocaleEvent([
+        'en',
+        'de',
+    ]);
+
+    $this->container->get('event_dispatcher')->dispatch($event, 'my_test_event');
+}
+```
+
+```php
+public function expecting_events_by_event_class(): void
+{
+    $this->expectsEvents(\Drupal\locale\LocaleEvent::class);
+
+    $event = new \Drupal\locale\LocaleEvent\LocaleEvent([
+        'en',
+        'de',
+    ]);
+
+    $this->container->get('event_dispatcher')->dispatch($event, 'my_test_event');
+}
+```
+### Not expecting events
+
+### Asserting events are dispatched
+
+### Asserting events are not dispatched
