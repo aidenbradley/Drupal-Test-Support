@@ -4,7 +4,7 @@ use Drupal\user\Entity\User;
 
 function test_support_postupdatehooks_post_update_only_in_post_update_php(): void
 {
-};
+}
 
 /**
  * Sets the status of all users to 0, effectively blocked

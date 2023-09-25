@@ -1351,3 +1351,51 @@ public function get_settings_location(): void
     $settingsLocation = $this->getSettingsLocation();
 }
 ```
+
+## Interacting with update hooks
+There is a trait called [InteractsWithUpdateHooks](.././tests/src/Traits/Support/InteractsWithUpdateHooks.php) that contains an API to improve the developer experience of testing update hooks.
+
+The trait allows you to run the following -
+- Update hooks
+- Post update hooks
+- Deploy hooks (drush).
+
+The trait will include the necessary file, ensuring that the hook can be called, as well as enable the module that defines the hook if it's not already defined.
+
+The trait will also handle batching your update hook uses it! This is handled under the hood, so you don't need to call any extra methods to test batching.
+
+### Running an update hook
+To run an update hook, call the `runUpdateHook` method. It accepts one argument, which is the name of the update hook function as a string.
+
+Update hooks are defined by modules and live inside your modules' `.install` file.
+
+```php
+public function run_update_hook(): void
+{
+    $this->runUpdateHook('my_module_update_hook_9001');
+}
+```
+
+### Running post update hooks
+To run post update hooks, call the `runPostUpdateHook` method. It accepts one argument, which is the name of the post update function as a string.
+
+Post update hooks are defined by modules and live inside your modules' `.post_update.php` file.
+
+```php
+public function run_post_update_hook(): void
+{
+    $this->runPostUpdateHook('my_module_post_update_hook');
+}
+```
+
+### Running deploy hooks
+To run a deploy hook, call the `runDeployHook` method. It accepts one argument, which is the name of the deploy hook function as a string.
+
+Deploy hooks are something introduced by Drush 10.3 and live inside your modules' `.deploy.php` file.
+
+```php
+public function run_deploy_hook(): void
+{
+    $this->runDeployHook('my_module_deploy_hook');
+}
+```
