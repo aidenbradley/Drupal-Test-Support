@@ -85,6 +85,26 @@ class WithoutEventsTest extends KernelTestBase
         });
     }
 
+    /** @test */
+    public function assert_not_dispatched_by_event_name(): void
+    {
+        $dispatchedEvent = $this->createEvent();
+
+        $this->container->get('event_dispatcher')->dispatch($dispatchedEvent, 'dispatch_event');
+
+        $this->assertNotDispatched('test_event');
+    }
+
+    /** @test */
+    public function assert_not_dispatched_by_class_string(): void
+    {
+        $dispatchedEvent = $this->createEvent();
+
+        $this->container->get('event_dispatcher')->dispatch($dispatchedEvent, 'dispatch_event');
+
+        $this->assertNotDispatched(LocaleEvent::class);
+    }
+
     /** @return object */
     private function createEvent()
     {

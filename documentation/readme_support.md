@@ -1448,7 +1448,123 @@ public function expecting_events_by_event_class(): void
 }
 ```
 ### Not expecting events
+You can tell a test to not expect a certain event. This acts as a per-assertion, useful for when you want to assert an event is not triggered under certain business logic.
+
+You have two options when not expecting an event, either by the event name or the event class string.
+
+```php
+public function not_expecting_events_by_event_name(): void
+{
+    $this->doesntExpectEvents('some_other_event');
+
+    $event = new \Drupal\locale\LocaleEvent\LocaleEvent([
+        'en',
+        'de',
+    ]);
+
+    $this->container->get('event_dispatcher')->dispatch($event, 'my_test_event');
+}
+```
+
+```php
+public function not_expecting_events_by_event_class(): void
+{
+    $this->doesntExpectEvents(\Drupal\my_module\SomeEvent::class);
+
+    $event = new \Drupal\locale\LocaleEvent\LocaleEvent([
+        'en',
+        'de',
+    ]);
+
+    $this->container->get('event_dispatcher')->dispatch($event, 'my_test_event');
+}
+```
 
 ### Asserting events are dispatched
+You can assert that certain events have been dispatched during your test.
 
+To do this, call the `assertDispatched` method. You can assert that an event was dispatched either by its event name or by the event class.
+
+```php
+public function assert_dispatched_class_string(): void
+{
+    $langcodes = [
+        'en',
+        'de',
+        'fr',
+    ];
+
+    $event = new LocaleEvent($langcodes);
+
+    $this->container->get('event_dispatcher')->dispatch($event, 'test_event');
+
+    $this->assertDispatched('test_event');
+}
+```
+
+```php
+public function assert_dispatched_class_string(): void
+{
+    $langcodes = [
+        'en',
+        'de',
+        'fr',
+    ];
+
+    $event = new LocaleEvent($langcodes);
+
+    $this->container->get('event_dispatcher')->dispatch($event, 'test_event');
+
+    $this->assertDispatched(\Drupal\locale\LocaleEvent\LocaleEvent::class);
+}
+```
+
+#### Asserting events are dispatched with further assertions
+The `assertDispatched` method also allows you to pass a callable to make further assertions.
+
+The way this works is once the `assertDispatched` has found the event(s) you are expecting to dispatch, it will pass each event into the callable. This allows you to make further assertions on the events that have been dispatched.
+
+```php
+public function assert_dispatched_with_further_assertions(): void
+{
+    $langcodes = [
+        'en',
+        'de',
+        'fr',
+    ];
+
+    $event = new LocaleEvent($langcodes);
+
+    $this->container->get('event_dispatcher')->dispatch($event, 'test_event');
+
+    $this->assertDispatched('test_event', function (LocaleEvent $firedEvent) use ($langcodes) {
+        return $firedEvent->getLangcodes() === $langcodes;
+    });
+}
+```
 ### Asserting events are not dispatched
+You can assert that certain events are not dispatched in your tests.
+
+To do this, call the `assertNotDispatched` method. You can assert that an event was not dispatched either by its event name or by the event class.
+
+```php
+public function assert_event_not_dispatched_by_event_name(): void
+{
+    $dispatchedEvent = $this->createEvent();
+
+    $this->container->get('event_dispatcher')->dispatch($dispatchedEvent, 'dispatch_event');
+
+    $this->assertNotDispatched('test_event');
+}
+```
+
+```php
+public function assert_event_not_dispatched_by_class_string(): void
+{
+    $dispatchedEvent = $this->createEvent();
+
+    $this->container->get('event_dispatcher')->dispatch($dispatchedEvent, 'dispatch_event');
+
+    $this->assertNotDispatched(LocaleEvent::class);
+}
+```
