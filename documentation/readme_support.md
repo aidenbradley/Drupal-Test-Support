@@ -1409,6 +1409,8 @@ To prevent all events from being dispatched, call the `withoutEvents` method.
 
 Calling this method will prevent all events from dispatching, meaning that event subscribers will not trigger as the event is not being dispatched.
 
+Calling `withoutEvents` is required before any of the below methods may be called. This is because when `withoutEvents` is called, a fake event dispatcher is used to collect all events that are dispatched, making assertions possible.
+
 ```php
 public function prevent_events_from_dispatching(): void
 {
@@ -1420,6 +1422,9 @@ public function prevent_events_from_dispatching(): void
 You can also expect an event. This is like a pre-assertion, useful when you expect a particular event to be fired under some specific business logic.
 
 You have two options when expecting an event, either by the event name or the event class string.
+
+Under the hood, calling `expectsEvents` will call `withoutEvents` for you.
+
 ```php
 public function expecting_events_by_event_name(): void
 {
@@ -1452,6 +1457,7 @@ You can tell a test to not expect a certain event. This acts as a per-assertion,
 
 You have two options when not expecting an event, either by the event name or the event class string.
 
+Under the hood, calling `doesntExpectEvents` calls `withoutEvents` for you.
 ```php
 public function not_expecting_events_by_event_name(): void
 {
@@ -1483,11 +1489,15 @@ public function not_expecting_events_by_event_class(): void
 ### Asserting events are dispatched
 You can assert that certain events have been dispatched during your test.
 
-To do this, call the `assertDispatched` method. You can assert that an event was dispatched either by its event name or by the event class.
+To do this, you must first call the `withoutEvents` method to prepare your test.
+
+Next, call the `assertDispatched` method. You can assert that an event was dispatched either by its event name or by the event class.
 
 ```php
 public function assert_dispatched_class_string(): void
 {
+    $this->withoutEvents();
+
     $langcodes = [
         'en',
         'de',
@@ -1505,6 +1515,8 @@ public function assert_dispatched_class_string(): void
 ```php
 public function assert_dispatched_class_string(): void
 {
+    $this->withoutEvents();
+
     $langcodes = [
         'en',
         'de',
@@ -1527,6 +1539,8 @@ The way this works is once the `assertDispatched` has found the event(s) you are
 ```php
 public function assert_dispatched_with_further_assertions(): void
 {
+    $this->withoutEvents();
+
     $langcodes = [
         'en',
         'de',
@@ -1545,11 +1559,15 @@ public function assert_dispatched_with_further_assertions(): void
 ### Asserting events are not dispatched
 You can assert that certain events are not dispatched in your tests.
 
-To do this, call the `assertNotDispatched` method. You can assert that an event was not dispatched either by its event name or by the event class.
+To do this, you must first call the `withoutEvents` method to prepare your test.
+
+Next, call the `assertNotDispatched` method. You can assert that an event was not dispatched either by its event name or by the event class.
 
 ```php
 public function assert_event_not_dispatched_by_event_name(): void
 {
+    $this->withoutEvents();
+
     $dispatchedEvent = $this->createEvent();
 
     $this->container->get('event_dispatcher')->dispatch($dispatchedEvent, 'dispatch_event');
@@ -1561,6 +1579,8 @@ public function assert_event_not_dispatched_by_event_name(): void
 ```php
 public function assert_event_not_dispatched_by_class_string(): void
 {
+    $this->withoutEvents();
+
     $dispatchedEvent = $this->createEvent();
 
     $this->container->get('event_dispatcher')->dispatch($dispatchedEvent, 'dispatch_event');

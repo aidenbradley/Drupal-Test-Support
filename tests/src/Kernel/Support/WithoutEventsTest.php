@@ -88,6 +88,8 @@ class WithoutEventsTest extends KernelTestBase
     /** @test */
     public function assert_not_dispatched_by_event_name(): void
     {
+        $this->withoutEvents();
+
         $dispatchedEvent = $this->createEvent();
 
         $this->container->get('event_dispatcher')->dispatch($dispatchedEvent, 'dispatch_event');
@@ -98,6 +100,8 @@ class WithoutEventsTest extends KernelTestBase
     /** @test */
     public function assert_not_dispatched_by_class_string(): void
     {
+        $this->withoutEvents();
+
         $dispatchedEvent = $this->createEvent();
 
         $this->container->get('event_dispatcher')->dispatch($dispatchedEvent, 'dispatch_event');
