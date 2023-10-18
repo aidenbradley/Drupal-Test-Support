@@ -57,6 +57,10 @@ class InteractsWithLanguagesTest extends KernelTestBase
 
         $germanLanguage = $this->languageManager()->getLanguage('de');
 
+        if ($germanLanguage === null) {
+            $this->fail('Language variable is not a valid type. Expected type of either string or ' . LanguageInterface::class);
+        }
+
         $this->setCurrentLanguage($germanLanguage);
 
         $this->assertEquals('de', $this->languageManager()->getCurrentLanguage()->getId());

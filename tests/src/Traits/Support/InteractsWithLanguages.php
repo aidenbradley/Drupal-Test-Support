@@ -67,7 +67,7 @@ trait InteractsWithLanguages
             /** @var array<string, string> $prefixes */
             $prefixes = $languageNegotiation->get('url.prefixes');
 
-            $prefixes[$language->id()] = $prefix;
+            $prefixes[$language->getId()] = $prefix;
 
             $languageNegotiation->set('url.prefixes', $prefixes)->save();
         }
