@@ -4,14 +4,14 @@ namespace Drupal\Tests\test_support\Traits\Installs\Configuration;
 
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Site\Settings;
-use Drupal\Tests\test_support\Traits\Installs\InstallsTheme;
+use Drupal\Tests\test_support\Traits\Installs\InstallsThemes;
 use Drupal\Tests\test_support\Traits\Support\Exceptions\ConfigInstallFailed;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithSettings;
 use PHPUnit\Framework\Assert;
 
 trait InstallConfiguration
 {
-    use InstallsTheme;
+    use InstallsThemes;
     use InteractsWithSettings;
 
     /** @var bool */

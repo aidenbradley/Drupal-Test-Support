@@ -3,11 +3,11 @@
 namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\test_support\Traits\Installs\InstallsTheme;
+use Drupal\Tests\test_support\Traits\Installs\InstallsThemes;
 
 class InstallsThemeTest extends KernelTestBase
 {
-    use InstallsTheme;
+    use InstallsThemes;
 
     /** @test */
     public function installs_theme(): void

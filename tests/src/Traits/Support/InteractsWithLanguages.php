@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\test_support\Traits\Support;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\Tests\test_support\Traits\Installs\InstallsExportedConfig;
 use PHPUnit\Framework\Assert;
 
@@ -37,7 +37,7 @@ trait InteractsWithLanguages
         $this->container->get('kernel')->rebuildContainer();
     }
 
-    /** @param ConfigurableLanguageInterface|string $language */
+    /** @param LanguageInterface|string $language */
     protected function setCurrentLanguage($language, ?string $prefix = null): void
     {
         $this->setupLanguageDependencies();
@@ -52,7 +52,7 @@ trait InteractsWithLanguages
             )->load($language);
         }
 
-        if ($language instanceof ConfigurableLanguageInterface === false) {
+        if ($language instanceof LanguageInterface === false) {
             Assert::fail('Could not install language');
         }
 
@@ -67,7 +67,7 @@ trait InteractsWithLanguages
             /** @var array<string, string> $prefixes */
             $prefixes = $languageNegotiation->get('url.prefixes');
 
-            $prefixes[$language->id()] = $prefix;
+            $prefixes[$language->getId()] = $prefix;
 
             $languageNegotiation->set('url.prefixes', $prefixes)->save();
         }

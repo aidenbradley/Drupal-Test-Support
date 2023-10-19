@@ -79,10 +79,34 @@ class WithoutEventsTest extends KernelTestBase
             return $firedEvent->getLangcodes() === $langcodes;
         });
 
-        /** @param  object  $firedEvent */
+        /** @param object $firedEvent */
         $this->assertDispatched(get_class($event), function (LocaleEvent $firedEvent) use ($langcodes) {
             return $firedEvent->getLangcodes() === $langcodes;
         });
+    }
+
+    /** @test */
+    public function assert_not_dispatched_by_event_name(): void
+    {
+        $this->withoutEvents();
+
+        $dispatchedEvent = $this->createEvent();
+
+        $this->container->get('event_dispatcher')->dispatch($dispatchedEvent, 'dispatch_event');
+
+        $this->assertNotDispatched('test_event');
+    }
+
+    /** @test */
+    public function assert_not_dispatched_by_class_string(): void
+    {
+        $this->withoutEvents();
+
+        $dispatchedEvent = $this->createEvent();
+
+        $this->container->get('event_dispatcher')->dispatch($dispatchedEvent, 'dispatch_event');
+
+        $this->assertNotDispatched(LocaleEvent::class);
     }
 
     /** @return object */
@@ -102,7 +126,7 @@ class WithoutEventsTest extends KernelTestBase
         }
 
         throw new \Exception(
-            'None of the following event classes exist' . implode(', ', $eventClasses),
+            'None of the following event classes exist ' . implode(', ', $eventClasses),
         );
     }
 }

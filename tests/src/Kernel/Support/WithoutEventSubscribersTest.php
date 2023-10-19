@@ -31,6 +31,8 @@ class WithoutEventSubscribersTest extends KernelTestBase
     {
         $this->assertNotListening(TimeZoneResolver::class);
         $this->assertNotListening('system.timezone_resolver');
+
+        $this->assertNotListening(TimeZoneResolver::class, KernelEvents::REQUEST);
         $this->assertNotListening('system.timezone_resolver', KernelEvents::REQUEST);
 
         $this->enableModules([
@@ -39,6 +41,8 @@ class WithoutEventSubscribersTest extends KernelTestBase
 
         $this->assertListening(TimeZoneResolver::class);
         $this->assertListening('system.timezone_resolver');
+
+        $this->assertListening(TimeZoneResolver::class, KernelEvents::REQUEST);
         $this->assertListening('system.timezone_resolver', KernelEvents::REQUEST);
     }
 
@@ -67,6 +71,20 @@ class WithoutEventSubscribersTest extends KernelTestBase
         ]);
 
         $this->assertEmpty($this->eventDispatcher()->getListeners());
+    }
+
+    /** @test */
+    public function without_event_subscribers_single_class_string(): void
+    {
+        $this->enableModules([
+            'node',
+        ]);
+
+        $this->assertListening(RouteSubscriber::class);
+
+        $this->withoutSubscribers(RouteSubscriber::class);
+
+        $this->assertNotListening(RouteSubscriber::class);
     }
 
     /** @test */
@@ -133,6 +151,20 @@ class WithoutEventSubscribersTest extends KernelTestBase
         ]);
 
         $this->assertEmpty($this->eventDispatcher()->getListeners(ConfigEvents::SAVE));
+    }
+
+    /** @test */
+    public function without_event_subscribers_single_service_id(): void
+    {
+        $this->enableModules([
+            'language',
+        ]);
+
+        $this->assertListening('language.config_subscriber');
+
+        $this->withoutSubscribers('language.config_subscriber');
+
+        $this->assertNotListening('language.config_subscriber');
     }
 
     /** @test */

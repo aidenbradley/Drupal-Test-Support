@@ -3,6 +3,7 @@
 namespace Drupal\Tests\test_support\Traits\Support\Mail;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\ExpectationFailedException;
 
 class TestMail
 {
@@ -23,18 +24,20 @@ class TestMail
 
     public function getTo(): ?string
     {
+        /** @phpstan-ignore-next-line */
         return $this->getValue('to');
     }
 
     public function assertSentTo(string $to): self
     {
-        Assert::assertEquals($to, $this->getTo());
+        $this->assertEquals($to, $this->getTo());
 
         return $this;
     }
 
     public function getSubject(): ?string
     {
+        /** @phpstan-ignore-next-line */
         return $this->getValue('subject');
     }
 
@@ -49,7 +52,7 @@ class TestMail
     {
         $body = $this->getValue('body');
 
-        if ($body === null) {
+        if (is_string($body) === false) {
             return null;
         }
 
@@ -59,7 +62,20 @@ class TestMail
     /** @param  mixed  $body */
     public function assertBody($body): self
     {
-        Assert::assertEquals($body, $this->getBody());
+        $this->assertEquals($body, $this->getBody());
+
+        return $this;
+    }
+
+    public function getModule(): ?string
+    {
+        /** @phpstan-ignore-next-line */
+        return $this->getValue('module');
+    }
+
+    public function assertSentFromModule(string $module): self
+    {
+        $this->assertEquals($module, $this->getModule());
 
         return $this;
     }
@@ -87,7 +103,7 @@ class TestMail
     {
         $paramValue = $this->getParameter($parameter);
 
-        Assert::assertEquals($value, $paramValue);
+        $this->assertEquals($value, $paramValue);
 
         if ($assertionCallback !== null) {
             $assertionCallback($paramValue);
@@ -102,14 +118,26 @@ class TestMail
         return $this->values;
     }
 
-    private function getValue(string $keyName): ?string
+    /** @return mixed|null */
+    private function getValue(string $keyName)
     {
-        $value = $this->values[$keyName];
-
-        if (is_string($value) === false) {
+        if (isset($this->values[$keyName]) === false) {
             return null;
         }
 
-        return $value;
+        return $this->values[$keyName];
+    }
+
+    /**
+     * @param mixed $expected
+     * @param mixed $actual
+     */
+    private function assertEquals($expected, $actual): void
+    {
+        try {
+            Assert::assertEquals($expected, $actual);
+        } catch (ExpectationFailedException $exception) {
+            Assert::fail('Failed asserting that `' . $expected . '` equals `' . $actual . '`');
+        }
     }
 }

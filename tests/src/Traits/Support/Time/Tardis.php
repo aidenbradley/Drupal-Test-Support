@@ -48,7 +48,7 @@ class Tardis
         Carbon::setTestNow();
     }
 
-    public function toTimezone(string $timezone, ?callable $callback = null): void
+    public function toTimezone(string $timezone, ?\Closure $callback = null): void
     {
         $currentTimezone = Carbon::now()->getTimezone()->getName();
 
@@ -64,7 +64,7 @@ class Tardis
     }
 
     /** @test */
-    public function freezeTime(?callable $callback = null): void
+    public function freezeTime(?\Closure $callback = null): void
     {
         if (is_callable($callback) === false) {
             return;
@@ -88,7 +88,7 @@ class Tardis
             ->save();
     }
 
-    /** @param array{0: ?callable} $args */
+    /** @param array{0: ?\Closure} $args */
     public function __call(string $method, array $args): void
     {
         if ($this->travel === null) {

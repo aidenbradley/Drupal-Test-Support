@@ -3,6 +3,7 @@
 namespace Drupal\Tests\test_support\Traits\Http\Response;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\ExpectationFailedException;
 use Symfony\Component\HttpFoundation\Response;
 
 class TestResponse extends Response
@@ -25,7 +26,11 @@ class TestResponse extends Response
     /** @return static */
     public function assertStatusCode(int $statusCode)
     {
-        Assert::assertEquals($statusCode, $this->getStatusCode());
+        try {
+            Assert::assertEquals($statusCode, $this->getStatusCode());
+        } catch (ExpectationFailedException $exception) {
+            Assert::fail('Failed asserting that status code `' . $statusCode . '` equals `' . $this->getStatusCode() . '`');
+        }
 
         return $this;
     }

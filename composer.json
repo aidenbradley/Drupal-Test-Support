@@ -38,6 +38,11 @@
         "test:code-smells": "vendor/bin/ecs",
 
         "test:types": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon",
-        "test:mess": "vendor/bin/phpmd tests/src/Traits ansi phpmd.xml"
+        "test:mess": "vendor/bin/phpmd tests/src/Traits ansi phpmd.xml",
+
+        "lint": [
+            "@composer test:code-smells",
+            "@composer test:types"
+        ]
     }
 }

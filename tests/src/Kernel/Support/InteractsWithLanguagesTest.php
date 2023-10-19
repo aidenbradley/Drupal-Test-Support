@@ -3,6 +3,7 @@
 namespace Drupal\Tests\test_support\Kernel\Support;
 
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithLanguages;
 
@@ -35,7 +36,7 @@ class InteractsWithLanguagesTest extends KernelTestBase
     }
 
     /** @test */
-    public function set_current_language(): void
+    public function set_current_language_using_langcode(): void
     {
         $this->setCurrentLanguage('en');
         $this->assertEquals('en', $this->languageManager()->getCurrentLanguage()->getId());
@@ -45,6 +46,24 @@ class InteractsWithLanguagesTest extends KernelTestBase
 
         $this->setCurrentLanguage('fr');
         $this->assertEquals('fr', $this->languageManager()->getCurrentLanguage()->getId());
+    }
+
+    /** @test */
+    public function set_current_language_using_language_class(): void
+    {
+        $this->installLanguage('de');
+
+        $this->assertEquals('en', $this->languageManager()->getCurrentLanguage()->getId());
+
+        $germanLanguage = $this->languageManager()->getLanguage('de');
+
+        if ($germanLanguage === null) {
+            $this->fail('Language variable is not a valid type. Expected type of either string or ' . LanguageInterface::class);
+        }
+
+        $this->setCurrentLanguage($germanLanguage);
+
+        $this->assertEquals('de', $this->languageManager()->getCurrentLanguage()->getId());
     }
 
     /** @test */

@@ -4,6 +4,7 @@ namespace Drupal\Tests\test_support\Traits\Support;
 
 use Drupal\Tests\test_support\Traits\Support\Contracts\TestEventDispatcher;
 use Drupal\Tests\test_support\Traits\Support\Decorators\EventDispatcher\DecoratedEventDispatcher;
+use PHPUnit\Framework\Assert;
 
 trait WithoutEvents
 {
@@ -40,14 +41,14 @@ trait WithoutEvents
     }
 
     /** @param class-string|string|null $event */
-    public function assertDispatched($event, ?callable $callback = null): self
+    public function assertDispatched($event, ?\Closure $callback = null): self
     {
         $firedEvents = $this->eventDispatcher()->getFiredEvents($event);
 
-        $this->assertTrue($firedEvents->isNotEmpty(), $event . ' event was not dispatched');
+        Assert::assertTrue($firedEvents->isNotEmpty(), $event . ' event was not dispatched');
 
         if ($callback) {
-            $this->assertTrue($callback($firedEvents->first()));
+            Assert::assertTrue($callback($firedEvents->first()));
         }
 
         return $this;
@@ -55,7 +56,7 @@ trait WithoutEvents
 
     public function assertNotDispatched(?string $event): self
     {
-        $this->assertTrue($this->eventDispatcher()->getFiredEvents($event)->isEmpty(), $event . ' event was dispatched');
+        Assert::assertTrue($this->eventDispatcher()->getFiredEvents($event)->isEmpty(), $event . ' event was dispatched');
 
         return $this;
     }

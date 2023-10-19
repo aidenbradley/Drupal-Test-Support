@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\test_support\Traits\Installs;
 
-trait InstallsTheme
+trait InstallsThemes
 {
     /** @var bool */
     private $setupThemeDependencies = false;
