@@ -1568,9 +1568,9 @@ public function assert_event_not_dispatched_by_event_name(): void
 {
     $this->withoutEvents();
 
-    $dispatchedEvent = $this->createEvent();
+    $eventToDispatch = $this->createEvent();
 
-    $this->container->get('event_dispatcher')->dispatch($dispatchedEvent, 'dispatch_event');
+    $this->container->get('event_dispatcher')->dispatch($eventToDispatch, 'dispatch_event');
 
     $this->assertNotDispatched('test_event');
 }
@@ -1581,10 +1581,186 @@ public function assert_event_not_dispatched_by_class_string(): void
 {
     $this->withoutEvents();
 
-    $dispatchedEvent = $this->createEvent();
+    $eventToDispatch = $this->createEvent();
 
-    $this->container->get('event_dispatcher')->dispatch($dispatchedEvent, 'dispatch_event');
+    $this->container->get('event_dispatcher')->dispatch($eventToDispatch, 'dispatch_event');
 
-    $this->assertNotDispatched(LocaleEvent::class);
+    $this->assertNotDispatched(\Drupal\locale\LocaleEvent\LocaleEvent::class);
+}
+```
+
+## Without event subscribers
+There is a trait called [WithoutEventSubscribers](.././tests/src/Traits/Support/WithoutEventSubscribers.php) that contains an API to improve the developer experience of testing event subscribers.
+
+### Preventing subscribers from listening
+In your test, you can prevent all or some event subscribers from acting at all.
+
+To do this, call the `withoutSubscribers` method. This will prevent any subscribers from acting at all when events being dispatched.
+
+```php
+public function without_subscribers(): void
+{
+    $this->withoutSubscribers();
+}
+```
+
+### Preventing certain subscribers from listening
+In your test, you can prevent a certain list of event subscribers from acting when events are dispatched.
+
+To do this, call the `withoutSubscribers` method and pass either one or more event subscribers to prevent them from acting. You can pass either the service ID of the event subscriber or the class string.
+
+#### Preventing a single event subscriber by service ID
+```php
+public function prevent_single_event_subscriber_by_service_id(): void
+{
+    $this->enableModules([
+        'language',
+    ]);
+
+    $this->withoutSubscribers('language.config_subscriber');
+}
+```
+
+#### Preventing a single event subscriber by class string
+```php
+public function prevent_single_event_subscriber_by_class_string(): void
+{
+    $this->enableModules([
+        'node',
+    ]);
+
+    $this->withoutSubscribers(\Drupal\node\Routing\RouteSubscriber::class);
+}
+```
+
+#### Preventing multiple event subscribers by service ID
+```php
+public function prevent_multiple_event_subscriber_by_service_id(): void
+{
+    $this->enableModules([
+        'language',
+        'node',
+    ]);
+
+    $this->withoutSubscribers([
+        'node.route_subscriber',
+        'language.config_subscriber',
+    ]);
+}
+```
+
+#### Preventing multiple event subscribers by class string
+```php
+public function prevent_multiple_event_subscriber_by_class_string(): void
+{
+    $this->enableModules([
+        'language',
+        'node',
+    ]);
+
+    $this->withoutSubscribers([
+        \Drupal\node\Routing\RouteSubscriber::class,
+        \Drupal\language\EventSubscriber\ConfigSubscriber::class,
+    ]);
+}
+```
+
+### Asserting an event subscriber is not listening
+You can assert in your test that a particular event subscriber is not listening.
+
+To do this, call the `assertNotListening` method. The method allows you to pass an argument of either the service ID of the event subscriber or the class string of the event subscriber.
+
+```php
+public function assert_not_listening_service_id(): void
+{
+    $this->assertNotListening('system.timezone_resolver');
+}
+```
+
+```php
+public function assert_not_listening_class_string(): void
+{
+    $this->assertNotListening(\Drupal\system\TimeZoneResolver::class);
+}
+```
+
+### Asserting an event subscriber is not listening to a certain event
+You can assert in your test that a particular event subscriber is not listening for a particular event.
+
+To do this, call the `assertNotListening` method and pass a second argument. The second argument will be service ID of the event.
+
+```php
+public function assert_not_listening_to_event_by_service_id(): void
+{
+    $this->assertNotListening('system.timezone_resolver', 'kernel.request');
+}
+```
+
+```php
+public function assert_not_listening_to_event_by_class_string(): void
+{
+    $this->assertNotListening(\Drupal\system\TimeZoneResolver::class, 'kernel.request');
+}
+```
+
+### Asserting an event subscriber is listening
+You can assert in your test that a particular event subscriber is listening. This is useful to ensure your event subscribers are registered by your module.
+
+To do this, call the `assertListening` method. The method allows you to pass an argument of either the service ID of the event subscriber or the class string of the event subscriber.
+
+```php
+public function assert_event_subscriber_listening_by_service_id(): void
+{
+    $this->assertNotListening('system.timezone_resolver');
+
+    $this->enableModules([
+        'system',
+    ]);
+
+    $this->assertListening('system.timezone_resolver');
+}
+```
+
+```php
+public function assert_event_subscriber_listening_by_class_string(): void
+{
+    $this->assertNotListening(TimeZoneResolver::class);
+
+    $this->enableModules([
+        'system',
+    ]);
+
+    $this->assertListening(TimeZoneResolver::class);
+}
+```
+
+### Assert event subscriber listening to a certain event
+You can assert in your test that a particular event subscriber is listening for a particular event.
+
+To do this, call the `assertListening` method and pass a second argument. The second argument will be service ID of the event.
+
+```php
+public function assert_event_subscriber_listening_to_certain_event_by_service_id(): void
+{
+    $this->assertNotListening('system.timezone_resolver', KernelEvents::REQUEST);
+
+    $this->enableModules([
+        'system',
+    ]);
+
+    $this->assertListening('system.timezone_resolver', KernelEvents::REQUEST);
+}
+```
+
+```php
+public function assert_event_subscriber_listening_to_certain_event_by_class_string(): void
+{
+    $this->assertNotListening(TimeZoneResolver::class, KernelEvents::REQUEST);
+
+    $this->enableModules([
+        'system',
+    ]);
+
+    $this->assertListening(TimeZoneResolver::class, KernelEvents::REQUEST);
 }
 ```
