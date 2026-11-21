@@ -11,7 +11,6 @@
     },
     "require-dev": {
         "mglaman/phpstan-drupal": "^1.1",
-        "sempro/phpunit-pretty-print": "^1.4",
         "brianium/paratest": "^6.9 || ^7.0",
         "symplify/easy-coding-standard": "^11.5",
         "behat/mink": "^1.9",
@@ -32,6 +31,14 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "phpstan/extension-installer": true,
             "infection/extension-installer": true
+        },
+        "audit": {
+            "abandoned": "ignore"
+        },
+        "policy": {
+            "advisories": {
+                "block": false
+            }
         }
     },
     "scripts": {
