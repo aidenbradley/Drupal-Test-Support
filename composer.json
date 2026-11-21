@@ -6,13 +6,18 @@
         "php": ">=7.3.0",
         "opis/closure": "^3.6",
         "nesbot/carbon": "^2.69",
-        "illuminate/collections": ">=8.83"
+        "illuminate/collections": ">=8.83",
+        "symfony/finder": "^5"
     },
     "require-dev": {
         "mglaman/phpstan-drupal": "^1.1",
         "sempro/phpunit-pretty-print": "^1.4",
         "brianium/paratest": "^6.9",
-        "symplify/easy-coding-standard": "^11.5"
+        "symplify/easy-coding-standard": "^11.5",
+        "behat/mink": "^1.9",
+        "phpspec/prophecy-phpunit": "^2",
+        "symfony/phpunit-bridge": "^5",
+        "mikey179/vfsstream": "^1.6"
     },
     "license": "MIT",
     "authors": [
