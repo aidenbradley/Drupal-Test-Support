@@ -32,9 +32,6 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "phpstan/extension-installer": true,
             "infection/extension-installer": true
-        },
-        "platform": {
-            "php": "7.3"
         }
     },
     "scripts": {
