@@ -77,7 +77,11 @@ jobs:
         -   name: PHP Mess Detector
             uses: php-actions/phpmd@v1
             with:
-                php_version: ${{ matrix.php-versions }}
+                # PHPMD's own phar (pinned to "latest" by this action) now requires
+                # PHP >=8.1 to even boot, independent of the matrix PHP this job lints
+                # against. This only affects the isolated PHP php-actions/phpmd builds
+                # for itself, not the PHP used to run the module's own test suite.
+                php_version: '8.1'
                 path: modules/test_support/tests/src/Traits
                 output: ansi
                 ruleset: modules/test_support/phpmd.xml
@@ -107,6 +111,10 @@ jobs:
                 path: vendor
                 key: ${{ runner.os }}-drupal-build-composer-v${{ matrix.drupal-core }}-${{ hashFiles('./composer.lock') }}
                 restore-keys: ${{ runner.os }}-drupal-build-composer-v
+
+        -   if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+            name: Allow Composer plugins (older Drupal core composer.json predates allow-plugins)
+            run: composer config allow-plugins true
 
         -   if: steps.build_drupal_cache.outputs.cache-hit != 'true'
             name: Install Drupal core dependencies
@@ -164,6 +172,10 @@ jobs:
            path: vendor
            key: ${{ runner.os }}-drupal-build-composer-v${{ matrix.drupal-core }}-${{ hashFiles('./composer.lock') }}
            restore-keys: ${{ runner.os }}-drupal-build-composer-v
+
+      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+        name: Allow Composer plugins (older Drupal core composer.json predates allow-plugins)
+        run: composer config allow-plugins true
 
       - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
         name: Install Drupal core dependencies
@@ -225,6 +237,10 @@ jobs:
           path: vendor
           key: ${{ runner.os }}-drupal-build-composer-v${{ matrix.drupal-core }}-${{ hashFiles('./composer.lock') }}
           restore-keys: ${{ runner.os }}-drupal-build-composer-v
+
+      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+        name: Allow Composer plugins (older Drupal core composer.json predates allow-plugins)
+        run: composer config allow-plugins true
 
       - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
         name: Install Drupal core dependencies
