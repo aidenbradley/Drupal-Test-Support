@@ -102,7 +102,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        drupal-core: ['9.1.0', '9.2.0', '9.3.0', '9.4.0', '9.5.0', '10.0.0']
+        drupal-core: ['9.1.0', '9.2.0', '9.3.0', '9.4.0', '9.5.0', '10.0.0', '10.1.0', '10.2.0', '10.3.0', '10.4.0', '10.5.0', '10.6.0']
     steps:
         -   # This job never pinned a PHP version, so it silently rode whatever
             # ubuntu-latest's bundled default PHP happened to be. That default has
@@ -172,7 +172,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        drupal-core: [ '10.0.0' ]
+        drupal-core: [ '10.0.0', '10.1.0', '10.2.0', '10.3.0', '10.4.0', '10.5.0', '10.6.0' ]
         php-versions: [ '8.2', '8.1.6' ]
     steps:
       - name: Setup PHP v${{ matrix.php-versions }}, with composer and extensions
