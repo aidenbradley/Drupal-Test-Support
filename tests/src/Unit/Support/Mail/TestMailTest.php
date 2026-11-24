@@ -5,12 +5,9 @@ namespace Drupal\Tests\test_support\Unit\Support\Mail;
 use Drupal\Tests\test_support\Traits\Support\Mail\TestMail;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\User;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 class TestMailTest extends UnitTestCase
 {
-    use ProphecyTrait;
-
     /** @test */
     public function get_to(): void
     {
@@ -92,25 +89,22 @@ class TestMailTest extends UnitTestCase
     /** @test */
     public function assert_param(): void
     {
-        $user = $this->prophesize(User::class);
+        $user = $this->createMock(User::class);
 
-        /** @phpstan-ignore-next-line */
-        $user->id()->willReturn(1);
-
-        /** @phpstan-ignore-next-line */
-        $user->getEmail()->willReturn('hello@example.com');
+        $user->method('id')->willReturn(1);
+        $user->method('getEmail')->willReturn('hello@example.com');
 
         $mail = TestMail::createFromValues([
             'params' => [
                 'message' => 'mail message',
                 'article_title' => 'arbitrary value',
-                'user' => $user->reveal(),
+                'user' => $user,
             ],
         ]);
 
         $mail->assertParameter('message', 'mail message');
         $mail->assertParameter('article_title', 'arbitrary value');
-        $mail->assertParameter('user', $user->reveal(), function (User $user) {
+        $mail->assertParameter('user', $user, function (User $user) {
             $this->assertEquals('hello@example.com', $user->getEmail());
         });
     }
