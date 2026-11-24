@@ -20,6 +20,15 @@ class InteractsWithSettingsTest extends KernelTestBase
 
         $container->set('kernel', $this->container->get('kernel'));
 
+        // Drupal 10.3+'s own KernelTestBase::tearDown() unconditionally fetches
+        // request_stack to clean up a mock session. Since this test swaps out
+        // $this->container for this bare stand-in (to isolate the trait under
+        // test from needing the full kernel container), request_stack needs
+        // carrying over the same way kernel already is, or tearDown() throws
+        // ServiceNotFoundException instead of the SessionNotFoundException it
+        // actually knows how to handle.
+        $container->set('request_stack', $this->container->get('request_stack'));
+
         /** @phpstan-ignore-next-line */
         if (version_compare(\Drupal::VERSION, '10.0', '>=')) {
             $container->setParameter('app.root', __DIR__);
