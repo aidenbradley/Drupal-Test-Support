@@ -164,7 +164,11 @@ jobs:
                 key: ${{ runner.os }}-drupal-build-composer-v${{ matrix.drupal-core }}-${{ hashFiles('./composer.lock') }}
                 restore-keys: ${{ runner.os }}-drupal-build-composer-v
 
-        -   if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+        -   # Always runs, cache hit or not: composer config is cheap and
+            # idempotent, and the composer.json it edits is a fresh checkout
+            # every run anyway (not part of the cached vendor/ path), so a
+            # cache hit would otherwise skip it and leave these unset before
+            # the always-run core-dev install below.
             name: Allow Composer plugins (older Drupal core composer.json predates allow-plugins)
             run: |
               composer config allow-plugins true
@@ -174,7 +178,14 @@ jobs:
             name: Install Drupal core dependencies
             run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
-        -   if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+        -   # Deliberately not gated on the cache hit above, unlike the
+            # plain `install` step. --with-all-dependencies resolves against
+            # whatever's newest right now, not the frozen composer.lock this
+            # job's cache is keyed on - caching it behind a key that can
+            # never change (a released Drupal version's composer.lock is
+            # immutable) would freeze that resolution the first time this
+            # ever ran and silently never update again, masking real
+            # dependency drift behind a permanently "warm" cache.
             name: Install drupal/core-dev with dependencies
             run: |
                 composer --no-interaction --no-progress require --dev \
@@ -240,7 +251,8 @@ jobs:
            key: ${{ runner.os }}-drupal-build-composer-v${{ matrix.drupal-core }}-${{ hashFiles('./composer.lock') }}
            restore-keys: ${{ runner.os }}-drupal-build-composer-v
 
-      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+      - # Always runs, cache hit or not - see the matching step in
+        # static_analysis_matrix for why.
         name: Allow Composer plugins (older Drupal core composer.json predates allow-plugins)
         run: |
           composer config allow-plugins true
@@ -250,7 +262,8 @@ jobs:
         name: Install Drupal core dependencies
         run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
-      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+      - # Deliberately not gated on the cache hit above - see the matching
+        # step in static_analysis_matrix for why.
         name: Install drupal/core-dev with dependencies
         run: |
           composer --no-interaction --no-progress require --dev \
@@ -307,7 +320,8 @@ jobs:
           key: ${{ runner.os }}-drupal-build-composer-v${{ matrix.drupal-core }}-${{ hashFiles('./composer.lock') }}
           restore-keys: ${{ runner.os }}-drupal-build-composer-v
 
-      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+      - # Always runs, cache hit or not - see the matching step in
+        # static_analysis_matrix for why.
         name: Allow Composer plugins (older Drupal core composer.json predates allow-plugins)
         run: |
           composer config allow-plugins true
@@ -317,7 +331,8 @@ jobs:
         name: Install Drupal core dependencies
         run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
-      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+      - # Deliberately not gated on the cache hit above - see the matching
+        # step in static_analysis_matrix for why.
         name: Install drupal/core-dev with dependencies
         run: |
             composer --no-interaction --no-progress require --dev \
