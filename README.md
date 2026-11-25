@@ -46,14 +46,15 @@ separate `tools/phpstan/composer.json`, with its own independent `vendor/` and
   container installing this module's actual Kernel/Unit test dependencies), rather than
   failing the whole install.
 - `composer test:types` still works exactly as before, from wherever you'd normally run
-  it (inside `modules/custom/test_support` of whichever Drupal site you're testing
-  against). It bridges `phpstan-drupal`'s Composer-runtime detection to that surrounding
-  site's own autoloader via `--autoload-file=../../../../vendor/autoload.php`, letting it
-  correctly see `drupal/core` while phpstan/phpstan-drupal themselves stay installed in
-  this module's own isolated `tools/phpstan`, not the site's.
-- That relative path assumes the standard `web/modules/custom/{name}` nesting depth
-  (what `composer/installers` uses by default for `type: drupal-custom-module`). This
-  only ever matters in environments this module's own maintainers control directly — the
-  local compatibility-testing sites and CI's matrix jobs — never for a downstream
-  developer who simply requires this module into their own project, since they'd never
-  run this module's own internal test/lint/static-analysis scripts at all.
+  it (inside this module's own directory, wherever it's cloned within a Drupal site). It
+  runs `bin/run-static-analysis.php`, which uses `webflo/drupal-finder` (the same
+  mechanism `bootstrap.php` already uses) to locate the surrounding site's real
+  `vendor/autoload.php` from the current directory, then bridges `phpstan-drupal`'s
+  Composer-runtime detection to it — letting it correctly see `drupal/core` while
+  phpstan/phpstan-drupal themselves stay installed in this module's own isolated
+  `tools/phpstan`, not the site's. This is deliberately dynamic rather than a fixed
+  relative path: this module is cloned at different depths relative to a Drupal site's
+  root depending on context — `web/modules/custom/{name}` locally (via
+  `composer/installers`'s default for `type: drupal-custom-module`), but `modules/{name}`
+  (no `web/` at all) in CI's own `drupal/drupal` checkouts — and a hardcoded path broke
+  the second case outright.
