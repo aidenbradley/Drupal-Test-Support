@@ -1,10 +1,18 @@
 parameters:
         level: 9
-        # The module's own floor is PHP 7.3, independent of whatever PHP the
-        # isolated tooling in tools/phpstan actually executes on (8.1+, see
-        # bin/install-static-analysis-tooling.php). Pin analysis to the
-        # module's real floor so this still catches 7.3-incompatible syntax.
-        phpVersion: 70300
+        # Pinned to tools/phpstan's own floor (8.1), not the module's PHP
+        # >=7.3 floor. Pinning to 7.3 broke reflection of newer Drupal
+        # sites' own dependencies (e.g. Symfony 6.4, required by Drupal
+        # 10.3+, which itself needs PHP 8.1+) when bridged in via
+        # --autoload-file, since such a site can never actually run on PHP
+        # 7.3 in the first place. Leaving phpVersion unset isn't right
+        # either - it then silently defaults to whatever PHP is actually
+        # executing phpstan, which varies between a local host and a DDEV
+        # container and would give inconsistent results between them.
+        # CI's real PHPUnit matrix already exercises actual PHP 7.3 for the
+        # 9.x entries, which catches genuine 7.3-incompatible syntax in this
+        # module's own code independently of static analysis.
+        phpVersion: 80100
         reportUnmatchedIgnoredErrors: false
         # checkGenericClassInNonGenericObjectType was removed in PHPStan 2.x
         # (now a skip-list of specific exempted classes instead of a blanket
