@@ -15,7 +15,8 @@
         "behat/mink": "^1.9",
         "phpspec/prophecy-phpunit": "^2",
         "symfony/phpunit-bridge": "^5",
-        "mikey179/vfsstream": "^1.6"
+        "mikey179/vfsstream": "^1.6",
+        "webflo/drupal-finder": "^1.2"
     },
     "license": "MIT",
     "authors": [
