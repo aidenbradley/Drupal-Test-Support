@@ -15,28 +15,19 @@ use Carbon\Carbon;
  */
 class Tardis
 {
-    /**
-     * @phpstan-ignore-next-line
-     * @var \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder @container
-     */
+    /** @var \Drupal\Core\DependencyInjection\ContainerBuilder */
     private $container;
 
     /** @var int|null */
     private $travel;
 
-    /**
-     * @phpstan-ignore-next-line
-     * @param  \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder  $container
-     */
+    /** @param \Drupal\Core\DependencyInjection\ContainerBuilder $container */
     public static function createFromTravel($container, ?int $travel = null): self
     {
         return new self($container, $travel);
     }
 
-    /**
-     * @phpstan-ignore-next-line
-     * @param  \Drupal\Component\DependencyInjection\ContainerInterface|\Drupal\Core\DependencyInjection\ContainerBuilder  $container
-     */
+    /** @param \Drupal\Core\DependencyInjection\ContainerBuilder $container */
     public function __construct($container, ?int $travel = null)
     {
         $this->container = $container;

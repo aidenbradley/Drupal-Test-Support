@@ -16,7 +16,12 @@ parameters:
         		- tests/src/Traits/Support/Decorators/EventDispatcher/DecoratedEventDispatcher.php
         ignoreErrors:
         		- '#Unsafe usage of new static\(\)#'
-        		- '#^Parameter \#2 \$length of method Drupal\\Core\\Entity\\Query\\QueryInterface\:\:range\(\) expects null, int given\.$#'
+        		# QueryInterface::range()'s own docblock in Drupal core <9.5 incorrectly
+        		# declares both $start and $length as `null` (the real, native signature
+        		# is untyped: range($start = NULL, $length = NULL)) - a stale docblock bug
+        		# in core itself, fixed by 9.5+, not a real incompatibility in code that
+        		# actually passes an int.
+        		- '#^Parameter \#[12] \$(start|length) of method Drupal\\Core\\Entity\\Query\\QueryInterface\:\:range\(\) expects null, int given\.$#'
         		- '#Cannot call method transform\(\) on mixed#'
         		- '#Cannot call method whenEmpty\(\) on mixed#'
         		- '#Cannot call method mapInto\(\) on mixed#'
