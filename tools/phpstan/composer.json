@@ -1,0 +1,19 @@
+{
+    "name": "aidenbradley/test-support-static-analysis-tooling",
+    "description": "Isolated static-analysis tooling for aidenbradley/test-support, kept separate from the module's own composer.json so mglaman/phpstan-drupal's own PHP floor (8.1+) never affects the module's actual PHP >=7.3 runtime/test dependencies. See bin/install-static-analysis-tooling.php in the module root.",
+    "type": "project",
+    "require": {
+        "php": ">=8.1",
+        "mglaman/phpstan-drupal": "^2.4"
+    },
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        },
+        "audit": {
+            "abandoned": "ignore"
+        }
+    }
+}

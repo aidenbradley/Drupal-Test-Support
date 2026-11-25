@@ -41,9 +41,28 @@ jobs:
                  key: ${{ runner.os }}-build-development-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
                  restore-keys: ${{ runner.os }}-build-development-module-composer-
 
-          -  if: steps.build_development_module_cache.outputs.cache-hit != 'true'
-             name: Build development module including dependencies
-             run: |
+          -   # tools/phpstan is a sibling of modules/test_support/vendor, not nested
+              # inside it, so it needs its own cache entry, independent of the
+              # main module vendor cache above. Restored before the install step
+              # below so that step's condition can react to either cache missing.
+              name: Cache static analysis tooling
+              id: static_analysis_tooling_cache
+              uses: actions/cache@v3
+              with:
+                  path: modules/test_support/tools/phpstan/vendor
+                  key: ${{ runner.os }}-static-analysis-tooling-composer-${{ hashFiles('modules/test_support/tools/phpstan/composer.lock') }}
+                  restore-keys: ${{ runner.os }}-static-analysis-tooling-composer-
+
+          -   # Runs if EITHER cache missed, not just the main module one -
+              # otherwise a tools/phpstan-only lock change (e.g. bumping
+              # phpstan-drupal) would never retrigger the post-install-cmd hook
+              # that rebuilds it, since the main module cache would still hit.
+              # composer install is idempotent against an unchanged lock, so
+              # this stays a faithful parity check of a developer's own
+              # `composer install`, just correctly reactive to both locks.
+              if: steps.build_development_module_cache.outputs.cache-hit != 'true' || steps.static_analysis_tooling_cache.outputs.cache-hit != 'true'
+              name: Build development module including dependencies
+              run: |
                  cd modules/test_support;
                  composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
@@ -160,6 +179,19 @@ jobs:
             path: modules/test_support/vendor
             key: ${{ runner.os }}-build-development-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
             restore-keys: ${{ runner.os }}-build-development-module-composer-
+            fail-on-cache-miss: true
+
+        # tools/phpstan is a sibling of modules/test_support/vendor, not nested
+        # inside it, so it needs its own cache entry. build_development_module
+        # is what actually populates it (its own composer install there fires
+        # the module's post-install-cmd hook, same as local dev), so this job
+        # just restores that cache rather than installing it separately.
+        - name: Retreive static analysis tooling build cache
+          uses: actions/cache@v3
+          with:
+            path: modules/test_support/tools/phpstan/vendor
+            key: ${{ runner.os }}-static-analysis-tooling-composer-${{ hashFiles('modules/test_support/tools/phpstan/composer.lock') }}
+            restore-keys: ${{ runner.os }}-static-analysis-tooling-composer-
             fail-on-cache-miss: true
 
         - name: Run static analysis

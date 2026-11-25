@@ -1,8 +1,16 @@
 parameters:
         level: 9
+        # The module's own floor is PHP 7.3, independent of whatever PHP the
+        # isolated tooling in tools/phpstan actually executes on (8.1+, see
+        # bin/install-static-analysis-tooling.php). Pin analysis to the
+        # module's real floor so this still catches 7.3-incompatible syntax.
+        phpVersion: 70300
         reportUnmatchedIgnoredErrors: false
-        checkGenericClassInNonGenericObjectType: false
-        checkMissingIterableValueType: false
+        # checkGenericClassInNonGenericObjectType was removed in PHPStan 2.x
+        # (now a skip-list of specific exempted classes instead of a blanket
+        # toggle); any real findings it used to suppress get an ignoreErrors
+        # entry below instead, same as everything else here.
+        checkMissingTypehints: false
         paths:
             - tests
         excludePaths:
@@ -14,5 +22,5 @@ parameters:
         		- '#Cannot call method whenEmpty\(\) on mixed#'
         		- '#Cannot call method mapInto\(\) on mixed#'
 includes:
-    - vendor/mglaman/phpstan-drupal/extension.neon
+    - tools/phpstan/vendor/mglaman/phpstan-drupal/extension.neon
     - phar://phpstan.phar/conf/bleedingEdge.neon

@@ -10,7 +10,6 @@
         "symfony/finder": "^5"
     },
     "require-dev": {
-        "mglaman/phpstan-drupal": "^1.1",
         "brianium/paratest": "^6.9 || ^7.0",
         "symplify/easy-coding-standard": "^11.5",
         "behat/mink": "^1.9",
@@ -50,7 +49,10 @@
 
         "test:code-smells": "vendor/bin/ecs",
 
-        "test:types": "php -d memory_limit=4G vendor/bin/phpstan analyse -c phpstan.neon",
-        "test:mess": "vendor/bin/phpmd tests/src/Traits ansi phpmd.xml"
+        "test:types": "php -d memory_limit=4G tools/phpstan/vendor/bin/phpstan analyse -c phpstan.neon --autoload-file=../../../../vendor/autoload.php",
+        "test:mess": "vendor/bin/phpmd tests/src/Traits ansi phpmd.xml",
+
+        "post-install-cmd": "@php bin/install-static-analysis-tooling.php",
+        "post-update-cmd": "@php bin/install-static-analysis-tooling.php"
     }
 }
