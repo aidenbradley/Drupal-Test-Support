@@ -28,6 +28,19 @@ jobs:
       name: Build Development Module
       runs-on: ubuntu-latest
       steps:
+          -   # This job never pinned a PHP version either (see the same fix
+              # already applied to static_analysis_matrix), so it rode
+              # ubuntu-latest's drifting default - now PHP 8.5, which
+              # phpspec/prophecy's locked 1.21.0 doesn't yet declare support
+              # for, breaking the install outright. None of the PHP versions
+              # actually used downstream (7.3, 8.1, 8.1.6, 8.2) need anything
+              # newer than this; pin instead of riding the runner default.
+              name: Setup PHP 8.1, with composer and extensions
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.1'
+                  coverage: none
+
           -  name: Checkout module
              uses: actions/checkout@v2
              with:
