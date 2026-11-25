@@ -8,6 +8,15 @@ class UpdateHookFailed extends \Exception
 
     public const INVALID_FINISHED_VALUE = 2;
 
+    public const COULD_NOT_DETERMINE_MODULE_NAME = 3;
+
+    public static function couldNotDetermineModuleName(string $function): self
+    {
+        $message = PHP_EOL . PHP_EOL . 'Could not determine the module name prefix for function: ' . $function;
+
+        return new self($message, static::COULD_NOT_DETERMINE_MODULE_NAME);
+    }
+
     /** @param  string|int|float  $finishedValue */
     public static function noBatchProgression($finishedValue): self
     {

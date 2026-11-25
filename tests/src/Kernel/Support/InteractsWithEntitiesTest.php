@@ -81,6 +81,7 @@ class InteractsWithEntitiesTest extends KernelTestBase
 
         $this->refreshEntity($node);
 
+        /** @var \Drupal\node\Entity\Node $node */
         $this->assertEquals('Example Title Updated', $node->get('title')->getString());
     }
 

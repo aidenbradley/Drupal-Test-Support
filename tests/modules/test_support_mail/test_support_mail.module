@@ -8,5 +8,10 @@ function test_support_mail_mail(string $key, array &$message): void
     }
 
     $message['subject'] = \Drupal::state()->get('test_support.mail_subject');
+
+    if (isset($message['body']) === false || is_array($message['body']) === false) {
+        $message['body'] = [];
+    }
+
     $message['body'][] = \Drupal::state()->get('test_support.mail_body');
 }

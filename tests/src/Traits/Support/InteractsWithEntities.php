@@ -4,6 +4,7 @@ namespace Drupal\Tests\test_support\Traits\Support;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use PHPUnit\Framework\Assert;
 
 trait InteractsWithEntities
 {
@@ -33,7 +34,13 @@ trait InteractsWithEntities
 
     protected function refreshEntity(EntityInterface &$entity): self
     {
-        $entity = $this->storage($entity->getEntityTypeId())->load($entity->id());
+        $reloaded = $this->storage($entity->getEntityTypeId())->load($entity->id());
+
+        if ($reloaded === null) {
+            Assert::fail('Could not reload entity with ID: ' . $entity->id());
+        }
+
+        $entity = $reloaded;
 
         return $this;
     }
