@@ -21,21 +21,24 @@ a flat list of IDs with no room for a reason, so the rationale for each lives he
 `mglaman/phpstan-drupal` (the Drupal-aware PHPStan rules this module's static analysis
 relies on) is **not** a dependency of this module's own `composer.json` — it lives in a
 separate `tools/phpstan/composer.json`, with its own independent `vendor/` and
-`composer.lock`. This is deliberate, not an accident of refactoring:
+`composer.lock`. This is deliberate, not an accident of refactoring: it requires PHP
+8.1+ itself, directly conflicting with this module's own PHP >=7.3 floor. Keeping it in
+a separate `composer.json` means its own PHP requirement never affects what this
+module's actual runtime/test dependencies resolve to.
 
-- `mglaman/phpstan-drupal`'s 2.x line (needed to analyse newer core versions correctly —
-  its 1.x line crashes on core's newer services.yml deprecation format) requires PHP
-  8.1+ itself, directly conflicting with this module's own PHP >=7.3 floor. Keeping it
-  in a separate `composer.json` means its own PHP requirement never affects what this
-  module's actual runtime/test dependencies resolve to.
-- Separately, and more fundamentally: `phpstan-drupal` 2.x determines the Drupal root by
-  asking Composer's own `InstalledVersions` registry whether `drupal/core` is installed
-  *in the same vendor that invoked it* — not by walking the filesystem like its 1.x line
-  did. Since this module always gets its own independent `vendor/` wherever it's cloned
-  (never merged into the surrounding site's own `composer.json`), that check will always
-  fail if phpstan/phpstan-drupal are installed as part of this module's own dependency
-  graph, regardless of PHP version. There is no version of phpstan-drupal's 2.x line that
-  works around this; it's how that whole major version is designed to work.
+It's pinned to `~1.2.12` specifically, not the latest `2.x` release. 2.x determines the
+Drupal root by asking Composer's own `InstalledVersions` registry whether `drupal/core`
+is installed *in the same vendor that invoked it* — not by walking the filesystem like
+1.x does. Since this module always gets its own independent `vendor/` wherever it's
+cloned (never merged into the surrounding site's own `composer.json`), that check always
+fails for a module-isolated install like this one, regardless of PHP version — there's
+no way to install 2.x here without that failing. `1.2.12` is the version to use, not just
+any `1.x`: earlier 1.x releases crash on Drupal core's newer services.yml deprecation
+format (fixed in [mglaman/phpstan-drupal#778](https://github.com/mglaman/phpstan-drupal/pull/778),
+included starting at `1.2.12`), and `1.3.0` onward switches to the same
+Composer-`InstalledVersions`-based detection 2.x uses, breaking the same way. `1.2.12` is
+the one release with both the fix and the filesystem-based detection this isolated setup
+needs.
 
 **How it's still invisible day-to-day:**
 
@@ -46,15 +49,10 @@ separate `tools/phpstan/composer.json`, with its own independent `vendor/` and
   container installing this module's actual Kernel/Unit test dependencies), rather than
   failing the whole install.
 - `composer test:types` still works exactly as before, from wherever you'd normally run
-  it (inside this module's own directory, wherever it's cloned within a Drupal site). It
-  runs `bin/run-static-analysis.php`, which uses `webflo/drupal-finder` (the same
-  mechanism `bootstrap.php` already uses) to locate the surrounding site's real
-  `vendor/autoload.php` from the current directory, then bridges `phpstan-drupal`'s
-  Composer-runtime detection to it — letting it correctly see `drupal/core` while
-  phpstan/phpstan-drupal themselves stay installed in this module's own isolated
-  `tools/phpstan`, not the site's. This is deliberately dynamic rather than a fixed
-  relative path: this module is cloned at different depths relative to a Drupal site's
-  root depending on context — `web/modules/custom/{name}` locally (via
-  `composer/installers`'s default for `type: drupal-custom-module`), but `modules/{name}`
-  (no `web/` at all) in CI's own `drupal/drupal` checkouts — and a hardcoded path broke
-  the second case outright.
+  it (inside this module's own directory, wherever it's cloned within a Drupal site) —
+  it's a plain `phpstan analyse` invocation against `tools/phpstan/vendor/bin/phpstan`,
+  with no bridging or wrapper script needed. `phpstan-drupal` 1.x locates the surrounding
+  site's root itself by walking up from the current directory, the same way
+  `bootstrap.php` does via `webflo/drupal-finder` — so it works regardless of how deep
+  this module is cloned relative to a Drupal site's root (`web/modules/custom/{name}`
+  locally, `modules/{name}` in CI's own `drupal/drupal` checkouts, or otherwise).

@@ -50,7 +50,7 @@
 
         "test:code-smells": "vendor/bin/ecs",
 
-        "test:types": "@php bin/run-static-analysis.php",
+        "test:types": "php -d memory_limit=4G tools/phpstan/vendor/bin/phpstan analyse -c phpstan.neon",
         "test:mess": "vendor/bin/phpmd tests/src/Traits ansi phpmd.xml",
 
         "post-install-cmd": "@php bin/install-static-analysis-tooling.php",
