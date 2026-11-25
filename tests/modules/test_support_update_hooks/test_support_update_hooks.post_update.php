@@ -25,8 +25,11 @@ function test_support_update_hooks_post_update_batch_block_users(array &$sandbox
 
     $usersPerBatch = 25;
 
+    $current = is_int($sandbox['current']) ? $sandbox['current'] : 0;
+    $total = is_int($sandbox['total']) ? $sandbox['total'] : 0;
+
     $uids = $userEntityQuery
-        ->range($sandbox['current'], $usersPerBatch)
+        ->range($current, $usersPerBatch)
         ->execute();
 
     if (count($uids) === 0) {
@@ -44,16 +47,17 @@ function test_support_update_hooks_post_update_batch_block_users(array &$sandbox
 
         $user->set('status', 0)->save();
 
-        $sandbox['current']++;
+        $current++;
+        $sandbox['current'] = $current;
     }
 
-    if ($sandbox['current'] >= $sandbox['total']) {
+    if ($current >= $total) {
         $sandbox['#finished'] = 1;
 
         return;
     }
 
-    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
+    $sandbox['#finished'] = $current / $total;
 }
 
 /**

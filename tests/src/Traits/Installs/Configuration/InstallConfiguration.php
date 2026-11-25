@@ -78,7 +78,7 @@ trait InstallConfiguration
             $configDirectory = Settings::get('config_sync_directory');
 
             if (is_string($configDirectory) === false) {
-                Assert::fail('Could not resolve configuration directory. Found: ' . $configDirectory);
+                Assert::fail('Could not resolve configuration directory. Found: ' . var_export($configDirectory, true));
             }
 
             return $configDirectory;
