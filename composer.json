@@ -10,14 +10,12 @@
         "symfony/finder": "^5"
     },
     "require-dev": {
-        "brianium/paratest": "^6.9 || ^7.0",
         "symplify/easy-coding-standard": "^11.5",
         "behat/mink": "^1.9",
         "phpspec/prophecy-phpunit": "^2",
         "symfony/phpunit-bridge": "^5",
         "mikey179/vfsstream": "^1.6",
-        "webflo/drupal-finder": "~1.2.2",
-        "phpunit/phpunit": ">=9 <12"
+        "webflo/drupal-finder": "~1.2.2"
     },
     "license": "MIT",
     "authors": [

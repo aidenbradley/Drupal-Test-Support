@@ -263,12 +263,21 @@ jobs:
         run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
       - # Deliberately not gated on the cache hit above - see the matching
-        # step in static_analysis_matrix for why.
+        # step in static_analysis_matrix for why. Also installs
+        # brianium/paratest at the site root now, alongside core-dev -
+        # paratest is a CI-only speed optimization (parallelizes test
+        # runs), never needed for local development, so it's no longer
+        # one of the module's own require-dev dependencies. Installing it
+        # here means it's always paired with whatever phpunit core-dev
+        # itself resolves for this specific Drupal version, rather than
+        # the module maintaining its own independent, often-mismatched
+        # lock.
         name: Install drupal/core-dev with dependencies
         run: |
           composer --no-interaction --no-progress require --dev \
           drupal/core-dev:${{ matrix.drupal-core }} \
-          phpspec/prophecy-phpunit:^2 --with-all-dependencies
+          phpspec/prophecy-phpunit:^2 \
+          brianium/paratest --with-all-dependencies
 
       - name: Checkout module
         uses: actions/checkout@v2
@@ -283,12 +292,18 @@ jobs:
           restore-keys: ${{ runner.os }}-build-development-module-composer-
           fail-on-cache-miss: true
 
-      - name: Tests
+      - # Runs via the site root's own paratest (installed above,
+        # alongside core-dev) rather than the module's own vendor - see
+        # the comment on the install step above for why. The positional
+        # path argument (not --path) is required for compatibility across
+        # the full range of paratest versions Composer may resolve here,
+        # since newer paratest releases dropped the --path option.
+        name: Tests
         run: |
-            modules/test_support/vendor/bin/paratest \
-            --path modules/test_support/tests \
+            vendor/bin/paratest \
             -c modules/test_support/phpunit.xml \
-            --runner WrapperRunner
+            --runner WrapperRunner \
+            modules/test_support/tests
 
   drupal-11-matrix:
     name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
@@ -332,12 +347,23 @@ jobs:
         run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
       - # Deliberately not gated on the cache hit above - see the matching
-        # step in static_analysis_matrix for why.
+        # step in static_analysis_matrix for why. Also installs
+        # brianium/paratest at the site root now, alongside core-dev -
+        # paratest is a CI-only speed optimization (parallelizes test
+        # runs), never needed for local development, so it's no longer
+        # one of the module's own require-dev dependencies. Installing it
+        # here means it's always paired with whatever phpunit core-dev
+        # itself resolves for this specific Drupal version, rather than
+        # the module maintaining its own independent, often-mismatched
+        # lock. This is specifically what fixes Drupal 11: no single
+        # module-locked phpunit version can satisfy core's own
+        # PhpUnit10/PhpUnit11 compatibility shim split across 11.0-11.4.
         name: Install drupal/core-dev with dependencies
         run: |
           composer --no-interaction --no-progress require --dev \
           drupal/core-dev:${{ matrix.drupal-core }} \
-          phpspec/prophecy-phpunit:^2 --with-all-dependencies
+          phpspec/prophecy-phpunit:^2 \
+          brianium/paratest --with-all-dependencies
 
       - name: Checkout module
         uses: actions/checkout@v2
@@ -352,12 +378,18 @@ jobs:
           restore-keys: ${{ runner.os }}-build-development-module-composer-
           fail-on-cache-miss: true
 
-      - name: Tests
+      - # Runs via the site root's own paratest (installed above,
+        # alongside core-dev) rather than the module's own vendor - see
+        # the comment on the install step above for why. The positional
+        # path argument (not --path) is required for compatibility across
+        # the full range of paratest versions Composer may resolve here,
+        # since newer paratest releases dropped the --path option.
+        name: Tests
         run: |
-            modules/test_support/vendor/bin/paratest \
-            --path modules/test_support/tests \
+            vendor/bin/paratest \
             -c modules/test_support/phpunit.xml \
-            --runner WrapperRunner
+            --runner WrapperRunner \
+            modules/test_support/tests
 
   drupal-9-matrix:
     name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
@@ -401,12 +433,21 @@ jobs:
         run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
       - # Deliberately not gated on the cache hit above - see the matching
-        # step in static_analysis_matrix for why.
+        # step in static_analysis_matrix for why. Also installs
+        # brianium/paratest at the site root now, alongside core-dev -
+        # paratest is a CI-only speed optimization (parallelizes test
+        # runs), never needed for local development, so it's no longer
+        # one of the module's own require-dev dependencies. Installing it
+        # here means it's always paired with whatever phpunit core-dev
+        # itself resolves for this specific Drupal version, rather than
+        # the module maintaining its own independent, often-mismatched
+        # lock.
         name: Install drupal/core-dev with dependencies
         run: |
             composer --no-interaction --no-progress require --dev \
             drupal/core-dev:${{ matrix.drupal-core }} \
-            phpspec/prophecy-phpunit:^2 --with-all-dependencies
+            phpspec/prophecy-phpunit:^2 \
+            brianium/paratest --with-all-dependencies
 
       - name: Checkout module
         uses: actions/checkout@v2
@@ -421,9 +462,15 @@ jobs:
           restore-keys: ${{ runner.os }}-build-development-module-composer-
           fail-on-cache-miss: true
 
-      - name: Tests
+      - # Runs via the site root's own paratest (installed above,
+        # alongside core-dev) rather than the module's own vendor - see
+        # the comment on the install step above for why. The positional
+        # path argument (not --path) is required for compatibility across
+        # the full range of paratest versions Composer may resolve here,
+        # since newer paratest releases dropped the --path option.
+        name: Tests
         run: |
-            modules/test_support/vendor/bin/paratest \
-            --path modules/test_support/tests \
+            vendor/bin/paratest \
             -c modules/test_support/phpunit.xml \
-            --runner WrapperRunner
+            --runner WrapperRunner \
+            modules/test_support/tests
