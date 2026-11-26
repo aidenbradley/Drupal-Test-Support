@@ -16,7 +16,8 @@
         "phpspec/prophecy-phpunit": "^2",
         "symfony/phpunit-bridge": "^5",
         "mikey179/vfsstream": "^1.6",
-        "webflo/drupal-finder": "~1.2.2"
+        "webflo/drupal-finder": "~1.2.2",
+        "phpunit/phpunit": ">=9 <12"
     },
     "license": "MIT",
     "authors": [
