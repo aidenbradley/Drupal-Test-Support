@@ -10,13 +10,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 trait WithoutEventSubscribers
 {
-    /** @var Collection|null */
+    /** @var Collection<string, Listener>|null */
     private $ignoredSubscribers = null;
 
-    /** @var Collection|null */
+    /** @var Collection<string, string>|null */
     private $ignoredEvents = null;
 
-    /** @var string[]|class-string[] */
+    /** @var string[]|class-string[]|null */
     private $deferredSubscribers = null;
 
     /**
@@ -42,7 +42,7 @@ trait WithoutEventSubscribers
                 return $listener->inList((array) $listeners);
             });
         })->whenEmpty(function (Collection $collection) use ($listeners) {
-            $this->deferredSubscribers = collect($this->deferredSubscribers)->merge($listeners)->unique()->toArray();
+            $this->deferredSubscribers = array_values(array_unique(array_merge($this->deferredSubscribers ?? [], (array) $listeners)));
 
             return $collection;
         })->each(function (Listener $listener) {
@@ -70,7 +70,7 @@ trait WithoutEventSubscribers
      */
     public function withoutSubscribersForEvents($eventNames): self
     {
-        collect($eventNames)->each(function (string $event): void {
+        collect((array) $eventNames)->each(function (string $event): void {
             $this->getListeners($event)->each(function (Listener $listener) use ($event): void {
                 $this->removeSubscriber($listener, $event);
             });
@@ -110,7 +110,7 @@ trait WithoutEventSubscribers
         parent::enableModules($modules);
 
         if ($this->ignoredSubscribers !== null) {
-            $this->withoutSubscribers($this->ignoredSubscribers->keys()->toArray());
+            $this->withoutSubscribers($this->ignoredSubscribers->keys()->all());
         }
 
         if ($this->deferredSubscribers !== null) {
@@ -121,7 +121,7 @@ trait WithoutEventSubscribers
             return;
         }
 
-        $this->withoutSubscribersForEvents($this->ignoredEvents->keys()->toArray());
+        $this->withoutSubscribersForEvents($this->ignoredEvents->keys()->all());
     }
 
     private function removeSubscriber(Listener $listener, ?string $event = null): self
@@ -131,7 +131,11 @@ trait WithoutEventSubscribers
             return $collection->put($event, $event);
         });
 
-        $this->ignoredSubscribers = collect($this->ignoredSubscribers)->put($listener->getServiceId(), $listener);
+        $serviceId = $listener->getServiceId();
+
+        if ($serviceId !== null) {
+            $this->ignoredSubscribers = collect($this->ignoredSubscribers)->put($serviceId, $listener);
+        }
 
         if ($listener->getOriginal() instanceof EventSubscriberInterface) {
             $this->container->get('event_dispatcher')->removeSubscriber($listener->getOriginal());
@@ -140,13 +144,18 @@ trait WithoutEventSubscribers
         return $this;
     }
 
+    /** @return Collection<int|string, Listener> */
     private function getListeners(?string $event = null): Collection
     {
         $listeners = $this->container->get('event_dispatcher')->getListeners($event);
 
         return collect($listeners)->unless($event !== null, function (Collection $listeners) {
             return $listeners->values()->collapse();
-        })->transform(function (array $listener) {
+        })->transform(function ($listener) {
+            if (is_array($listener) === false || is_object($listener[0] ?? null) === false) {
+                return $listener;
+            }
+
             $listener[2] = $this->resolveListenerServiceId($listener[0]);
 
             return $listener;

@@ -39,8 +39,6 @@ class InteractsWithBatchesTest extends KernelTestBase
 
         $this->runLatestBatch();
 
-        $userStorage = $this->container->get('entity_type.manager')->getStorage('user');
-
         $this->assertEquals(0, $this->loadUser(1)->get('status')->getString());
         $this->assertEquals(0, $this->loadUser(2)->get('status')->getString());
         $this->assertEquals(0, $this->loadUser(3)->get('status')->getString());

@@ -17,7 +17,7 @@ trait InteractsWithContainer
      * $this->service('node.route_subscriber');
      *
      * @param string $id The service identifier or class string
-     * @param int $invalidBehavior The behavior when the service does not exist
+     * @param 0|1|2|3|4 $invalidBehavior The behavior when the service does not exist
      * @return object|null The associated service
      *
      * @throws InvalidArgumentException when no definitions are available

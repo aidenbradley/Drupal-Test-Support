@@ -12,15 +12,27 @@ trait InteractsWithMail
     {
         $mail = $this->container->get('state')->get('system.test_mail_collector');
 
-        if ($mail === null) {
+        if (is_array($mail) === false) {
             return [];
         }
 
-        return collect($mail)->when($fromModule, function (Collection $mail, string $fromModule) {
-            return $mail->filter(function (array $mail) use ($fromModule) {
-                return $mail['module'] === $fromModule;
-            });
-        })->mapInto(TestMail::class)->toArray();
+        /** @var Collection<int, array<string, mixed>> $mail */
+        $mail = collect($mail);
+
+        /** @var Collection<int, array<string, mixed>> $mail */
+        $mail = $mail->when(
+            $fromModule,
+            /** @param Collection<int, array<string, mixed>> $mail */
+            function (Collection $mail, string $fromModule) {
+                return $mail->filter(function (array $mail) use ($fromModule) {
+                    return $mail['module'] === $fromModule;
+                });
+            }
+        );
+
+        return $mail->map(function (array $mail): TestMail {
+            return new TestMail($mail);
+        })->values()->all();
     }
 
     public function assertMailSent(?int $numberOfMailSent = null): self

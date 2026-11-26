@@ -133,6 +133,7 @@ class InteractsWithQueuesTest extends KernelTestBase
             public function get($name, $reliable = false): QueueInterface
             {
                 if ($name == 'create_node_worker' && $reliable) {
+                    /** @phpstan-ignore-next-line */
                     $this->queues[$name] = $this->container->get(
                         'queue_reliable_service_create_node_worker'
                     )->get($name);

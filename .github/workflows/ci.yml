@@ -28,6 +28,19 @@ jobs:
       name: Build Development Module
       runs-on: ubuntu-latest
       steps:
+          -   # This job never pinned a PHP version either (see the same fix
+              # already applied to static_analysis_matrix), so it rode
+              # ubuntu-latest's drifting default - now PHP 8.5, which
+              # phpspec/prophecy's locked 1.21.0 doesn't yet declare support
+              # for, breaking the install outright. None of the PHP versions
+              # actually used downstream (7.3, 8.1, 8.1.6, 8.2) need anything
+              # newer than this; pin instead of riding the runner default.
+              name: Setup PHP 8.1, with composer and extensions
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.1'
+                  coverage: none
+
           -  name: Checkout module
              uses: actions/checkout@v2
              with:
@@ -41,9 +54,28 @@ jobs:
                  key: ${{ runner.os }}-build-development-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
                  restore-keys: ${{ runner.os }}-build-development-module-composer-
 
-          -  if: steps.build_development_module_cache.outputs.cache-hit != 'true'
-             name: Build development module including dependencies
-             run: |
+          -   # tools/phpstan is a sibling of modules/test_support/vendor, not nested
+              # inside it, so it needs its own cache entry, independent of the
+              # main module vendor cache above. Restored before the install step
+              # below so that step's condition can react to either cache missing.
+              name: Cache static analysis tooling
+              id: static_analysis_tooling_cache
+              uses: actions/cache@v3
+              with:
+                  path: modules/test_support/tools/phpstan/vendor
+                  key: ${{ runner.os }}-static-analysis-tooling-composer-${{ hashFiles('modules/test_support/tools/phpstan/composer.lock') }}
+                  restore-keys: ${{ runner.os }}-static-analysis-tooling-composer-
+
+          -   # Runs if EITHER cache missed, not just the main module one -
+              # otherwise a tools/phpstan-only lock change (e.g. bumping
+              # phpstan-drupal) would never retrigger the post-install-cmd hook
+              # that rebuilds it, since the main module cache would still hit.
+              # composer install is idempotent against an unchanged lock, so
+              # this stays a faithful parity check of a developer's own
+              # `composer install`, just correctly reactive to both locks.
+              if: steps.build_development_module_cache.outputs.cache-hit != 'true' || steps.static_analysis_tooling_cache.outputs.cache-hit != 'true'
+              name: Build development module including dependencies
+              run: |
                  cd modules/test_support;
                  composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
@@ -102,7 +134,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        drupal-core: ['9.1.0', '9.2.0', '9.3.0', '9.4.0', '9.5.0', '10.0.0']
+        drupal-core: ['9.1.0', '9.2.0', '9.3.0', '9.4.0', '9.5.0', '10.0.0', '10.1.0', '10.2.0', '10.3.0', '10.4.0', '10.5.0', '10.6.0']
     steps:
         -   # This job never pinned a PHP version, so it silently rode whatever
             # ubuntu-latest's bundled default PHP happened to be. That default has
@@ -132,7 +164,11 @@ jobs:
                 key: ${{ runner.os }}-drupal-build-composer-v${{ matrix.drupal-core }}-${{ hashFiles('./composer.lock') }}
                 restore-keys: ${{ runner.os }}-drupal-build-composer-v
 
-        -   if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+        -   # Always runs, cache hit or not: composer config is cheap and
+            # idempotent, and the composer.json it edits is a fresh checkout
+            # every run anyway (not part of the cached vendor/ path), so a
+            # cache hit would otherwise skip it and leave these unset before
+            # the always-run core-dev install below.
             name: Allow Composer plugins (older Drupal core composer.json predates allow-plugins)
             run: |
               composer config allow-plugins true
@@ -142,7 +178,14 @@ jobs:
             name: Install Drupal core dependencies
             run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
-        -   if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+        -   # Deliberately not gated on the cache hit above, unlike the
+            # plain `install` step. --with-all-dependencies resolves against
+            # whatever's newest right now, not the frozen composer.lock this
+            # job's cache is keyed on - caching it behind a key that can
+            # never change (a released Drupal version's composer.lock is
+            # immutable) would freeze that resolution the first time this
+            # ever ran and silently never update again, masking real
+            # dependency drift behind a permanently "warm" cache.
             name: Install drupal/core-dev with dependencies
             run: |
                 composer --no-interaction --no-progress require --dev \
@@ -162,6 +205,19 @@ jobs:
             restore-keys: ${{ runner.os }}-build-development-module-composer-
             fail-on-cache-miss: true
 
+        # tools/phpstan is a sibling of modules/test_support/vendor, not nested
+        # inside it, so it needs its own cache entry. build_development_module
+        # is what actually populates it (its own composer install there fires
+        # the module's post-install-cmd hook, same as local dev), so this job
+        # just restores that cache rather than installing it separately.
+        - name: Retreive static analysis tooling build cache
+          uses: actions/cache@v3
+          with:
+            path: modules/test_support/tools/phpstan/vendor
+            key: ${{ runner.os }}-static-analysis-tooling-composer-${{ hashFiles('modules/test_support/tools/phpstan/composer.lock') }}
+            restore-keys: ${{ runner.os }}-static-analysis-tooling-composer-
+            fail-on-cache-miss: true
+
         - name: Run static analysis
           run: cd modules/test_support; composer test:types
 
@@ -172,7 +228,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        drupal-core: [ '10.0.0' ]
+        drupal-core: [ '10.0.0', '10.1.0', '10.2.0', '10.3.0', '10.4.0', '10.5.0', '10.6.0' ]
         php-versions: [ '8.2', '8.1.6' ]
     steps:
       - name: Setup PHP v${{ matrix.php-versions }}, with composer and extensions
@@ -195,7 +251,8 @@ jobs:
            key: ${{ runner.os }}-drupal-build-composer-v${{ matrix.drupal-core }}-${{ hashFiles('./composer.lock') }}
            restore-keys: ${{ runner.os }}-drupal-build-composer-v
 
-      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+      - # Always runs, cache hit or not - see the matching step in
+        # static_analysis_matrix for why.
         name: Allow Composer plugins (older Drupal core composer.json predates allow-plugins)
         run: |
           composer config allow-plugins true
@@ -205,7 +262,8 @@ jobs:
         name: Install Drupal core dependencies
         run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
-      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+      - # Deliberately not gated on the cache hit above - see the matching
+        # step in static_analysis_matrix for why.
         name: Install drupal/core-dev with dependencies
         run: |
           composer --no-interaction --no-progress require --dev \
@@ -262,7 +320,8 @@ jobs:
           key: ${{ runner.os }}-drupal-build-composer-v${{ matrix.drupal-core }}-${{ hashFiles('./composer.lock') }}
           restore-keys: ${{ runner.os }}-drupal-build-composer-v
 
-      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+      - # Always runs, cache hit or not - see the matching step in
+        # static_analysis_matrix for why.
         name: Allow Composer plugins (older Drupal core composer.json predates allow-plugins)
         run: |
           composer config allow-plugins true
@@ -272,7 +331,8 @@ jobs:
         name: Install Drupal core dependencies
         run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
-      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+      - # Deliberately not gated on the cache hit above - see the matching
+        # step in static_analysis_matrix for why.
         name: Install drupal/core-dev with dependencies
         run: |
             composer --no-interaction --no-progress require --dev \

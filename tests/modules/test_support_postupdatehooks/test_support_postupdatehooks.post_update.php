@@ -46,10 +46,13 @@ function test_support_postupdatehooks_post_update_with_batch_disable_users(array
         }
     }
 
+    $current = is_int($sandbox['current']) ? $sandbox['current'] : 0;
+    $total = is_int($sandbox['total']) ? $sandbox['total'] : 0;
+
     $usersPerBatch = 25;
 
     $uids = $userEntityQuery
-        ->range($sandbox['current'], $usersPerBatch)
+        ->range($current, $usersPerBatch)
         ->execute();
 
     if (count($uids) === 0) {
@@ -67,16 +70,17 @@ function test_support_postupdatehooks_post_update_with_batch_disable_users(array
 
         $user->set('status', 0)->save();
 
-        $sandbox['current']++;
+        $current++;
+        $sandbox['current'] = $current;
     }
 
-    if ($sandbox['current'] >= $sandbox['total']) {
+    if ($current >= $total) {
         $sandbox['#finished'] = 1;
 
         return;
     }
 
-    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
+    $sandbox['#finished'] = $current / $total;
 }
 
 /**
@@ -101,10 +105,13 @@ function test_support_postupdatehooks_post_update_with_no_finished_progression(a
         }
     }
 
+    $current = is_int($sandbox['current']) ? $sandbox['current'] : 0;
+    $total = is_int($sandbox['total']) ? $sandbox['total'] : 0;
+
     $usersPerBatch = 5;
 
     $uids = $userEntityQuery
-        ->range($sandbox['current'], $usersPerBatch)
+        ->range($current, $usersPerBatch)
         ->execute();
 
     if (count($uids) === 0) {
@@ -113,11 +120,10 @@ function test_support_postupdatehooks_post_update_with_no_finished_progression(a
         return;
     }
 
-    foreach ($uids as $uid) {
-        $sandbox['current']++;
-    }
+    $current += count($uids);
+    $sandbox['current'] = $current;
 
-    if ($sandbox['current'] >= $sandbox['total']) {
+    if ($current >= $total) {
         $sandbox['#finished'] = 1;
     }
 }

@@ -37,7 +37,13 @@ abstract class UpdateHookHandler implements HookHandler
 
         preg_match_all(static::pattern(), $this->function, $matches);
 
-        return explode($matches[0][0], $this->function)[0];
+        $prefix = $matches[0][0] ?? '';
+
+        if ($prefix === '') {
+            throw UpdateHookFailed::couldNotDetermineModuleName($this->function);
+        }
+
+        return explode($prefix, $this->function)[0];
     }
 
     public static function canHandle(string $function): bool
