@@ -19,6 +19,7 @@ trait InteractsWithMail
         /** @var Collection<int, array<string, mixed>> $mail */
         $mail = collect($mail);
 
+        /** @var Collection<int, array<string, mixed>> $mail */
         $mail = $mail->when(
             $fromModule,
             /** @param Collection<int, array<string, mixed>> $mail */
