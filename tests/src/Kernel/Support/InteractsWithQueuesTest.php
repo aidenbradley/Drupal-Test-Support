@@ -135,6 +135,7 @@ class InteractsWithQueuesTest extends KernelTestBase
                 // reassigns the same value the parent constructor already
                 // set), necessary on 9/10 (which never set it at all).
                 if ((new \ReflectionMethod(QueueFactory::class, '__construct'))->getNumberOfParameters() >= 2) {
+                    /** @phpstan-ignore-next-line */
                     parent::__construct(Settings::getInstance(), \Drupal::getContainer());
                 } else {
                     /** @phpstan-ignore-next-line */

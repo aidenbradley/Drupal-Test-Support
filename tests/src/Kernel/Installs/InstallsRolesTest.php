@@ -55,6 +55,12 @@ class InstallsRolesTest extends KernelTestBase
 
         $editor = reset($roles);
 
+        // reset() returns false on an empty array - assertNotEmpty() above
+        // already guarantees that never happens here, but doesn't narrow
+        // the type for static analysis the way an explicit instanceof
+        // assertion does.
+        $this->assertInstanceOf(\Drupal\user\RoleInterface::class, $editor);
+
         $this->assertEquals('editor', $editor->id());
     }
 

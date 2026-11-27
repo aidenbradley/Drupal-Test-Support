@@ -147,6 +147,7 @@ trait WithoutEventSubscribers
             // in the first place. Remove them the same way they were added.
             $this->container->get('event_dispatcher')->removeListener(
                 $listener->getEventName(),
+                /** @phpstan-ignore-next-line */
                 [$listener->getOriginal(), $listener->getMethod()]
             );
         }
