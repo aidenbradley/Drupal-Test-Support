@@ -52,6 +52,8 @@
         "test:types": "php -d memory_limit=4G tools/phpstan/vendor/bin/phpstan analyse -c phpstan.neon",
         "test:mess": "vendor/bin/phpmd tests/src/Traits ansi phpmd.xml",
 
+        "install-site-test-dependencies": "@php bin/install-site-test-dependencies.php",
+
         "post-install-cmd": "@php bin/install-static-analysis-tooling.php",
         "post-update-cmd": "@php bin/install-static-analysis-tooling.php"
     }
