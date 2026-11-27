@@ -77,7 +77,13 @@ class InteractsWithEntitiesTest extends KernelTestBase
 
         $this->assertEquals('Example Title', $node->get('title')->getString());
 
-        $this->updateNodeTitle($node->id());
+        // The node was just created with an explicit 'nid' above, so
+        // id() is never null here - narrower than its own general,
+        // nullable (unsaved-entity) return type.
+        /** @var int|string $nodeId */
+        $nodeId = $node->id();
+
+        $this->updateNodeTitle($nodeId);
 
         $this->refreshEntity($node);
 
@@ -85,7 +91,10 @@ class InteractsWithEntitiesTest extends KernelTestBase
         $this->assertEquals('Example Title Updated', $node->get('title')->getString());
     }
 
-    /** @param int|string|null $nodeId */
+    // Always called with an already-saved node's own id(), which is
+    // never null - narrower than EntityInterface::id()'s own general
+    // (nullable, for unsaved entities) return type.
+    /** @param int|string $nodeId */
     private function updateNodeTitle($nodeId): void
     {
         $node = $this->storage('node')->load($nodeId);

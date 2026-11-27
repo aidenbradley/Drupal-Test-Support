@@ -34,10 +34,19 @@ trait InteractsWithEntities
 
     protected function refreshEntity(EntityInterface &$entity): self
     {
-        $reloaded = $this->storage($entity->getEntityTypeId())->load($entity->id());
+        $id = $entity->id();
+
+        // EntityInterface::id() is nullable in general (an unsaved entity
+        // has none), but "refresh" only makes sense for an already-saved
+        // one - EntityStorageInterface::load() itself doesn't accept null.
+        if ($id === null) {
+            Assert::fail('Could not reload entity: it has no ID (was it ever saved?)');
+        }
+
+        $reloaded = $this->storage($entity->getEntityTypeId())->load($id);
 
         if ($reloaded === null) {
-            Assert::fail('Could not reload entity with ID: ' . $entity->id());
+            Assert::fail('Could not reload entity with ID: ' . $id);
         }
 
         $entity = $reloaded;
