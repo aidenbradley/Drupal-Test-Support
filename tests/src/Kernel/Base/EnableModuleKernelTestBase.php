@@ -31,8 +31,6 @@ abstract class EnableModuleKernelTestBase extends KernelTestBase
     /** @test */
     public function install_module_entity_definitions(): void
     {
-        $this->expectNotToPerformAssertions();
-
         $this->enableModuleWithDependencies($this->module());
 
         $moduleEntityDefinitions = array_diff(
