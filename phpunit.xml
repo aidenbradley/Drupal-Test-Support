@@ -14,8 +14,17 @@
          cacheResult="false"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
     <php>
-        <!-- Set error reporting to E_ALL. -->
-        <ini name="error_reporting" value="32767"/>
+        <!-- E_ALL (32767) minus E_DEPRECATED (8192) = 24575. PHP 8.4 added a
+             new deprecation ("implicitly marking parameter as nullable")
+             that several third-party dependencies this module pulls in
+             (symfony/translation, opis/closure) trigger on every call,
+             since their own code predates PHP 8.4. PHPUnit's own error
+             handler converts any error still included in this mask
+             straight into a test failure - deliberately excluding
+             E_DEPRECATED here keeps deprecations visible in the run
+             summary without failing on ones this module has no control
+             over. -->
+        <ini name="error_reporting" value="24575"/>
         <!-- Do not limit the amount of memory tests take to run. -->
         <ini name="memory_limit" value="-1"/>
         <!-- Example SIMPLETEST_BASE_URL value: http://localhost -->
