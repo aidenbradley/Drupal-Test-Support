@@ -19,25 +19,37 @@ To work on this module locally:
    this repo's own CI builds its sites from a bare `drupal/drupal` checkout instead,
    which has no `web/` subdirectory, but either layout works).
 2. Clone this module into that site's modules directory (e.g.
-   `web/modules/custom/test_support`).
-3. From the site's own root (not this module's directory), run:
+   `web/modules/custom/test_support`), then run a normal `composer install` from
+   *this module's own* directory (not the site's root) to pull in its own dependencies.
+3. From this module's own directory, run:
    ```
-   composer require --dev drupal/core-dev:^<matching-core-version> --with-all-dependencies
+   composer test-support:install-site-dependencies
    ```
-   This installs a PHPUnit version already correctly matched to that specific core
-   version - the same constraint Drupal core itself maintains, rather than one this
-   module would otherwise have to track independently.
+   (or, from anywhere else, `composer --working-dir=web/modules/custom/test_support
+   test-support:install-site-dependencies` - a composer script is scoped to whichever
+   `composer.json` it's defined in, so running the bare command from the site's own
+   root instead fails, since that composer.json doesn't define it).
+
+   This detects the installed Drupal core version from the surrounding site and, at
+   that site's own root (not this module's), installs a matching `drupal/core-dev` -
+   the same per-version PHPUnit constraint Drupal core itself maintains, rather than
+   one this module would otherwise have to track independently - along with
+   `brianium/paratest` (a CI-only speed optimization with no bearing on correctness,
+   installed here too so you can reproduce CI's own invocation exactly).
 4. Run tests via the site's own root, pointed at this module's `phpunit.xml` and `tests/`
    directory:
    ```
    vendor/bin/phpunit -c web/modules/custom/test_support/phpunit.xml web/modules/custom/test_support/tests
    ```
-   (adjust the `web/` prefix if your site layout doesn't use one).
+   (adjust the `web/` prefix if your site layout doesn't use one). Swap in
+   `vendor/bin/paratest --runner WrapperRunner` instead of `vendor/bin/phpunit` to
+   match CI's own, faster invocation.
 
-`brianium/paratest` is never needed for this - it's a CI-only speed optimization
-(parallelizes the test run) with no bearing on correctness, so CI installs it itself,
-directly at the site root alongside `drupal/core-dev`, rather than this module declaring
-it as a dependency any contributor would have to install too.
+Step 3 is not wired up as part of this module's own `composer install`/`update` (unlike
+the `tools/phpstan` setup below): it mutates the surrounding *site's* own
+`composer.json`/`composer.lock`, a much larger side effect than this module's own
+install should ever trigger automatically, so it stays an explicit, one-off command a
+contributor runs themselves.
 
 ## Ignored security advisories
 
