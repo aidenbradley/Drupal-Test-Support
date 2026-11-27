@@ -48,7 +48,12 @@ class InteractsWithSettingsTest extends KernelTestBase
     {
         $this->setSettingsLocation('/__fixtures__/settings/fixture.settings.php');
 
-        if (str_starts_with(\Drupal::VERSION, '10.')) {
+        // Matches the same check in setUp() above - app.root became a
+        // parameter (not a service) starting at Drupal 10, not just for
+        // the "10." major specifically. str_starts_with(..., '10.') never
+        // matched Drupal 11+, so this always took the wrong (service)
+        // branch there.
+        if (version_compare(\Drupal::VERSION, '10.0', '>=')) {
             /** @var string $appRoot */
             $appRoot = $this->container->getParameter('app.root');
 

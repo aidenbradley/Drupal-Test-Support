@@ -139,6 +139,16 @@ trait WithoutEventSubscribers
 
         if ($listener->getOriginal() instanceof EventSubscriberInterface) {
             $this->container->get('event_dispatcher')->removeSubscriber($listener->getOriginal());
+        } elseif ($listener->getOriginal() !== null && $listener->getMethod() !== null && $listener->getEventName() !== null) {
+            // Drupal 11.1+'s "OOP hooks" register plain listeners directly
+            // via addListener(), never addSubscriber() - removeSubscriber()
+            // above was never going to remove these regardless of the
+            // instanceof check, since they were never added as subscribers
+            // in the first place. Remove them the same way they were added.
+            $this->container->get('event_dispatcher')->removeListener(
+                $listener->getEventName(),
+                [$listener->getOriginal(), $listener->getMethod()]
+            );
         }
 
         return $this;
@@ -149,9 +159,31 @@ trait WithoutEventSubscribers
     {
         $listeners = $this->container->get('event_dispatcher')->getListeners($event);
 
-        return collect($listeners)->unless($event !== null, function (Collection $listeners) {
-            return $listeners->values()->collapse();
-        })->transform(function ($listener) {
+        // The event name each listener is registered under has to be
+        // captured here, before flattening loses it (getListeners(null)
+        // returns listeners keyed by event name; getListeners($event)
+        // returns a flat list for just that one event, so $event itself
+        // is already the answer there). removeSubscriber() below needs
+        // it to remove a Drupal 11.1+ "OOP hook" listener, which was
+        // never added as a subscriber in the first place.
+        if ($event !== null) {
+            $listeners = array_map(function ($listener) use ($event) {
+                return $this->withEventName($listener, $event);
+            }, $listeners);
+        } else {
+            $withEventNames = [];
+
+            foreach ($listeners as $eventName => $eventListeners) {
+                /** @phpstan-ignore-next-line */
+                foreach ($eventListeners as $listener) {
+                    $withEventNames[] = $this->withEventName($listener, $eventName);
+                }
+            }
+
+            $listeners = $withEventNames;
+        }
+
+        return collect($listeners)->transform(function ($listener) {
             if (is_array($listener) === false || is_object($listener[0] ?? null) === false) {
                 return $listener;
             }
@@ -162,16 +194,38 @@ trait WithoutEventSubscribers
         })->mapInto(Listener::class);
     }
 
+    /**
+     * @param mixed $listener
+     * @return mixed
+     */
+    private function withEventName($listener, string $eventName)
+    {
+        if (is_array($listener) === false) {
+            return $listener;
+        }
+
+        $listener[3] = $eventName;
+
+        return $listener;
+    }
+
     private function resolveListenerServiceId(object $listener): ?string
     {
         if (property_exists($listener, '_serviceId')) {
             return $listener->_serviceId;
         }
 
+        // Registered as Drupal\Component\DependencyInjection\ReverseContainer
+        // (not Core) on every version that has it (9.5+/10.x/11.x) - this
+        // was checking the wrong namespace, so has() always returned false
+        // and this fast path was never actually reachable, on any version.
+        // Harmless while getServiceIdMapping() below still worked as a
+        // fallback (9.5-10.x); fatal once Drupal 11 removed it entirely,
+        // since the intended fast path was never actually being taken.
         /** @phpstan-ignore-next-line */
-        if ($this->container->has('Drupal\Core\DependencyInjection\ReverseContainer')) {
+        if ($this->container->has('Drupal\Component\DependencyInjection\ReverseContainer')) {
             /** @phpstan-ignore-next-line */
-            return $this->container->get('Drupal\Core\DependencyInjection\ReverseContainer')->getId($listener);
+            return $this->container->get('Drupal\Component\DependencyInjection\ReverseContainer')->getId($listener);
         }
 
         /** @phpstan-ignore-next-line */

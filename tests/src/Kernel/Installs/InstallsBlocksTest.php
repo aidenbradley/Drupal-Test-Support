@@ -26,16 +26,20 @@ class InstallsBlocksTest extends KernelTestBase
     /** @test */
     public function installing_block_prepares_dependencies(): void
     {
-        $moduleHandler = $this->container->get('module_handler');
-
-        $this->assertFalse($moduleHandler->moduleExists('block'));
+        $this->assertFalse($this->container->get('module_handler')->moduleExists('block'));
 
         $entityTypeDefinitions = $this->container->get('entity_type.manager')->getDefinitions();
         $this->assertArrayNotHasKey('block', $entityTypeDefinitions);
 
         $this->installBlocks('stark_messages');
 
-        $this->assertTrue($moduleHandler->moduleExists('block'));
+        // Drupal 11.2+'s enableModules() rebuilds $this->container at the
+        // end (via $this->container->get('kernel')->getContainer()), which
+        // produces a fresh module_handler instance - a reference fetched
+        // before installBlocks() (which calls enableModules() internally)
+        // would go stale, still reporting pre-install state. Fetch fresh
+        // afterwards instead of caching it beforehand.
+        $this->assertTrue($this->container->get('module_handler')->moduleExists('block'));
         $this->assertInstanceOf(ConfigEntityType::class, $this->container->get('entity_type.manager')->getDefinition('block'));
     }
 

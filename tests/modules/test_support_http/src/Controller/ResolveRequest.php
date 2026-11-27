@@ -68,8 +68,10 @@ class ResolveRequest implements ContainerInjectionInterface
         // former, Drupal 11's only has the latter, Drupal 10 has both (the
         // former deprecated) - feature-detect rather than branch on Drupal's
         // own version, since it's Symfony's API that changed, not Drupal's.
+        /** @phpstan-ignore-next-line */
         $contentType = method_exists($this->request, 'getContentTypeFormat')
             ? $this->request->getContentTypeFormat()
+            /** @phpstan-ignore-next-line */
             : $this->request->getContentType();
 
         if ($contentType !== 'json') {

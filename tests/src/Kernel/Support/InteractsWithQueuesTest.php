@@ -137,6 +137,7 @@ class InteractsWithQueuesTest extends KernelTestBase
                 if ((new \ReflectionMethod(QueueFactory::class, '__construct'))->getNumberOfParameters() >= 2) {
                     parent::__construct(Settings::getInstance(), \Drupal::getContainer());
                 } else {
+                    /** @phpstan-ignore-next-line */
                     parent::__construct(Settings::getInstance());
                 }
 
