@@ -124,7 +124,23 @@ class InteractsWithQueuesTest extends KernelTestBase
         return new class() extends QueueFactory {
             public function __construct()
             {
-                parent::__construct(Settings::getInstance());
+                // Drupal 11's QueueFactory::__construct() takes a second,
+                // required $container parameter (which it promotes directly
+                // to the $container property itself); Drupal 9/10's takes
+                // only $settings. Reflect on the parent's own constructor
+                // rather than branching on \Drupal::VERSION, since it's the
+                // parameter count itself that determines whether the call
+                // below is even valid. $this->container is still set
+                // manually afterwards regardless - harmless on 11 (just
+                // reassigns the same value the parent constructor already
+                // set), necessary on 9/10 (which never set it at all).
+                if ((new \ReflectionMethod(QueueFactory::class, '__construct'))->getNumberOfParameters() >= 2) {
+                    /** @phpstan-ignore-next-line */
+                    parent::__construct(Settings::getInstance(), \Drupal::getContainer());
+                } else {
+                    /** @phpstan-ignore-next-line */
+                    parent::__construct(Settings::getInstance());
+                }
 
                 /** @phpstan-ignore-next-line */
                 $this->container = \Drupal::getContainer();

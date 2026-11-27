@@ -82,7 +82,11 @@ jobs:
   sanity_check:
     name: Sanity Check - Lint
     runs-on: ubuntu-latest
-    needs: build_development_module
+    # No longer needs build_development_module: it builds and validates
+    # its own module vendor below, keyed by its own PHP version, rather
+    # than trusting a cache built and validated only on a different one
+    # (see the matching comment on drupal-9-matrix for the bug this
+    # caused).
     strategy:
         matrix:
             php-versions: [ '7.3' ]
@@ -98,13 +102,30 @@ jobs:
             with:
                 path: modules/test_support
 
-        -   name: Retreive module build cache
+        -   # Deliberately keyed by this job's own PHP version, not just
+            # the lock hash - a cache built once on one PHP version must
+            # never be silently trusted on another, since Composer only
+            # validates platform requirements (the "php": ">=X" on each
+            # locked package) against whichever PHP actually ran the
+            # install. A lock that's secretly broken for this specific
+            # PHP version would otherwise go uncaught, exactly as
+            # happened when this module's own composer.lock briefly
+            # locked packages requiring PHP >=7.4 while still declaring
+            # (and claiming to support) a >=7.3.0 floor - invisible to
+            # every job validated only on PHP 8.1+.
+            id: module_vendor_cache
+            name: Retreive module build cache
             uses: actions/cache@v3
             with:
                 path: modules/test_support/vendor
-                key: ${{ runner.os }}-build-development-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-                restore-keys: ${{ runner.os }}-build-development-module-composer-
-                fail-on-cache-miss: true
+                key: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-${{ hashFiles('modules/test_support/composer.lock') }}
+                restore-keys: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-
+
+        -   if: steps.module_vendor_cache.outputs.cache-hit != 'true'
+            name: Build module including dependencies
+            run: |
+                cd modules/test_support;
+                composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
         -   name: PHP Mess Detector
             uses: php-actions/phpmd@v1
@@ -134,7 +155,42 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        drupal-core: ['9.1.0', '9.2.0', '9.3.0', '9.4.0', '9.5.0', '10.0.0', '10.1.0', '10.2.0', '10.3.0', '10.4.0', '10.5.0', '10.6.0']
+        # A single fixed PHP version can't cover every Drupal major here:
+        # drupal/core itself declares "php": ">=8.3.0" starting at 11.0.0 -
+        # not something a later 11.x minor bumped, true since Drupal 11's
+        # very first release (verified directly against drupal/drupal's own
+        # committed composer.lock). PHP 8.1 (what this job always used)
+        # can't even load Composer's own autoloader there, let alone run
+        # anything meaningful - two different-looking failures turned out
+        # to share this one root cause: 11.0.0/11.1.0 fail immediately via
+        # Composer's own platform_check.php the moment phpstan-drupal's
+        # bootstrap tries to load the surrounding site's autoloader, while
+        # 11.2.0+ fail earlier still, via a PHP 8.3+ typed class constant
+        # in drupal/core-recipe-unpack (the "recipes" feature) that PHP 8.1
+        # can't even parse. 9.x/10.x have no such floor and stay on the
+        # same PHP 8.1 this job has always used (see the comment on the
+        # setup step below for why that specific version). Paired
+        # explicitly via `include` rather than a second, independent
+        # php-version axis, which would otherwise multiply into a full
+        # cartesian product of every drupal-core against every version.
+        include:
+          - { drupal-core: '9.1.0', php-version: '8.1' }
+          - { drupal-core: '9.2.0', php-version: '8.1' }
+          - { drupal-core: '9.3.0', php-version: '8.1' }
+          - { drupal-core: '9.4.0', php-version: '8.1' }
+          - { drupal-core: '9.5.0', php-version: '8.1' }
+          - { drupal-core: '10.0.0', php-version: '8.1' }
+          - { drupal-core: '10.1.0', php-version: '8.1' }
+          - { drupal-core: '10.2.0', php-version: '8.1' }
+          - { drupal-core: '10.3.0', php-version: '8.1' }
+          - { drupal-core: '10.4.0', php-version: '8.1' }
+          - { drupal-core: '10.5.0', php-version: '8.1' }
+          - { drupal-core: '10.6.0', php-version: '8.1' }
+          - { drupal-core: '11.0.0', php-version: '8.3' }
+          - { drupal-core: '11.1.0', php-version: '8.3' }
+          - { drupal-core: '11.2.0', php-version: '8.3' }
+          - { drupal-core: '11.3.0', php-version: '8.3' }
+          - { drupal-core: '11.4.0', php-version: '8.3' }
     steps:
         -   # This job never pinned a PHP version, so it silently rode whatever
             # ubuntu-latest's bundled default PHP happened to be. That default has
@@ -143,11 +199,12 @@ jobs:
             # in composer.lock predates that, so its own internal reflection adapter
             # (ReflectionClass::IS_READONLY) fails with a declaration-incompatible
             # fatal error. Pin to a period-appropriate PHP instead of the drifting
-            # runner default.
-            name: Setup PHP 8.1, with composer and extensions
+            # runner default - now per Drupal major (see the matrix comment above),
+            # rather than a single fixed version for every one.
+            name: Setup PHP v${{ matrix.php-version }}, with composer and extensions
             uses: shivammathur/setup-php@v2
             with:
-                php-version: '8.1'
+                php-version: ${{ matrix.php-version }}
                 coverage: none
 
         -   name: Checkout Drupal core v${{ matrix.drupal-core }}
@@ -263,32 +320,155 @@ jobs:
         run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
       - # Deliberately not gated on the cache hit above - see the matching
-        # step in static_analysis_matrix for why.
+        # step in static_analysis_matrix for why. Also installs
+        # brianium/paratest at the site root now, alongside core-dev -
+        # paratest is a CI-only speed optimization (parallelizes test
+        # runs), never needed for local development, so it's no longer
+        # one of the module's own require-dev dependencies. Installing it
+        # here means it's always paired with whatever phpunit core-dev
+        # itself resolves for this specific Drupal version, rather than
+        # the module maintaining its own independent, often-mismatched
+        # lock.
         name: Install drupal/core-dev with dependencies
         run: |
           composer --no-interaction --no-progress require --dev \
           drupal/core-dev:${{ matrix.drupal-core }} \
-          phpspec/prophecy-phpunit:^2 --with-all-dependencies
+          phpspec/prophecy-phpunit:^2 \
+          brianium/paratest --with-all-dependencies
 
       - name: Checkout module
         uses: actions/checkout@v2
         with:
           path: modules/test_support
 
-      - name: Retreive module build cache
+      - # Deliberately keyed by this matrix cell's own PHP version, not
+        # just the lock hash - see the matching comment on sanity_check
+        # for the bug this fixes (a cache built and validated on one PHP
+        # version silently trusted on another, masking Composer platform
+        # requirement violations specific to this cell's own PHP).
+        id: module_vendor_cache
+        name: Retreive module build cache
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ runner.os }}-build-development-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-          restore-keys: ${{ runner.os }}-build-development-module-composer-
-          fail-on-cache-miss: true
+          key: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-${{ hashFiles('modules/test_support/composer.lock') }}
+          restore-keys: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-
 
-      - name: Tests
+      - if: steps.module_vendor_cache.outputs.cache-hit != 'true'
+        name: Build module including dependencies
         run: |
-            modules/test_support/vendor/bin/paratest \
-            --path modules/test_support/tests \
+          cd modules/test_support;
+          composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+      - # Runs via the site root's own paratest (installed above,
+        # alongside core-dev) rather than the module's own vendor - see
+        # the comment on the install step above for why. The positional
+        # path argument (not --path) is required for compatibility across
+        # the full range of paratest versions Composer may resolve here,
+        # since newer paratest releases dropped the --path option.
+        name: Tests
+        run: |
+            vendor/bin/paratest \
             -c modules/test_support/phpunit.xml \
-            --runner WrapperRunner
+            --runner WrapperRunner \
+            modules/test_support/tests
+
+  drupal-11-matrix:
+    name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
+    runs-on: ubuntu-latest
+    needs: [ sanity_check, static_analysis_matrix ]
+    strategy:
+      fail-fast: false
+      matrix:
+        drupal-core: [ '11.0.0', '11.1.0', '11.2.0', '11.3.0', '11.4.0' ]
+        php-versions: [ '8.3', '8.4' ]
+    steps:
+      - name: Setup PHP v${{ matrix.php-versions }}, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: none
+
+      - name: Checkout Drupal core v${{ matrix.drupal-core }}
+        uses: actions/checkout@v2
+        with:
+          repository: drupal/drupal
+          ref: ${{ matrix.drupal-core }}
+
+      - name: Cache Drupal v${{ matrix.drupal-core }}
+        id: build_drupal_cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-drupal-build-composer-v${{ matrix.drupal-core }}-${{ hashFiles('./composer.lock') }}
+          restore-keys: ${{ runner.os }}-drupal-build-composer-v
+
+      - # Always runs, cache hit or not - see the matching step in
+        # static_analysis_matrix for why.
+        name: Allow Composer plugins (older Drupal core composer.json predates allow-plugins)
+        run: |
+          composer config allow-plugins true
+          composer config policy.advisories.block false
+
+      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+        name: Install Drupal core dependencies
+        run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+      - # Deliberately not gated on the cache hit above - see the matching
+        # step in static_analysis_matrix for why. Also installs
+        # brianium/paratest at the site root now, alongside core-dev -
+        # paratest is a CI-only speed optimization (parallelizes test
+        # runs), never needed for local development, so it's no longer
+        # one of the module's own require-dev dependencies. Installing it
+        # here means it's always paired with whatever phpunit core-dev
+        # itself resolves for this specific Drupal version, rather than
+        # the module maintaining its own independent, often-mismatched
+        # lock. This is specifically what fixes Drupal 11: no single
+        # module-locked phpunit version can satisfy core's own
+        # PhpUnit10/PhpUnit11 compatibility shim split across 11.0-11.4.
+        name: Install drupal/core-dev with dependencies
+        run: |
+          composer --no-interaction --no-progress require --dev \
+          drupal/core-dev:${{ matrix.drupal-core }} \
+          phpspec/prophecy-phpunit:^2 \
+          brianium/paratest --with-all-dependencies
+
+      - name: Checkout module
+        uses: actions/checkout@v2
+        with:
+          path: modules/test_support
+
+      - # Deliberately keyed by this matrix cell's own PHP version, not
+        # just the lock hash - see the matching comment on sanity_check
+        # for the bug this fixes (a cache built and validated on one PHP
+        # version silently trusted on another, masking Composer platform
+        # requirement violations specific to this cell's own PHP).
+        id: module_vendor_cache
+        name: Retreive module build cache
+        uses: actions/cache@v3
+        with:
+          path: modules/test_support/vendor
+          key: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-${{ hashFiles('modules/test_support/composer.lock') }}
+          restore-keys: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-
+
+      - if: steps.module_vendor_cache.outputs.cache-hit != 'true'
+        name: Build module including dependencies
+        run: |
+          cd modules/test_support;
+          composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+      - # Runs via the site root's own paratest (installed above,
+        # alongside core-dev) rather than the module's own vendor - see
+        # the comment on the install step above for why. The positional
+        # path argument (not --path) is required for compatibility across
+        # the full range of paratest versions Composer may resolve here,
+        # since newer paratest releases dropped the --path option.
+        name: Tests
+        run: |
+            vendor/bin/paratest \
+            -c modules/test_support/phpunit.xml \
+            --runner WrapperRunner \
+            modules/test_support/tests
 
   drupal-9-matrix:
     name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
@@ -297,7 +477,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        drupal-core: [ '9.5.0', '9.1.0' ]
+        drupal-core: [ '9.1.0', '9.2.0', '9.3.0', '9.4.0', '9.5.0' ]
         php-versions: [ '7.3' ]
     steps:
       - name: Setup PHP v${{ matrix.php-versions }}, with composer and extensions
@@ -332,29 +512,55 @@ jobs:
         run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
       - # Deliberately not gated on the cache hit above - see the matching
-        # step in static_analysis_matrix for why.
+        # step in static_analysis_matrix for why. Also installs
+        # brianium/paratest at the site root now, alongside core-dev -
+        # paratest is a CI-only speed optimization (parallelizes test
+        # runs), never needed for local development, so it's no longer
+        # one of the module's own require-dev dependencies. Installing it
+        # here means it's always paired with whatever phpunit core-dev
+        # itself resolves for this specific Drupal version, rather than
+        # the module maintaining its own independent, often-mismatched
+        # lock.
         name: Install drupal/core-dev with dependencies
         run: |
             composer --no-interaction --no-progress require --dev \
             drupal/core-dev:${{ matrix.drupal-core }} \
-            phpspec/prophecy-phpunit:^2 --with-all-dependencies
+            phpspec/prophecy-phpunit:^2 \
+            brianium/paratest --with-all-dependencies
 
       - name: Checkout module
         uses: actions/checkout@v2
         with:
           path: modules/test_support
 
-      - name: Retreive module build cache
+      - # Deliberately keyed by this matrix cell's own PHP version, not
+        # just the lock hash - see the matching comment on sanity_check
+        # for the bug this fixes (a cache built and validated on one PHP
+        # version silently trusted on another, masking Composer platform
+        # requirement violations specific to this cell's own PHP).
+        id: module_vendor_cache
+        name: Retreive module build cache
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ runner.os }}-build-development-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-          restore-keys: ${{ runner.os }}-build-development-module-composer-
-          fail-on-cache-miss: true
+          key: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-${{ hashFiles('modules/test_support/composer.lock') }}
+          restore-keys: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-
 
-      - name: Tests
+      - if: steps.module_vendor_cache.outputs.cache-hit != 'true'
+        name: Build module including dependencies
         run: |
-            modules/test_support/vendor/bin/paratest \
-            --path modules/test_support/tests \
+            cd modules/test_support;
+            composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+      - # Runs via the site root's own paratest (installed above,
+        # alongside core-dev) rather than the module's own vendor - see
+        # the comment on the install step above for why. The positional
+        # path argument (not --path) is required for compatibility across
+        # the full range of paratest versions Composer may resolve here,
+        # since newer paratest releases dropped the --path option.
+        name: Tests
+        run: |
+            vendor/bin/paratest \
             -c modules/test_support/phpunit.xml \
-            --runner WrapperRunner
+            --runner WrapperRunner \
+            modules/test_support/tests

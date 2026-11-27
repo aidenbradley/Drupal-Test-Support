@@ -20,9 +20,7 @@ class InstallsVocabulariesTest extends KernelTestBase
     /** @test */
     public function installing_vocabulary_sets_up_dependencies(): void
     {
-        $moduleHandler = $this->container->get('module_handler');
-
-        $this->assertFalse($moduleHandler->moduleExists('taxonomy'));
+        $this->assertFalse($this->container->get('module_handler')->moduleExists('taxonomy'));
 
         $entityTypeDefinitions = $this->container->get('entity_type.manager')->getDefinitions();
         $this->assertArrayNotHasKey('taxonomy_vocabulary', $entityTypeDefinitions);
@@ -32,7 +30,13 @@ class InstallsVocabulariesTest extends KernelTestBase
         $entityTypeDefinitions = $this->container->get('entity_type.manager')->getDefinitions();
         $this->assertArrayHasKey('taxonomy_vocabulary', $entityTypeDefinitions);
 
-        $this->assertTrue($moduleHandler->moduleExists('taxonomy'));
+        // Drupal 11.2+'s enableModules() rebuilds $this->container at the
+        // end (via $this->container->get('kernel')->getContainer()), which
+        // produces a fresh module_handler instance - a reference fetched
+        // before installVocabularies() (which calls enableModules()
+        // internally) would go stale, still reporting pre-install state.
+        // Fetch fresh afterwards instead of caching it beforehand.
+        $this->assertTrue($this->container->get('module_handler')->moduleExists('taxonomy'));
         $this->assertInstanceOf(Vocabulary::class, $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->load('tags'));
     }
 

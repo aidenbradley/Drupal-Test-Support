@@ -10,7 +10,6 @@
         "symfony/finder": "^5"
     },
     "require-dev": {
-        "brianium/paratest": "^6.9 || ^7.0",
         "symplify/easy-coding-standard": "^11.5",
         "behat/mink": "^1.9",
         "phpspec/prophecy-phpunit": "^2",

@@ -62,7 +62,19 @@ class ResolveRequest implements ContainerInjectionInterface
             throw new NotFoundHttpException();
         }
 
-        if ($this->request->getContentType() !== 'json') {
+        // Symfony removed Request::getContentType() in favour of
+        // getContentTypeFormat() (same purpose: map the Content-Type header
+        // to a format string like "json"). Drupal 9's Symfony only has the
+        // former, Drupal 11's only has the latter, Drupal 10 has both (the
+        // former deprecated) - feature-detect rather than branch on Drupal's
+        // own version, since it's Symfony's API that changed, not Drupal's.
+        /** @phpstan-ignore-next-line */
+        $contentType = method_exists($this->request, 'getContentTypeFormat')
+            ? $this->request->getContentTypeFormat()
+            /** @phpstan-ignore-next-line */
+            : $this->request->getContentType();
+
+        if ($contentType !== 'json') {
             throw new NotFoundHttpException();
         }
 

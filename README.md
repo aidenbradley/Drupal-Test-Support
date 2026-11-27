@@ -1,6 +1,44 @@
 # Test Support
 Traits to be used in Drupal tests that help with test setup and assertions
 
+## Running tests locally
+
+This module's own `composer.json` deliberately has no `phpunit/phpunit` or
+`brianium/paratest` dependency. Its tests are Kernel tests, which always require a real,
+bootable Drupal site to run - there's no "standalone module" test mode - so PHPUnit
+always has to come from that surrounding site anyway, via `drupal/core-dev`. Declaring
+our own version here previously caused genuine problems: it couldn't track
+`drupal/core-dev`'s own per-Drupal-minor PHPUnit constraint, which splits across the
+PhpUnit10/PhpUnit11 compatibility shim boundary within Drupal 11's own 0-4 minor range,
+so no single module-locked version could satisfy it across that whole range.
+
+To work on this module locally:
+
+1. Set up a real Drupal site matching whichever core version you want to test against
+   (any standard `composer create-project drupal/recommended-project` site, or similar -
+   this repo's own CI builds its sites from a bare `drupal/drupal` checkout instead,
+   which has no `web/` subdirectory, but either layout works).
+2. Clone this module into that site's modules directory (e.g.
+   `web/modules/custom/test_support`).
+3. From the site's own root (not this module's directory), run:
+   ```
+   composer require --dev drupal/core-dev:^<matching-core-version> --with-all-dependencies
+   ```
+   This installs a PHPUnit version already correctly matched to that specific core
+   version - the same constraint Drupal core itself maintains, rather than one this
+   module would otherwise have to track independently.
+4. Run tests via the site's own root, pointed at this module's `phpunit.xml` and `tests/`
+   directory:
+   ```
+   vendor/bin/phpunit -c web/modules/custom/test_support/phpunit.xml web/modules/custom/test_support/tests
+   ```
+   (adjust the `web/` prefix if your site layout doesn't use one).
+
+`brianium/paratest` is never needed for this - it's a CI-only speed optimization
+(parallelizes the test run) with no bearing on correctness, so CI installs it itself,
+directly at the site root alongside `drupal/core-dev`, rather than this module declaring
+it as a dependency any contributor would have to install too.
+
 ## Ignored security advisories
 
 `composer.json` (`config.policy.advisories.ignore-id`) explicitly ignores the following

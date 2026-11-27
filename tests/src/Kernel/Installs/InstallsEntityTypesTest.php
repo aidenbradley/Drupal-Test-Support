@@ -71,8 +71,14 @@ class InstallsEntityTypesTest extends KernelTestBase
         /** @var \Drupal\Core\Entity\EntityTypeInterface $nodeEntityTypeDefinition */
         $nodeEntityTypeDefinition = $entityTypeManager->getDefinition('node');
 
+        // getDataTable() is nullable in general (config entities and
+        // others have no data table at all), but node is a content entity
+        // type with SQL storage, so it's always a string here.
+        /** @var string $nodeDataTable */
+        $nodeDataTable = $nodeEntityTypeDefinition->getDataTable();
+
         $this->assertFalse($this->container->get('database')->schema()->tableExists(
-            $nodeEntityTypeDefinition->getDataTable()
+            $nodeDataTable
         ));
 
         $nodeTypeStorage = $entityTypeManager->getStorage('node_type');
@@ -85,7 +91,7 @@ class InstallsEntityTypesTest extends KernelTestBase
         ]);
 
         $this->assertTrue($this->container->get('database')->schema()->tableExists(
-            $nodeEntityTypeDefinition->getDataTable()
+            $nodeDataTable
         ));
 
         $this->assertInstanceOf(NodeType::class, $nodeTypeStorage->load('page'));

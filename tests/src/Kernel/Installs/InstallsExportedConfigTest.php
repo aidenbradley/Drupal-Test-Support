@@ -44,7 +44,15 @@ class InstallsExportedConfigTest extends KernelTestBase
     /** @test */
     public function installs_theme_dependency(): void
     {
+        // Drupal 11.3+'s field type plugin discovery requires image's own
+        // parent class's module (FileItem, from the "file" module - image's
+        // own FieldType plugin, ImageItem, extends it) to be genuinely
+        // enabled, not just loadable - views.view.media.yml's own declared
+        // "image" dependency isn't enough on its own. "file" was never
+        // explicitly enabled here before Drupal 11 either, it just didn't
+        // matter until 11.3's discovery became stricter about it.
         $this->enableModules([
+            'file',
             'image',
         ]);
 
@@ -61,7 +69,10 @@ class InstallsExportedConfigTest extends KernelTestBase
     /** @test */
     public function installs_config_dependency(): void
     {
+        // See the comment on installs_theme_dependency() above - "file"
+        // needs enabling too, for the same reason.
         $this->setFixtureConfigDirectory('config_dependencies')->enableModules([
+            'file',
             'image',
         ]);
 
@@ -84,6 +95,18 @@ class InstallsExportedConfigTest extends KernelTestBase
     public function installs_module_dependency(): void
     {
         $this->setFixtureConfigDirectory('config_dependencies');
+
+        // See the comment on installs_theme_dependency() above - "file"
+        // needs enabling too, for the same reason. It's deliberately left
+        // out of the assertions below: this test is specifically about the
+        // config's own declared dependencies (image, media, user) getting
+        // auto-enabled, and "file" isn't one of those - it's only a
+        // transitive dependency of "image" itself, which this module's own
+        // dependency resolution doesn't currently chase, same as a real
+        // Drupal 9/10/11.0-11.2 site's own install never needed it to.
+        $this->enableModules([
+            'file',
+        ]);
 
         $this->disableModules([
             'user',
