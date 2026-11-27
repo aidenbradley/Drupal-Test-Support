@@ -2,20 +2,25 @@
 
 namespace Drupal\Tests\test_support\Kernel\Support;
 
-use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\EventSubscriber\ConfigSubscriber;
 use Drupal\node\Routing\RouteSubscriber;
 use Drupal\system\TimeZoneResolver;
 use Drupal\Tests\test_support\Traits\Support\WithoutEventSubscribers;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class WithoutEventSubscribersTest extends KernelTestBase
 {
     use WithoutEventSubscribers;
 
-    /** @var ContainerAwareEventDispatcher|null */
+    // Drupal 9/10's "event_dispatcher" service is Drupal's own
+    // ContainerAwareEventDispatcher; Drupal 11's is Symfony's plain
+    // EventDispatcher (no Drupal subclass at all). Both implement this
+    // same interface, which is why it's used as the type here rather
+    // than either concrete class.
+    /** @var EventDispatcherInterface|null */
     private $eventDispatcher;
 
     /** @test */
@@ -169,9 +174,9 @@ class WithoutEventSubscribersTest extends KernelTestBase
         $this->assertNotListening('language.config_subscriber');
     }
 
-    private function eventDispatcher(): ContainerAwareEventDispatcher
+    private function eventDispatcher(): EventDispatcherInterface
     {
-        if ($this->eventDispatcher instanceof ContainerAwareEventDispatcher === false) {
+        if ($this->eventDispatcher instanceof EventDispatcherInterface === false) {
             $this->eventDispatcher = $this->container->get('event_dispatcher');
         }
 
