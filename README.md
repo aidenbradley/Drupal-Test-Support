@@ -33,17 +33,23 @@ To work on this module locally:
    This detects the installed Drupal core version from the surrounding site and, at
    that site's own root (not this module's), installs a matching `drupal/core-dev` -
    the same per-version PHPUnit constraint Drupal core itself maintains, rather than
-   one this module would otherwise have to track independently - along with
-   `brianium/paratest` (a CI-only speed optimization with no bearing on correctness,
-   installed here too so you can reproduce CI's own invocation exactly).
+   one this module would otherwise have to track independently.
 4. Run tests via the site's own root, pointed at this module's `phpunit.xml` and `tests/`
    directory:
    ```
-   vendor/bin/phpunit -c web/modules/custom/test_support/phpunit.xml web/modules/custom/test_support/tests
+   vendor/bin/phpunit -c $PWD/web/modules/custom/test_support/phpunit.xml $PWD/web/modules/custom/test_support/tests
    ```
-   (adjust the `web/` prefix if your site layout doesn't use one). Swap in
-   `vendor/bin/paratest --runner WrapperRunner` instead of `vendor/bin/phpunit` to
-   match CI's own, faster invocation.
+   (adjust the `web/` prefix if your site layout doesn't use one). The `$PWD`s matter,
+   not just style: Kernel tests run each test method in its own subprocess, which ends
+   up with a different working directory than the one phpunit itself started in, so a
+   relative `-c` path resolves against the wrong place there and fails with
+   "Could not read ... phpunit.xml" for most (though curiously not all) tests.
+
+   CI instead runs via `brianium/paratest` (a speed optimization that parallelizes the
+   run, with no bearing on correctness), which it installs itself rather than this
+   script installing it for you - a contributor who wants it too can
+   `composer require --dev brianium/paratest --working-dir=<site root>` and swap in
+   `vendor/bin/paratest --runner WrapperRunner` for `vendor/bin/phpunit` above.
 
 Step 3 is not wired up as part of this module's own `composer install`/`update` (unlike
 the `tools/phpstan` setup below): it mutates the surrounding *site's* own

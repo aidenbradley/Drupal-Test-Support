@@ -71,12 +71,8 @@ if ($exitCode !== 0) {
     exit($exitCode);
 }
 
-// brianium/paratest is a CI-only speed optimization (parallelizes the
-// test run), never required for local development - installed here too
-// anyway, since it has no bearing on correctness and having it available
-// locally lets a contributor reproduce CI's own invocation exactly.
 $command = sprintf(
-    '%s --no-interaction --no-progress require --dev %s phpspec/prophecy-phpunit:^2 brianium/paratest --with-all-dependencies --working-dir=%s',
+    '%s --no-interaction --no-progress require --dev %s phpspec/prophecy-phpunit:^2 --with-all-dependencies --working-dir=%s',
     $composer,
     escapeshellarg('drupal/core-dev:' . $coreVersion),
     escapeshellarg($siteRoot)
