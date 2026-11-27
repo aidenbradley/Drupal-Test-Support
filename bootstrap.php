@@ -1,10 +1,15 @@
 <?php
 
-$finder = new \DrupalFinder\DrupalFinder();
-$finder->locateRoot(getcwd());
-
+// DrupalFinder itself comes from this module's own vendor - requiring
+// it before instantiating the class means that's always true
+// regardless of what any already-active autoloader (e.g. the site
+// root's own, when this bootstrap runs via the root's paratest rather
+// than this module's own) happens to already know about.
 /** @var \Composer\Autoload\ClassLoader $testAutoloader */
 $testAutoloader = require __DIR__ . '/vendor/autoload.php';
+
+$finder = new \DrupalFinder\DrupalFinder();
+$finder->locateRoot(getcwd());
 
 // Composer always registers a newly-required autoloader with $prepend =
 // true, so this module's own autoloader would otherwise sit ahead of the
