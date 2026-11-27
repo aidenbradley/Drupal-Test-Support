@@ -23,8 +23,13 @@ To work on this module locally:
    *this module's own* directory (not the site's root) to pull in its own dependencies.
 3. From this module's own directory, run:
    ```
-   composer run-script install-site-test-dependencies
+   composer test-support:install-site-dependencies
    ```
+   (or, from anywhere else, `composer --working-dir=web/modules/custom/test_support
+   test-support:install-site-dependencies` - a composer script is scoped to whichever
+   `composer.json` it's defined in, so running the bare command from the site's own
+   root instead fails, since that composer.json doesn't define it).
+
    This detects the installed Drupal core version from the surrounding site and, at
    that site's own root (not this module's), installs a matching `drupal/core-dev` -
    the same per-version PHPUnit constraint Drupal core itself maintains, rather than
