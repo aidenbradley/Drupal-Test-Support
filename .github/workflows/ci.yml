@@ -82,7 +82,11 @@ jobs:
   sanity_check:
     name: Sanity Check - Lint
     runs-on: ubuntu-latest
-    needs: build_development_module
+    # No longer needs build_development_module: it builds and validates
+    # its own module vendor below, keyed by its own PHP version, rather
+    # than trusting a cache built and validated only on a different one
+    # (see the matching comment on drupal-9-matrix for the bug this
+    # caused).
     strategy:
         matrix:
             php-versions: [ '7.3' ]
@@ -98,13 +102,30 @@ jobs:
             with:
                 path: modules/test_support
 
-        -   name: Retreive module build cache
+        -   # Deliberately keyed by this job's own PHP version, not just
+            # the lock hash - a cache built once on one PHP version must
+            # never be silently trusted on another, since Composer only
+            # validates platform requirements (the "php": ">=X" on each
+            # locked package) against whichever PHP actually ran the
+            # install. A lock that's secretly broken for this specific
+            # PHP version would otherwise go uncaught, exactly as
+            # happened when this module's own composer.lock briefly
+            # locked packages requiring PHP >=7.4 while still declaring
+            # (and claiming to support) a >=7.3.0 floor - invisible to
+            # every job validated only on PHP 8.1+.
+            id: module_vendor_cache
+            name: Retreive module build cache
             uses: actions/cache@v3
             with:
                 path: modules/test_support/vendor
-                key: ${{ runner.os }}-build-development-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-                restore-keys: ${{ runner.os }}-build-development-module-composer-
-                fail-on-cache-miss: true
+                key: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-${{ hashFiles('modules/test_support/composer.lock') }}
+                restore-keys: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-
+
+        -   if: steps.module_vendor_cache.outputs.cache-hit != 'true'
+            name: Build module including dependencies
+            run: |
+                cd modules/test_support;
+                composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
         -   name: PHP Mess Detector
             uses: php-actions/phpmd@v1
@@ -284,13 +305,24 @@ jobs:
         with:
           path: modules/test_support
 
-      - name: Retreive module build cache
+      - # Deliberately keyed by this matrix cell's own PHP version, not
+        # just the lock hash - see the matching comment on sanity_check
+        # for the bug this fixes (a cache built and validated on one PHP
+        # version silently trusted on another, masking Composer platform
+        # requirement violations specific to this cell's own PHP).
+        id: module_vendor_cache
+        name: Retreive module build cache
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ runner.os }}-build-development-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-          restore-keys: ${{ runner.os }}-build-development-module-composer-
-          fail-on-cache-miss: true
+          key: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-${{ hashFiles('modules/test_support/composer.lock') }}
+          restore-keys: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-
+
+      - if: steps.module_vendor_cache.outputs.cache-hit != 'true'
+        name: Build module including dependencies
+        run: |
+          cd modules/test_support;
+          composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
       - # Runs via the site root's own paratest (installed above,
         # alongside core-dev) rather than the module's own vendor - see
@@ -370,13 +402,24 @@ jobs:
         with:
           path: modules/test_support
 
-      - name: Retreive module build cache
+      - # Deliberately keyed by this matrix cell's own PHP version, not
+        # just the lock hash - see the matching comment on sanity_check
+        # for the bug this fixes (a cache built and validated on one PHP
+        # version silently trusted on another, masking Composer platform
+        # requirement violations specific to this cell's own PHP).
+        id: module_vendor_cache
+        name: Retreive module build cache
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ runner.os }}-build-development-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-          restore-keys: ${{ runner.os }}-build-development-module-composer-
-          fail-on-cache-miss: true
+          key: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-${{ hashFiles('modules/test_support/composer.lock') }}
+          restore-keys: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-
+
+      - if: steps.module_vendor_cache.outputs.cache-hit != 'true'
+        name: Build module including dependencies
+        run: |
+          cd modules/test_support;
+          composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
       - # Runs via the site root's own paratest (installed above,
         # alongside core-dev) rather than the module's own vendor - see
@@ -454,13 +497,24 @@ jobs:
         with:
           path: modules/test_support
 
-      - name: Retreive module build cache
+      - # Deliberately keyed by this matrix cell's own PHP version, not
+        # just the lock hash - see the matching comment on sanity_check
+        # for the bug this fixes (a cache built and validated on one PHP
+        # version silently trusted on another, masking Composer platform
+        # requirement violations specific to this cell's own PHP).
+        id: module_vendor_cache
+        name: Retreive module build cache
         uses: actions/cache@v3
         with:
           path: modules/test_support/vendor
-          key: ${{ runner.os }}-build-development-module-composer-${{ hashFiles('modules/test_support/composer.lock') }}
-          restore-keys: ${{ runner.os }}-build-development-module-composer-
-          fail-on-cache-miss: true
+          key: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-${{ hashFiles('modules/test_support/composer.lock') }}
+          restore-keys: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-
+
+      - if: steps.module_vendor_cache.outputs.cache-hit != 'true'
+        name: Build module including dependencies
+        run: |
+            cd modules/test_support;
+            composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
 
       - # Runs via the site root's own paratest (installed above,
         # alongside core-dev) rather than the module's own vendor - see
