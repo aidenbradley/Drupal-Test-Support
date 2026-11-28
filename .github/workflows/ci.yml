@@ -254,11 +254,25 @@ jobs:
             # immutable) would freeze that resolution the first time this
             # ever ran and silently never update again, masking real
             # dependency drift behind a permanently "warm" cache.
+            #
+            # Deliberately not requiring phpspec/prophecy-phpunit here,
+            # unlike the runtime-test matrices below: this module's own
+            # tests don't use it, and requiring it forces upgrading
+            # phpunit/phpunit itself to satisfy its own ^9.1 constraint -
+            # fine for the actual test runners (core/tests/bootstrap.php
+            # loads things in an order that tolerates it), fatal here.
+            # Confirmed directly: Drupal 9.1.0 ships phpunit/phpunit
+            # 8.5.8, whose KernelTestBase::setUpBeforeClass() override
+            # was written to match PHPUnit 8's own TestCase signature;
+            # forcing an upgrade to 9.6.39 to satisfy prophecy-phpunit
+            # makes PHPStan's own reflection-based class loading hit a
+            # declaration-incompatible fatal error the moment it tries
+            # to load KernelTestBase at all, well before it gets anywhere
+            # near analysing this module's own code.
             name: Install drupal/core-dev with dependencies
             run: |
                 composer --no-interaction --no-progress require --dev \
-                drupal/core-dev:${{ matrix.drupal-core }} \
-                phpspec/prophecy-phpunit:^2 --with-all-dependencies
+                drupal/core-dev:${{ matrix.drupal-core }} --with-all-dependencies
 
         - name: Checkout module
           uses: actions/checkout@v2
