@@ -5,7 +5,10 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Installs\InstallsRoles;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InstallsRolesTest extends KernelTestBase
 {
     use InstallsRoles;
@@ -18,6 +21,7 @@ class InstallsRolesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function installing_role_sets_dependencies(): void
     {
         $this->assertFalse($this->container->get('module_handler')->moduleExists('user'));
@@ -34,6 +38,7 @@ class InstallsRolesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_single_role(): void
     {
         $this->enableModules([
@@ -65,6 +70,7 @@ class InstallsRolesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_multiple_roles(): void
     {
         $this->enableModules([

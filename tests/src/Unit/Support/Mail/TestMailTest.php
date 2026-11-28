@@ -5,10 +5,12 @@ namespace Drupal\Tests\test_support\Unit\Support\Mail;
 use Drupal\Tests\test_support\Traits\Support\Mail\TestMail;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\User;
+use PHPUnit\Framework\Attributes\Test;
 
 class TestMailTest extends UnitTestCase
 {
     /** @test */
+    #[Test]
     public function get_to(): void
     {
         $mail = TestMail::createFromValues([
@@ -19,6 +21,7 @@ class TestMailTest extends UnitTestCase
     }
 
     /** @test */
+    #[Test]
     public function assert_mail_sent_to(): void
     {
         $mail = TestMail::createFromValues([
@@ -29,6 +32,7 @@ class TestMailTest extends UnitTestCase
     }
 
     /** @test */
+    #[Test]
     public function get_subject(): void
     {
         $mail = TestMail::createFromValues([
@@ -39,6 +43,7 @@ class TestMailTest extends UnitTestCase
     }
 
     /** @test */
+    #[Test]
     public function assert_subject(): void
     {
         $mail = TestMail::createFromValues([
@@ -49,6 +54,7 @@ class TestMailTest extends UnitTestCase
     }
 
     /** @test */
+    #[Test]
     public function get_body(): void
     {
         $mail = TestMail::createFromValues([
@@ -63,6 +69,7 @@ class TestMailTest extends UnitTestCase
     }
 
     /** @test */
+    #[Test]
     public function assert_body(): void
     {
         $mail = TestMail::createFromValues([
@@ -73,6 +80,7 @@ class TestMailTest extends UnitTestCase
     }
 
     /** @test */
+    #[Test]
     public function get_param(): void
     {
         $mail = TestMail::createFromValues([
@@ -87,6 +95,7 @@ class TestMailTest extends UnitTestCase
     }
 
     /** @test */
+    #[Test]
     public function assert_param(): void
     {
         $user = $this->createMock(User::class);

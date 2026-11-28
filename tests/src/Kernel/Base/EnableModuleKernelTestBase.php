@@ -4,6 +4,7 @@ namespace Drupal\Tests\test_support\Kernel\Base;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Installs\InstallsModules;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * This class will act as a base set of tests to test whether a module will work or not.
@@ -29,6 +30,7 @@ abstract class EnableModuleKernelTestBase extends KernelTestBase
     abstract public function module(): string;
 
     /** @test */
+    #[Test]
     public function install_module_entity_definitions(): void
     {
         $this->enableModuleWithDependencies($this->module());

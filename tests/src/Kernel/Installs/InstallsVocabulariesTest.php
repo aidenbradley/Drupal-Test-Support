@@ -5,7 +5,10 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\test_support\Traits\Installs\InstallsVocabularies;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InstallsVocabulariesTest extends KernelTestBase
 {
     use InstallsVocabularies;
@@ -18,6 +21,7 @@ class InstallsVocabulariesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function installing_vocabulary_sets_up_dependencies(): void
     {
         $this->assertFalse($this->container->get('module_handler')->moduleExists('taxonomy'));
@@ -41,6 +45,7 @@ class InstallsVocabulariesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_single_vocabulary(): void
     {
         $this->enableModules([
@@ -63,6 +68,7 @@ class InstallsVocabulariesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_multiple_vocabularies(): void
     {
         $this->enableModules([

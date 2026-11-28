@@ -6,7 +6,10 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\test_support\Traits\Installs\InstallsEntityTypes;
 use Drupal\Tests\test_support\Traits\Installs\InstallsFields;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InstallsFieldsTest extends KernelTestBase
 {
     use InstallsEntityTypes;
@@ -28,6 +31,7 @@ class InstallsFieldsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function installing_field_sets_up_dependencies(): void
     {
         $this->assertFalse($this->container->get('module_handler')->moduleExists('field'));
@@ -58,6 +62,7 @@ class InstallsFieldsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_single_field(): void
     {
         $this->enableModules([
@@ -86,6 +91,7 @@ class InstallsFieldsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_multiple_fields(): void
     {
         $this->enableModules([
@@ -119,6 +125,7 @@ class InstallsFieldsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_all_fields_for_entity(): void
     {
         $this->enableModules([

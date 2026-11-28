@@ -4,7 +4,10 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Tests\test_support\Kernel\Base\EnableModuleKernelTestBase;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
+#[RunTestsInSeparateProcesses]
 class InstallModuleTest extends EnableModuleKernelTestBase
 {
     public function module(): string
@@ -20,6 +23,7 @@ class InstallModuleTest extends EnableModuleKernelTestBase
      * install will fail when installing the entity schema definition.
      * The "text" module must be declared as a dependency.
      */
+    #[Test]
     public function module_and_entity_schema_install_fails_without_correct_dependencies(): void
     {
         $this->enableModules([

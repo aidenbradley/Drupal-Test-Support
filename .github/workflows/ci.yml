@@ -30,11 +30,15 @@ jobs:
       steps:
           -   # This job never pinned a PHP version either (see the same fix
               # already applied to static_analysis_matrix), so it rode
-              # ubuntu-latest's drifting default - now PHP 8.5, which
-              # phpspec/prophecy's locked 1.21.0 doesn't yet declare support
-              # for, breaking the install outright. None of the PHP versions
-              # actually used downstream (7.3, 8.1, 8.1.6, 8.2) need anything
-              # newer than this; pin instead of riding the runner default.
+              # ubuntu-latest's drifting default - a dependency not yet
+              # declaring support for however new that's become breaks the
+              # install outright (this module's own composer.json now also
+              # pins config.platform.php to its own 7.3.0 floor, a different
+              # but related safeguard: it stops `composer update` itself
+              # silently resolving against whatever PHP ran it instead of
+              # that floor). None of the PHP versions actually used
+              # downstream (7.3, 8.1, 8.1.6, 8.2) need anything newer than
+              # this; pin instead of riding the runner default.
               name: Setup PHP 8.1, with composer and extensions
               uses: shivammathur/setup-php@v2
               with:
@@ -191,6 +195,13 @@ jobs:
           - { drupal-core: '11.2.0', php-version: '8.3' }
           - { drupal-core: '11.3.0', php-version: '8.3' }
           - { drupal-core: '11.4.0', php-version: '8.3' }
+          # Drupal 12.0.0 isn't released yet (scheduled for the week of
+          # December 7, 2026, per drupal.org's own core release
+          # schedule) - 12.0.0-rc1 is the latest real, installable tag
+          # right now, both on Packagist and on drupal/drupal's own git
+          # mirror this job's own checkout step below relies on.
+          # drupal/core itself declares "php": ">=8.5.0" starting here.
+          - { drupal-core: '12.0.0-rc1', php-version: '8.5' }
     steps:
         -   # This job never pinned a PHP version, so it silently rode whatever
             # ubuntu-latest's bundled default PHP happened to be. That default has
@@ -463,6 +474,93 @@ jobs:
         # path argument (not --path) is required for compatibility across
         # the full range of paratest versions Composer may resolve here,
         # since newer paratest releases dropped the --path option.
+        name: Tests
+        run: |
+            vendor/bin/paratest \
+            -c modules/test_support/phpunit.xml \
+            --runner WrapperRunner \
+            modules/test_support/tests
+
+  drupal-12-matrix:
+    name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
+    runs-on: ubuntu-latest
+    needs: [ sanity_check, static_analysis_matrix ]
+    strategy:
+      fail-fast: false
+      matrix:
+        # Drupal 12.0.0 isn't released yet - see the matching comment in
+        # static_analysis_matrix. 12.0.0-rc1 is the only installable tag
+        # right now, so there's no minor range to cover yet the way
+        # 9.x/10.x/11.x each have one.
+        drupal-core: [ '12.0.0-rc1' ]
+        php-versions: [ '8.5' ]
+    steps:
+      - name: Setup PHP v${{ matrix.php-versions }}, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: none
+
+      - name: Checkout Drupal core v${{ matrix.drupal-core }}
+        uses: actions/checkout@v2
+        with:
+          repository: drupal/drupal
+          ref: ${{ matrix.drupal-core }}
+
+      - name: Cache Drupal v${{ matrix.drupal-core }}
+        id: build_drupal_cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-drupal-build-composer-v${{ matrix.drupal-core }}-${{ hashFiles('./composer.lock') }}
+          restore-keys: ${{ runner.os }}-drupal-build-composer-v
+
+      - # Always runs, cache hit or not - see the matching step in
+        # static_analysis_matrix for why.
+        name: Allow Composer plugins (older Drupal core composer.json predates allow-plugins)
+        run: |
+          composer config allow-plugins true
+          composer config policy.advisories.block false
+
+      - if: steps.build_drupal_cache.outputs.cache-hit != 'true'
+        name: Install Drupal core dependencies
+        run: composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+      - # Deliberately not gated on the cache hit above - see the matching
+        # step in static_analysis_matrix for why. Also installs
+        # brianium/paratest at the site root now, alongside core-dev -
+        # see the matching step in drupal-11-matrix for why.
+        name: Install drupal/core-dev with dependencies
+        run: |
+          composer --no-interaction --no-progress require --dev \
+          drupal/core-dev:${{ matrix.drupal-core }} \
+          phpspec/prophecy-phpunit:^2 \
+          brianium/paratest --with-all-dependencies
+
+      - name: Checkout module
+        uses: actions/checkout@v2
+        with:
+          path: modules/test_support
+
+      - # Deliberately keyed by this matrix cell's own PHP version, not
+        # just the lock hash - see the matching comment on sanity_check.
+        id: module_vendor_cache
+        name: Retreive module build cache
+        uses: actions/cache@v3
+        with:
+          path: modules/test_support/vendor
+          key: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-${{ hashFiles('modules/test_support/composer.lock') }}
+          restore-keys: ${{ runner.os }}-module-vendor-composer-php${{ matrix.php-versions }}-
+
+      - if: steps.module_vendor_cache.outputs.cache-hit != 'true'
+        name: Build module including dependencies
+        run: |
+          cd modules/test_support;
+          composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+      - # Runs via the site root's own paratest (installed above,
+        # alongside core-dev) rather than the module's own vendor - see
+        # the matching step in drupal-11-matrix for why.
         name: Tests
         run: |
             vendor/bin/paratest \

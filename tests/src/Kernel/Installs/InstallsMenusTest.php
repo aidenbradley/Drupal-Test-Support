@@ -5,7 +5,10 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Menu;
 use Drupal\Tests\test_support\Traits\Installs\InstallsMenus;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InstallsMenusTest extends KernelTestBase
 {
     use InstallsMenus;
@@ -18,6 +21,7 @@ class InstallsMenusTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function installing_menu_sets_dependencies(): void
     {
         $this->assertFalse($this->container->get('module_handler')->moduleExists('system'));
@@ -34,6 +38,7 @@ class InstallsMenusTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_single_menu(): void
     {
         $this->enableModules([
@@ -56,6 +61,7 @@ class InstallsMenusTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_multiple_menus(): void
     {
         $this->enableModules([

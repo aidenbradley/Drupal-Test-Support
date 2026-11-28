@@ -4,10 +4,12 @@ namespace Drupal\Tests\test_support\Unit\Support\UpdateHook;
 
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\UpdateHandler;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class UpdateHandlerTest extends UnitTestCase
 {
     /** @test */
+    #[Test]
     public function get_module_name(): void
     {
         $handler = UpdateHandler::create('test_support_update_9401');
@@ -33,6 +35,7 @@ class UpdateHandlerTest extends UnitTestCase
     }
 
     /** @test */
+    #[Test]
     public function can_handle(): void
     {
         $this->assertTrue(UpdateHandler::canHandle('test_support_update_9401'));

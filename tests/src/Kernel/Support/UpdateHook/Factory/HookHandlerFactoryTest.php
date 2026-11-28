@@ -8,10 +8,14 @@ use Drupal\Tests\test_support\Traits\Support\UpdateHook\DeployHookHandler;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\Exceptions\HookHandlerError;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\Factory\HookHandlerFactory;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\PostUpdateHandler;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class HookHandlerFactoryTest extends KernelTestBase
 {
     /** @test */
+    #[Test]
     public function creates_deploy_hook_handler(): void
     {
         $handler = HookHandlerFactory::create('test_support_deployhooks_deploy_no_batch_disable_users');
@@ -20,6 +24,7 @@ class HookHandlerFactoryTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function creates_post_update_handler(): void
     {
         $handler = HookHandlerFactory::create('test_support_postupdatehooks_post_update_no_batch_disable_users');
@@ -28,6 +33,7 @@ class HookHandlerFactoryTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function creates_update_hook_handler(): void
     {
         $handler = HookHandlerFactory::create('test_support_updatehooks_update_9002');
@@ -36,6 +42,7 @@ class HookHandlerFactoryTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function exception_thrown_when_hook_cannot_be_determined(): void
     {
         $this->expectException(HookHandlerError::class);

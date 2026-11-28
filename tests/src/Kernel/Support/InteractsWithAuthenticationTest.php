@@ -8,7 +8,10 @@ use Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithAuthentication;
 use Drupal\user\Entity\Role;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InteractsWithAuthenticationTest extends KernelTestBase
 {
     use InteractsWithAuthentication;
@@ -28,6 +31,7 @@ class InteractsWithAuthenticationTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function acting_as(): void
     {
         $userStorage = $this->container->get('entity_type.manager')->getStorage('user');
@@ -60,13 +64,20 @@ class InteractsWithAuthenticationTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function acting_as_role(): void
     {
         $this->enableModules([
             'system',
             'user',
         ]);
-        $this->installSchema('system', 'sequences');
+        // Drupal 12 removed the sequences table (and its underlying
+        // \Drupal::service('database')->nextId() table-based mechanism)
+        // entirely in favour of native database sequences - it's both
+        // invalid and unnecessary to install there.
+        if (version_compare(\Drupal::VERSION, '12.0', '<')) {
+            $this->installSchema('system', 'sequences');
+        }
         $this->installEntitySchema('user_role');
 
         $adminRole = $this->createRole('administrator');
@@ -81,13 +92,20 @@ class InteractsWithAuthenticationTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function acting_as_roles(): void
     {
         $this->enableModules([
             'system',
             'user',
         ]);
-        $this->installSchema('system', 'sequences');
+        // Drupal 12 removed the sequences table (and its underlying
+        // \Drupal::service('database')->nextId() table-based mechanism)
+        // entirely in favour of native database sequences - it's both
+        // invalid and unnecessary to install there.
+        if (version_compare(\Drupal::VERSION, '12.0', '<')) {
+            $this->installSchema('system', 'sequences');
+        }
         $this->installEntitySchema('user_role');
 
         $adminRole = $this->createRole('administrator');

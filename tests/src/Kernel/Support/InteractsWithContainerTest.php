@@ -5,7 +5,10 @@ namespace Drupal\Tests\test_support\Kernel\Support;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Routing\RouteSubscriber;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithContainer;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InteractsWithContainerTest extends KernelTestBase
 {
     use InteractsWithContainer;
@@ -16,6 +19,7 @@ class InteractsWithContainerTest extends KernelTestBase
     ];
 
     /** @test */
+    #[Test]
     public function resolves_service_by_id(): void
     {
         $this->assertInstanceOf(RouteSubscriber::class, $this->service('node.route_subscriber'));

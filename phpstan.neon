@@ -1,4 +1,18 @@
 parameters:
+        # pre-drupal-autoload.php (below) locates and requires the
+        # surrounding site's own vendor/autoload.php so Composer's
+        # InstalledVersions registry knows about drupal/core before
+        # mglaman/phpstan-drupal's own bootstrap runs next and needs it.
+        # Multiple analysis worker processes each do this independently -
+        # observed directly, intermittently, one of them sometimes hits
+        # "Package drupal/core is not installed" anyway, a race somewhere
+        # in that double bootstrap sequence across concurrent processes.
+        # A single process removes the race entirely; CI already
+        # parallelizes across Drupal versions themselves, not within one
+        # version's own analysis run, so this costs real time but nothing
+        # this project's CI structure actually needed.
+        parallel:
+            maximumNumberOfProcesses: 1
         level: 9
         # Pinned to tools/phpstan's own floor (8.1), not the module's PHP
         # >=7.3 floor, so results stay consistent regardless of whatever
@@ -25,8 +39,15 @@ parameters:
         		- '#Cannot call method transform\(\) on mixed#'
         		- '#Cannot call method whenEmpty\(\) on mixed#'
         		- '#Cannot call method mapInto\(\) on mixed#'
+        		# KernelTestBase's own $container property is only ever
+        		# actually null before setUp() runs and bootKernel() sets it -
+        		# every test method (and anything only ever called from one)
+        		# always runs after that. PHPStan has no way to know setUp()
+        		# already ran by the time a test method's own body executes.
+        		- '#^Cannot call method \w+\(\) on Drupal\\Core\\DependencyInjection\\ContainerBuilder\|null\.$#'
         bootstrapFiles:
         		- tools/phpstan/restore-autoloader-priority.php
 includes:
+    - tools/phpstan/pre-drupal-autoload.neon
     - tools/phpstan/vendor/mglaman/phpstan-drupal/extension.neon
     - phar://phpstan.phar/conf/bleedingEdge.neon

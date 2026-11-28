@@ -5,12 +5,16 @@ namespace Drupal\Tests\test_support\Kernel\Support;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\locale\LocaleEvent;
 use Drupal\Tests\test_support\Traits\Support\WithoutEvents;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class WithoutEventsTest extends KernelTestBase
 {
     use WithoutEvents;
 
     /** @test */
+    #[Test]
     public function without_events(): void
     {
         $this->withoutEvents();
@@ -25,6 +29,7 @@ class WithoutEventsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function expects_events_class_string(): void
     {
         $event = $this->createEvent();
@@ -35,6 +40,7 @@ class WithoutEventsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function expects_events_event_name(): void
     {
         $this->expectsEvents('test_event');
@@ -43,6 +49,7 @@ class WithoutEventsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function doesnt_expect_events_class_string(): void
     {
         $this->doesntExpectEvents(
@@ -53,6 +60,7 @@ class WithoutEventsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function doesnt_expect_events_event_name(): void
     {
         $this->doesntExpectEvents('first_event');
@@ -61,6 +69,7 @@ class WithoutEventsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function assert_dispatched_with_callback(): void
     {
         $this->expectsEvents('test_event');

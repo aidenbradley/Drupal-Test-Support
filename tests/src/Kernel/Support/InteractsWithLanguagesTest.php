@@ -5,7 +5,10 @@ namespace Drupal\Tests\test_support\Kernel\Support;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithLanguages;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InteractsWithLanguagesTest extends KernelTestBase
 {
     use InteractsWithLanguages;
@@ -23,6 +26,7 @@ class InteractsWithLanguagesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_languages(): void
     {
         $this->assertArrayNotHasKey('de', $this->languageManager()->getLanguages());
@@ -35,6 +39,7 @@ class InteractsWithLanguagesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function set_current_language(): void
     {
         $this->setCurrentLanguage('en');
@@ -48,6 +53,7 @@ class InteractsWithLanguagesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function set_current_language_with_prefix(): void
     {
         $this->enableModules([
@@ -98,6 +104,7 @@ class InteractsWithLanguagesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function set_current_language_when_creating_entity(): void
     {
         $this->enableModules([

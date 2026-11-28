@@ -5,7 +5,10 @@ namespace Drupal\Tests\test_support\Kernel\Http;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class MakesHttpRequestsTest extends KernelTestBase
 {
     use MakesHttpRequests;
@@ -16,12 +19,14 @@ class MakesHttpRequestsTest extends KernelTestBase
     ];
 
     /** @test */
+    #[Test]
     public function http_get(): void
     {
         $this->get($this->route('route.get'))->assertOk();
     }
 
     /** @test */
+    #[Test]
     public function http_get_json(): void
     {
         $this->get($this->route('route.json.get'))->assertNotFound();
@@ -30,12 +35,14 @@ class MakesHttpRequestsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function http_post(): void
     {
         $this->post($this->route('route.post'))->assertOk();
     }
 
     /** @test */
+    #[Test]
     public function http_post_json(): void
     {
         $this->post($this->route('route.json.post'))->assertNotFound();
@@ -44,12 +51,14 @@ class MakesHttpRequestsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function http_put(): void
     {
         $this->put($this->route('route.put'))->assertOk();
     }
 
     /** @test */
+    #[Test]
     public function http_put_json(): void
     {
         $this->put($this->route('route.json.put'))->assertNotFound();
@@ -58,12 +67,14 @@ class MakesHttpRequestsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function http_patch(): void
     {
         $this->patch($this->route('route.patch'))->assertOk();
     }
 
     /** @test */
+    #[Test]
     public function http_patch_json(): void
     {
         $this->patch($this->route('route.json.patch'))->assertNotFound();
@@ -72,12 +83,14 @@ class MakesHttpRequestsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function http_delete(): void
     {
         $this->delete($this->route('route.delete'))->assertOk();
     }
 
     /** @test */
+    #[Test]
     public function http_delete_json(): void
     {
         $this->delete($this->route('route.json.delete'))->assertNotFound();
@@ -86,12 +99,14 @@ class MakesHttpRequestsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function http_options(): void
     {
         $this->options($this->route('route.options'))->assertOk();
     }
 
     /** @test */
+    #[Test]
     public function ajax_xml_http(): void
     {
         // controller throws NotFoundHttpException if the request isn't XML HTTP
@@ -101,6 +116,7 @@ class MakesHttpRequestsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function assert_location(): void
     {
         $route = $this->route('route.get');
@@ -109,6 +125,7 @@ class MakesHttpRequestsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function assert_redirect(): void
     {
         $response = $this->get($this->route('route.redirect', [
@@ -121,6 +138,7 @@ class MakesHttpRequestsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function following_redirects(): void
     {
         $this->followingRedirects()->get($this->route('route.redirect', [
@@ -129,6 +147,7 @@ class MakesHttpRequestsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function from_url(): void
     {
         $response = $this->from('https://example.com/from')
@@ -141,6 +160,7 @@ class MakesHttpRequestsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function as_form(): void
     {
         $route = $this->route('route.post', [], [
@@ -157,6 +177,7 @@ class MakesHttpRequestsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function as_json(): void
     {
         $route = $this->route('route.post', [], [

@@ -5,7 +5,10 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\test_support\Traits\Installs\InstallsEntityTypes;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InstallsEntityTypesTest extends KernelTestBase
 {
     use InstallsEntityTypes;
@@ -27,6 +30,7 @@ class InstallsEntityTypesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_bundle(): void
     {
         $this->installEntitySchema('node');
@@ -46,6 +50,7 @@ class InstallsEntityTypesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_bundles(): void
     {
         $this->installEntitySchema('node');
@@ -64,6 +69,7 @@ class InstallsEntityTypesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_entity_schema_with_bundles(): void
     {
         $entityTypeManager = $this->container->get('entity_type.manager');

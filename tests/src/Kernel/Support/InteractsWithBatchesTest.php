@@ -7,7 +7,10 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithBatches;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InteractsWithBatchesTest extends KernelTestBase
 {
     use InteractsWithBatches;
@@ -25,10 +28,17 @@ class InteractsWithBatchesTest extends KernelTestBase
         parent::setUp();
 
         $this->installEntitySchema('user');
-        $this->installSchema('system', 'sequences');
+        // Drupal 12 removed the sequences table (and its underlying
+        // \Drupal::service('database')->nextId() table-based mechanism)
+        // entirely in favour of native database sequences - it's both
+        // invalid and unnecessary to install there.
+        if (version_compare(\Drupal::VERSION, '12.0', '<')) {
+            $this->installSchema('system', 'sequences');
+        }
     }
 
     /** @test */
+    #[Test]
     public function run_batch_thats_been_set(): void
     {
         $this->createEnabledUser('enabled_user_one')
@@ -45,6 +55,7 @@ class InteractsWithBatchesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function run_batch_thats_been_processed(): void
     {
         $this->createEnabledUser('enabled_user_one')

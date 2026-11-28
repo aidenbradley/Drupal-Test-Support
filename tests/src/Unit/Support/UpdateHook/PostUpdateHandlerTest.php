@@ -4,10 +4,12 @@ namespace Drupal\Tests\test_support\Unit\Support\UpdateHook;
 
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\PostUpdateHandler;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class PostUpdateHandlerTest extends UnitTestCase
 {
     /** @test */
+    #[Test]
     public function get_module_name(): void
     {
         $handler = PostUpdateHandler::create('test_support_post_update_hook');
@@ -39,6 +41,7 @@ class PostUpdateHandlerTest extends UnitTestCase
     }
 
     /** @test */
+    #[Test]
     public function can_handle(): void
     {
         $this->assertTrue(PostUpdateHandler::canHandle('test_support_post_update_disable_users'));

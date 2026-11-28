@@ -5,7 +5,10 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Installs\InstallsImageStyles;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InstallsImageStylesTest extends KernelTestBase
 {
     use InstallsImageStyles;
@@ -18,6 +21,7 @@ class InstallsImageStylesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function installing_image_style_prepares_dependencies(): void
     {
         $this->installImageStyles('large');
@@ -28,6 +32,7 @@ class InstallsImageStylesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_single_image_style(): void
     {
         $this->enableModules([
@@ -50,6 +55,7 @@ class InstallsImageStylesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_multiple_image_styles(): void
     {
         $this->enableModules([
