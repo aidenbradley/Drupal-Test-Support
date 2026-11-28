@@ -10,7 +10,10 @@ use Drupal\system\TimeZoneResolver;
 use Drupal\Tests\test_support\Traits\Support\WithoutEventSubscribers;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class WithoutEventSubscribersTest extends KernelTestBase
 {
     use WithoutEventSubscribers;
@@ -24,6 +27,7 @@ class WithoutEventSubscribersTest extends KernelTestBase
     private $eventDispatcher;
 
     /** @test */
+    #[Test]
     public function assert_not_listening(): void
     {
         $this->assertNotListening(TimeZoneResolver::class);
@@ -32,6 +36,7 @@ class WithoutEventSubscribersTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function assert_listening(): void
     {
         $this->assertNotListening(TimeZoneResolver::class);
@@ -48,6 +53,7 @@ class WithoutEventSubscribersTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function without_event_subscribers(): void
     {
         $this->assertNotEmpty($this->eventDispatcher()->getListeners());
@@ -58,6 +64,7 @@ class WithoutEventSubscribersTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function ignores_event_subscribers_after_enabling_module(): void
     {
         $this->assertNotEmpty($this->eventDispatcher()->getListeners());
@@ -75,6 +82,7 @@ class WithoutEventSubscribersTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function without_event_subscribers_class_list(): void
     {
         $this->enableModules([
@@ -95,6 +103,7 @@ class WithoutEventSubscribersTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function ignores_event_subscribers_by_class_after_enabling_module(): void
     {
         $this->withoutSubscribers([
@@ -115,6 +124,7 @@ class WithoutEventSubscribersTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function without_event_subscribers_listening_for_events(): void
     {
         $this->enableModules([
@@ -129,6 +139,7 @@ class WithoutEventSubscribersTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function ignores_events_by_subscribed_events_after_enabling_modules(): void
     {
         $this->withoutSubscribersForEvents(ConfigEvents::SAVE);
@@ -141,6 +152,7 @@ class WithoutEventSubscribersTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function without_event_subscribers_by_class_string_or_service_id(): void
     {
         $this->enableModules([
@@ -158,6 +170,7 @@ class WithoutEventSubscribersTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function ignores_event_by_class_string_or_service_id_after_enabling_modules(): void
     {
         $this->withoutSubscribers([

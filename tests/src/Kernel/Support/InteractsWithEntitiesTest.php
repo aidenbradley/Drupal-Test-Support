@@ -7,7 +7,10 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithEntities;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InteractsWithEntitiesTest extends KernelTestBase
 {
     use InteractsWithEntities;
@@ -35,6 +38,7 @@ class InteractsWithEntitiesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function create_entity(): void
     {
         $node = $this->createEntity('node', [
@@ -47,6 +51,7 @@ class InteractsWithEntitiesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function update_entity(): void
     {
         $node = $this->createEntity('node', [
@@ -66,6 +71,7 @@ class InteractsWithEntitiesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function refresh_entity(): void
     {
         /** @var \Drupal\node\Entity\Node $node */

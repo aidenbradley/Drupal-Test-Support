@@ -6,8 +6,11 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithSettings;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\DependencyInjection\Reference;
 
+#[RunTestsInSeparateProcesses]
 class InteractsWithSettingsTest extends KernelTestBase
 {
     use InteractsWithSettings;
@@ -44,6 +47,7 @@ class InteractsWithSettingsTest extends KernelTestBase
      *
      * "fixture.settings.php" contains a variable not defined in scope when it's loaded in.
      */
+    #[Test]
     public function supresses_errors_when_requiring_settings(): void
     {
         $this->setSettingsLocation('/__fixtures__/settings/fixture.settings.php');
@@ -73,6 +77,7 @@ class InteractsWithSettingsTest extends KernelTestBase
      *
      * "auto_discovered" is a setting set at /Kernel/__fixtures__/settings/auto_discover/settings.php
      */
+    #[Test]
     public function auto_discovers_settings(): void
     {
         $this->assertNull($this->getSettings()->get('auto_discovered'));
@@ -86,6 +91,7 @@ class InteractsWithSettingsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function set_site(): void
     {
         $this->assertEquals('default', $this->site);
@@ -96,6 +102,7 @@ class InteractsWithSettingsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function setting_site_refreshes_settings(): void
     {
         $this->setSettingsLocation('/__fixtures__/settings/fixture.settings.php');
@@ -112,6 +119,7 @@ class InteractsWithSettingsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function setting_site_updates_settings(): void
     {
         $fixtureSiteDirectory = __DIR__ . '/__fixtures__';
@@ -133,6 +141,7 @@ class InteractsWithSettingsTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function setting_settings_location_refreshes_settings(): void
     {
         /** @phpstan-ignore-next-line */

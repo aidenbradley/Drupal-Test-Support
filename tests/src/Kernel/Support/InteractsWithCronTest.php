@@ -5,7 +5,10 @@ namespace Drupal\Tests\test_support\Kernel\Support;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\Exceptions\CronFailed;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithCron;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InteractsWithCronTest extends KernelTestBase
 {
     use InteractsWithCron;
@@ -16,6 +19,7 @@ class InteractsWithCronTest extends KernelTestBase
     ];
 
     /** @test */
+    #[Test]
     public function set_cron_key(): void
     {
         $this->assertNull($this->getCronKey());
@@ -26,6 +30,7 @@ class InteractsWithCronTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function running_system_cron_requires_cron_key(): void
     {
         $this->expectException(CronFailed::class);
@@ -37,6 +42,7 @@ class InteractsWithCronTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function run_cron(): void
     {
         $this->setCronKey('EXAMPLE_CRON_KEY');
@@ -53,6 +59,7 @@ class InteractsWithCronTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function run_cron_multiple(): void
     {
         $this->setCronKey('EXAMPLE_CRON_KEY');

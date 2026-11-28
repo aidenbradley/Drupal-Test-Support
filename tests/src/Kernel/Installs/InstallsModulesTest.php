@@ -4,12 +4,16 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Installs\InstallsModules;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InstallsModulesTest extends KernelTestBase
 {
     use InstallsModules;
 
     /** @test */
+    #[Test]
     public function installs_dependencies(): void
     {
         $expectedDependencies = [
@@ -26,6 +30,7 @@ class InstallsModulesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function handles_nested_mutual_dependencies(): void
     {
         $expectedDependencies = [

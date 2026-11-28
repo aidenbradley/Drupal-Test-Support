@@ -6,7 +6,10 @@ use Drupal\block\Entity\Block;
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Installs\InstallsBlocks;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InstallsBlocksTest extends KernelTestBase
 {
     use InstallsBlocks;
@@ -24,6 +27,7 @@ class InstallsBlocksTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function installing_block_prepares_dependencies(): void
     {
         $this->assertFalse($this->container->get('module_handler')->moduleExists('block'));
@@ -44,6 +48,7 @@ class InstallsBlocksTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_single_block(): void
     {
         $this->enableModules([
@@ -66,6 +71,7 @@ class InstallsBlocksTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function install_multiple_blocks(): void
     {
         $this->enableModules([

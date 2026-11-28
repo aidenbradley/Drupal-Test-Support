@@ -6,7 +6,10 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Installs\InstallsExportedConfig;
 use Drupal\Tests\test_support\Traits\Support\Exceptions\ConfigInstallFailed;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InstallsExportedConfigTest extends KernelTestBase
 {
     use InstallsExportedConfig {
@@ -24,6 +27,7 @@ class InstallsExportedConfigTest extends KernelTestBase
     private $customConfigDirectory;
 
     /** @test */
+    #[Test]
     public function disable_strict_config_schema(): void
     {
         $this->disableStrictConfig();
@@ -32,6 +36,7 @@ class InstallsExportedConfigTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function enable_strict_config_schema(): void
     {
         $this->strictConfigSchema = false;
@@ -42,6 +47,7 @@ class InstallsExportedConfigTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function installs_theme_dependency(): void
     {
         // Drupal 11.3+'s field type plugin discovery requires image's own
@@ -67,6 +73,7 @@ class InstallsExportedConfigTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function installs_config_dependency(): void
     {
         // See the comment on installs_theme_dependency() above - "file"
@@ -92,6 +99,7 @@ class InstallsExportedConfigTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function installs_module_dependency(): void
     {
         $this->setFixtureConfigDirectory('config_dependencies');
@@ -129,6 +137,7 @@ class InstallsExportedConfigTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function throws_exception_for_bad_config(): void
     {
         $this->useVfsConfigDirectory();

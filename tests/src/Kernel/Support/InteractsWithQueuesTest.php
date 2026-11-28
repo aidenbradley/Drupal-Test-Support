@@ -10,12 +10,16 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\test_support_queue\Queue\ReliableCreateNodeQueue;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithQueues;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InteractsWithQueuesTest extends KernelTestBase
 {
     use InteractsWithQueues;
 
     /** @test */
+    #[Test]
     public function get_queue(): void
     {
         $this->enableModules([
@@ -29,6 +33,7 @@ class InteractsWithQueuesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function get_reliable_queue(): void
     {
         $this->enableModules([
@@ -44,6 +49,7 @@ class InteractsWithQueuesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function add_to_queue(): void
     {
         $this->addToQueue('create_node_worker', [
@@ -54,6 +60,7 @@ class InteractsWithQueuesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function process_queue(): void
     {
         $this->enableModules([
@@ -87,6 +94,7 @@ class InteractsWithQueuesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function clear_queue(): void
     {
         $this->assertEquals(0, $this->getQueue('create_node_worker')->numberOfItems());
@@ -103,6 +111,7 @@ class InteractsWithQueuesTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function queue_count(): void
     {
         $this->assertEquals(0, $this->getQueueCount('create_node_worker'));

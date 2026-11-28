@@ -5,7 +5,10 @@ namespace Drupal\Tests\test_support\Kernel\Support;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithMail;
 use Drupal\Tests\test_support\Traits\Support\Mail\TestMail;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InteractsWithMailTest extends KernelTestBase
 {
     use InteractsWithMail;
@@ -30,6 +33,7 @@ class InteractsWithMailTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function get_sent_mail(): void
     {
         $this->assertNoMailSent();
@@ -44,6 +48,7 @@ class InteractsWithMailTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function get_sent_mail_from_module(): void
     {
         // this will send from the test_support_mail module
@@ -54,6 +59,7 @@ class InteractsWithMailTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function get_mail_sent_to(): void
     {
         $this->assertEmpty($this->getMailSentTo('hello@example.com'));
@@ -69,6 +75,7 @@ class InteractsWithMailTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function get_mail_with_subject(): void
     {
         $this->assertEmpty($this->getMailWithSubject('User Registration'));
@@ -83,6 +90,7 @@ class InteractsWithMailTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function multiple_get_mail_with_subject(): void
     {
         $this->assertEmpty($this->getMailWithSubject('User Registration'));
@@ -104,6 +112,7 @@ class InteractsWithMailTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function sent_mail_contains_subject(): void
     {
         $this->assertEmpty($this->getMailWithSubject('User Registration'));
@@ -114,6 +123,7 @@ class InteractsWithMailTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function clear_mail(): void
     {
         $this->assertNoMailSent();

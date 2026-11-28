@@ -54,7 +54,6 @@ class Tardis
         $this->setTimezone($currentTimezone);
     }
 
-    /** @test */
     public function freezeTime(?callable $callback = null): void
     {
         if (is_callable($callback) === false) {
