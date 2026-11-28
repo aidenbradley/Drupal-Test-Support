@@ -77,7 +77,7 @@ if (version_compare(\Drupal::VERSION, '10.0', '>=')) {
             });
         }
 
-        private function registerDispatchedEvent(object $event, string $eventName = null): void
+        private function registerDispatchedEvent(object $event, ?string $eventName = null): void
         {
             $this->firedEvents[$eventName] = $event;
         }
@@ -126,7 +126,7 @@ if (version_compare(\Drupal::VERSION, '10.0', '>=')) {
             return $this->eventDispatcher->getListeners($eventName);
         }
 
-        public function dispatch($event, string $eventName = null)
+        public function dispatch($event, ?string $eventName = null)
         {
             $this->registerDispatchedEvent($event, $eventName);
 
@@ -152,7 +152,7 @@ if (version_compare(\Drupal::VERSION, '10.0', '>=')) {
             });
         }
 
-        private function registerDispatchedEvent(object $event, string $eventName = null): void
+        private function registerDispatchedEvent(object $event, ?string $eventName = null): void
         {
             $this->firedEvents[$eventName] = $event;
         }
