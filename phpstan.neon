@@ -45,6 +45,15 @@ parameters:
         		# always runs after that. PHPStan has no way to know setUp()
         		# already ran by the time a test method's own body executes.
         		- '#^Cannot call method \w+\(\) on Drupal\\Core\\DependencyInjection\\ContainerBuilder\|null\.$#'
+        		# #[Test] and #[RunTestsInSeparateProcesses] are PHP 8
+        		# attributes referencing PHPUnit\Framework\Attributes
+        		# classes that only exist from PHPUnit 10 onwards - some
+        		# supported Drupal majors' own drupal/core-dev still
+        		# bundles an older PHPUnit (9.x) lacking that namespace
+        		# entirely. Harmless either way: that PHPUnit major never
+        		# introspects attributes at all (it predates them), so it
+        		# never tries to resolve the class this flags as missing.
+        		- '#^Attribute class PHPUnit\\Framework\\Attributes\\(Test|RunTestsInSeparateProcesses) does not exist\.$#'
         bootstrapFiles:
         		- tools/phpstan/restore-autoloader-priority.php
 includes:
