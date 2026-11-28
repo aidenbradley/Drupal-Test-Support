@@ -12,7 +12,6 @@
     "require-dev": {
         "symplify/easy-coding-standard": "^11.5",
         "behat/mink": "^1.9",
-        "phpspec/prophecy-phpunit": "^2",
         "symfony/phpunit-bridge": "^5",
         "mikey179/vfsstream": "^1.6",
         "webflo/drupal-finder": "~1.2.2"
@@ -42,6 +41,9 @@
                     "PKSA-5jz8-6tcw-pbk4"
                 ]
             }
+        },
+        "platform": {
+            "php": "7.3.0"
         }
     },
     "scripts": {
