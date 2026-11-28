@@ -177,7 +177,11 @@ trait WithoutEventSubscribers
             foreach ($listeners as $eventName => $eventListeners) {
                 /** @phpstan-ignore-next-line */
                 foreach ($eventListeners as $listener) {
-                    $withEventNames[] = $this->withEventName($listener, $eventName);
+                    // A numeric-looking event name would make $eventName
+                    // an actual int key (PHP's own array key coercion),
+                    // never a realistic case for Drupal's own event names,
+                    // but withEventName() takes string regardless.
+                    $withEventNames[] = $this->withEventName($listener, (string) $eventName);
                 }
             }
 

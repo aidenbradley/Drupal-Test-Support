@@ -46,6 +46,7 @@ trait InteractsWithDrupalTime
     {
         $this->setupDateDependencies();
 
+        /** @phpstan-ignore-next-line */
         return Tardis::createFromTravel($this->container, $travel);
     }
 

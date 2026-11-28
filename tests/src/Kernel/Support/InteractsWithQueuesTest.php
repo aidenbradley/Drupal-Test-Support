@@ -159,9 +159,10 @@ class InteractsWithQueuesTest extends KernelTestBase
             {
                 if ($name == 'create_node_worker' && $reliable) {
                     /** @phpstan-ignore-next-line */
-                    $this->queues[$name] = $this->container->get(
-                        'queue_reliable_service_create_node_worker'
-                    )->get($name);
+                    $reliableQueueService = $this->container->get('queue_reliable_service_create_node_worker');
+
+                    /** @phpstan-ignore-next-line */
+                    $this->queues[$name] = $reliableQueueService->get($name);
 
                     return $this->queues[$name];
                 }
