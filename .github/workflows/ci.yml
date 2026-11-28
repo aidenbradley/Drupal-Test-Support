@@ -30,11 +30,15 @@ jobs:
       steps:
           -   # This job never pinned a PHP version either (see the same fix
               # already applied to static_analysis_matrix), so it rode
-              # ubuntu-latest's drifting default - now PHP 8.5, which
-              # phpspec/prophecy's locked 1.21.0 doesn't yet declare support
-              # for, breaking the install outright. None of the PHP versions
-              # actually used downstream (7.3, 8.1, 8.1.6, 8.2) need anything
-              # newer than this; pin instead of riding the runner default.
+              # ubuntu-latest's drifting default - a dependency not yet
+              # declaring support for however new that's become breaks the
+              # install outright (this module's own composer.json now also
+              # pins config.platform.php to its own 7.3.0 floor, a different
+              # but related safeguard: it stops `composer update` itself
+              # silently resolving against whatever PHP ran it instead of
+              # that floor). None of the PHP versions actually used
+              # downstream (7.3, 8.1, 8.1.6, 8.2) need anything newer than
+              # this; pin instead of riding the runner default.
               name: Setup PHP 8.1, with composer and extensions
               uses: shivammathur/setup-php@v2
               with:
