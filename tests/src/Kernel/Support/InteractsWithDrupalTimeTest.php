@@ -10,7 +10,10 @@ use Drupal\Tests\test_support\Traits\Support\InteractsWithDrupalTime;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithEntities;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class InteractsWithDrupalTimeTest extends KernelTestBase
 {
     use InstallsExportedConfig;
@@ -36,7 +39,13 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
         $this->installEntitySchema('node');
         $this->installEntitySchema('user');
 
-        $this->installSchema('system', 'sequences');
+        // Drupal 12 removed the sequences table (and its underlying
+        // \Drupal::service('database')->nextId() table-based mechanism)
+        // entirely in favour of native database sequences - it's both
+        // invalid and unnecessary to install there.
+        if (version_compare(\Drupal::VERSION, '12.0', '<')) {
+            $this->installSchema('system', 'sequences');
+        }
 
         $this->createEntity('node_type', [
             'type' => 'page',
@@ -45,6 +54,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function travel_to(): void
     {
         $this->travelTo('3rd January 2000 15:00:00');
@@ -60,6 +70,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function back(): void
     {
         $this->travelTo('3rd January 2000 15:00:00');
@@ -72,6 +83,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function seconds(): void
     {
         $this->travelTo('3rd January 2000 15:00:00');
@@ -82,6 +94,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function minutes(): void
     {
         $this->travelTo('3rd January 2000 15:05:00');
@@ -92,6 +105,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function hours(): void
     {
         $this->travelTo('3rd January 2000 15:00:00');
@@ -102,6 +116,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function days(): void
     {
         $this->travelTo('3rd January 2000 20:00:00');
@@ -112,6 +127,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function weeks(): void
     {
         $this->travelTo('10th January 2000 20:00:00');
@@ -122,6 +138,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function months(): void
     {
         $this->travelTo('10th January 2000 20:00:00');
@@ -132,6 +149,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function years(): void
     {
         $this->travelTo('10th March 2000 20:00:00');
@@ -142,6 +160,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function freeze_time_travel(): void
     {
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
@@ -166,6 +185,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function travelling_to_timezone_sets_sysmtes_default_timezone(): void
     {
         $timezone = $this->config('system.date')->get('timezone');
@@ -191,6 +211,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function travel_to_date_with_timezone(): void
     {
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
@@ -201,6 +222,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function travel_to_timezone(): void
     {
         $this->travelTo('10th January 2020 15:00:00', 'Europe/London');
@@ -229,6 +251,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function freeze_timezone_travel(): void
     {
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
@@ -260,6 +283,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function set_user_timezone(): void
     {
         /** @var UserInterface<mixed> $user */
@@ -281,6 +305,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function date_formatter_service_adheres_to_timezones(): void
     {
         $this->travel()->toTimezone('Europe/London');
@@ -309,6 +334,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function system_uses_logged_in_users_timezone(): void
     {
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');
@@ -333,6 +359,7 @@ class InteractsWithDrupalTimeTest extends KernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function dates_adhere_to_users_timezone(): void
     {
         $this->travelTo('3rd January 2000 15:00:00', 'Europe/London');

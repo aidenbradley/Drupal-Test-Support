@@ -5,7 +5,10 @@ namespace Drupal\Tests\test_support\Kernel\Support\UpdateHook;
 use Drupal\Tests\test_support\Kernel\Support\UpdateHook\Base\UpdateHandlerKernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\Exceptions\UpdateHookFailed;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithUpdateHooks;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class PostUpdateHandlerTest extends UpdateHandlerKernelTestBase
 {
     use InteractsWithUpdateHooks;
@@ -21,10 +24,17 @@ class PostUpdateHandlerTest extends UpdateHandlerKernelTestBase
         parent::setUp();
 
         $this->installEntitySchema('user');
-        $this->installSchema('system', 'sequences');
+        // Drupal 12 removed the sequences table (and its underlying
+        // \Drupal::service('database')->nextId() table-based mechanism)
+        // entirely in favour of native database sequences - it's both
+        // invalid and unnecessary to install there.
+        if (version_compare(\Drupal::VERSION, '12.0', '<')) {
+            $this->installSchema('system', 'sequences');
+        }
     }
 
     /** @test */
+    #[Test]
     public function enables_module_that_defines_function(): void
     {
         $this->assertModuleDisabled('test_support_postupdatehooks');
@@ -35,6 +45,7 @@ class PostUpdateHandlerTest extends UpdateHandlerKernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function includes_post_update_file_when_post_update_hook_defined_in_post_update_file(): void
     {
         $this->assertFalse(function_exists('test_support_postupdatehooks_post_update_no_batch_disable_users'));
@@ -45,6 +56,7 @@ class PostUpdateHandlerTest extends UpdateHandlerKernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function runs_post_update_hook_without_batch(): void
     {
         $this->createNumberOfActiveUsers(50);
@@ -57,6 +69,7 @@ class PostUpdateHandlerTest extends UpdateHandlerKernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function runs_post_update_hook_with_batch(): void
     {
         $this->createNumberOfActiveUsers(50);
@@ -69,6 +82,7 @@ class PostUpdateHandlerTest extends UpdateHandlerKernelTestBase
     }
 
     /** @test */
+    #[Test]
     public function update_hook_with_batch_that_doesnt_increment_finished_key_triggers_exception(): void
     {
         $this->createNumberOfActiveUsers(50);
