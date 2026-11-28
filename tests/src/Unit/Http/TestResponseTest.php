@@ -4,9 +4,9 @@ namespace Drupal\Tests\test_support\Unit\Http;
 
 use Drupal\Tests\test_support\Traits\Http\Response\TestResponse;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use PHPUnit\Framework\Attributes\Test;
 
 class TestResponseTest extends UnitTestCase
 {

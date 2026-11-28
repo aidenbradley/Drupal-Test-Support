@@ -10,8 +10,8 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\test_support_queue\Queue\ReliableCreateNodeQueue;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithQueues;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
 #[RunTestsInSeparateProcesses]
 class InteractsWithQueuesTest extends KernelTestBase

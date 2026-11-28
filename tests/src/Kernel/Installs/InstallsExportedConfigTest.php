@@ -6,8 +6,8 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Installs\InstallsExportedConfig;
 use Drupal\Tests\test_support\Traits\Support\Exceptions\ConfigInstallFailed;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
 #[RunTestsInSeparateProcesses]
 class InstallsExportedConfigTest extends KernelTestBase

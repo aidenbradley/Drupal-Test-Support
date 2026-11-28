@@ -7,8 +7,8 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithBatches;
 use Drupal\user\UserInterface;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
 #[RunTestsInSeparateProcesses]
 class InteractsWithBatchesTest extends KernelTestBase

@@ -5,8 +5,8 @@ namespace Drupal\Tests\test_support\Kernel\Http;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Http\MakesHttpRequests;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
 #[RunTestsInSeparateProcesses]
 class MakesHttpRequestsTest extends KernelTestBase

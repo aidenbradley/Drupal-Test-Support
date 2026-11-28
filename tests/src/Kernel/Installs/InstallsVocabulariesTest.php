@@ -5,8 +5,8 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\test_support\Traits\Installs\InstallsVocabularies;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
 #[RunTestsInSeparateProcesses]
 class InstallsVocabulariesTest extends KernelTestBase

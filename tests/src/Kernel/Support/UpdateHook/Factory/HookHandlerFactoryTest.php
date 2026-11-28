@@ -8,8 +8,8 @@ use Drupal\Tests\test_support\Traits\Support\UpdateHook\DeployHookHandler;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\Exceptions\HookHandlerError;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\Factory\HookHandlerFactory;
 use Drupal\Tests\test_support\Traits\Support\UpdateHook\PostUpdateHandler;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
 #[RunTestsInSeparateProcesses]
 class HookHandlerFactoryTest extends KernelTestBase

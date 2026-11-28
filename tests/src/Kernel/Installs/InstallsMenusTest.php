@@ -5,8 +5,8 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Menu;
 use Drupal\Tests\test_support\Traits\Installs\InstallsMenus;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
 #[RunTestsInSeparateProcesses]
 class InstallsMenusTest extends KernelTestBase

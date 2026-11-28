@@ -5,8 +5,8 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\test_support\Traits\Installs\InstallsEntityTypes;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
 #[RunTestsInSeparateProcesses]
 class InstallsEntityTypesTest extends KernelTestBase

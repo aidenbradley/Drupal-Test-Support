@@ -5,8 +5,8 @@ namespace Drupal\Tests\test_support\Kernel\Support;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\locale\LocaleEvent;
 use Drupal\Tests\test_support\Traits\Support\WithoutEvents;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
 #[RunTestsInSeparateProcesses]
 class WithoutEventsTest extends KernelTestBase

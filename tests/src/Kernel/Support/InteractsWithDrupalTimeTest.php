@@ -10,8 +10,8 @@ use Drupal\Tests\test_support\Traits\Support\InteractsWithDrupalTime;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithEntities;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
 #[RunTestsInSeparateProcesses]
 class InteractsWithDrupalTimeTest extends KernelTestBase

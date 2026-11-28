@@ -5,8 +5,8 @@ namespace Drupal\Tests\test_support\Kernel\Installs;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Installs\InstallsImageStyles;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
 #[RunTestsInSeparateProcesses]
 class InstallsImageStylesTest extends KernelTestBase

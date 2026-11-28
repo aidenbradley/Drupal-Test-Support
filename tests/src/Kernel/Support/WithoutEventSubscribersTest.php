@@ -8,10 +8,10 @@ use Drupal\language\EventSubscriber\ConfigSubscriber;
 use Drupal\node\Routing\RouteSubscriber;
 use Drupal\system\TimeZoneResolver;
 use Drupal\Tests\test_support\Traits\Support\WithoutEventSubscribers;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 #[RunTestsInSeparateProcesses]
 class WithoutEventSubscribersTest extends KernelTestBase

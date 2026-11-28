@@ -6,8 +6,8 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\test_support\Traits\Installs\InstallsEntityTypes;
 use Drupal\Tests\test_support\Traits\Installs\InstallsFields;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
 #[RunTestsInSeparateProcesses]
 class InstallsFieldsTest extends KernelTestBase

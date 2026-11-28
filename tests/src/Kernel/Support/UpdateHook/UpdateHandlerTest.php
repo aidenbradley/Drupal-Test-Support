@@ -5,8 +5,8 @@ namespace Drupal\Tests\test_support\Kernel\Support\UpdateHook;
 use Drupal\Tests\test_support\Kernel\Support\UpdateHook\Base\UpdateHandlerKernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\Exceptions\UpdateHookFailed;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithUpdateHooks;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
 #[RunTestsInSeparateProcesses]
 class UpdateHandlerTest extends UpdateHandlerKernelTestBase

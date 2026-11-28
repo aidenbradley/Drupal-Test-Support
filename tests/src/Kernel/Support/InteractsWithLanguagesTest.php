@@ -5,8 +5,8 @@ namespace Drupal\Tests\test_support\Kernel\Support;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Support\InteractsWithLanguages;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
 #[RunTestsInSeparateProcesses]
 class InteractsWithLanguagesTest extends KernelTestBase

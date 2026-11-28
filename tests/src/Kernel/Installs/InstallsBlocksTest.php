@@ -6,8 +6,8 @@ use Drupal\block\Entity\Block;
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\test_support\Traits\Installs\InstallsBlocks;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Test;
 
 #[RunTestsInSeparateProcesses]
 class InstallsBlocksTest extends KernelTestBase
